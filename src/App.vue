@@ -23,6 +23,12 @@
         <router-link to="/templates">
           <v-list-item class="mx-2">Templates</v-list-item>
         </router-link>
+        <router-link to="/contacts">
+          <v-list-item class="mx-2">Contacts</v-list-item>
+        </router-link>
+        <router-link to="/login">
+          <v-list-item class="mx-2">Přihlášení</v-list-item>
+        </router-link>
       </div>
       <v-spacer></v-spacer>
       <div class="d-flex align-center">
