@@ -1,11 +1,14 @@
 <template>
-  <div class="home">
-    <h1 class="text-center">AMP editor will be ready soon</h1>
-    <router-link to="/editor" class="text-decoration-none">
-      <v-btn class="hp-button mr-4">Create new email</v-btn>
-    </router-link>
-    <v-btn class="hp-button mr-4">Edit last email</v-btn>
-    <v-btn class="hp-button">Send emails</v-btn>
+  <div class="home text-center">
+    <h1 class="mt-10 mb-5">AMP editor</h1>
+    <v-btn to="" color="primary" class="hp-button">Jak začít?</v-btn>
+    <h2 class="mt-10 mb-5">Příprava kampaně</h2>
+    <v-btn to="/templates" color="success" class="hp-button mr-4"
+      >Vytvořit AMP email</v-btn
+    >
+    <v-btn to="/contacts" color="success" class="hp-button mr-4"
+      >Přidat kontakty</v-btn
+    >
   </div>
 </template>
 

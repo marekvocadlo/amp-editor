@@ -29,7 +29,7 @@
             </v-flex>
             <v-flex class="text-xs-center" mt-5>
               <v-btn :disabled="!valid" color="primary" type="submit"
-                >Přihlásit se e-mailem</v-btn
+                >Přihlásit se</v-btn
               >
 
               <v-btn
@@ -38,7 +38,7 @@
                 class="registerBtn"
                 to="/register"
               >
-                Registrovat se
+                Registrovat
               </v-btn>
             </v-flex>
           </v-layout>

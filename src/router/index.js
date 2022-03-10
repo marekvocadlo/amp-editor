@@ -6,6 +6,7 @@ import Templates from "../views/Templates";
 import Login from "../views/Login";
 import Register from "../views/Register";
 import Editor from "../views/Editor";
+import Help from "../views/Help";
 
 Vue.use(VueRouter);
 
@@ -39,6 +40,11 @@ const routes = [
     path: "/register",
     name: "register",
     component: Register,
+  },
+  {
+    path: "/help",
+    name: "help",
+    component: Help,
   },
 ];
 

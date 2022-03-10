@@ -42,6 +42,14 @@
               <v-btn :disabled="!valid" color="success" @click="registerUser">
                 Registrovat se pomocí e-mailu
               </v-btn>
+              <v-btn
+                color="secondary"
+                outlined
+                class="ml-5"
+                to="/login"
+              >
+                Zpět na přihlášení
+              </v-btn>
             </v-flex>
           </v-layout>
         </v-form>
