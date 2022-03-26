@@ -6,8 +6,8 @@
     <v-btn to="/templates" color="success" class="hp-button mr-4"
       >Vytvořit AMP email</v-btn
     >
-    <v-btn to="/contacts" color="success" class="hp-button mr-4"
-      >Přidat kontakty</v-btn
+    <v-btn to="/register" color="success" class="hp-button mr-4"
+      >Registrace</v-btn
     >
   </div>
 </template>

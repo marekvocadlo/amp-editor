@@ -59,6 +59,7 @@
 </template>
 
 <script>
+
 export default {
   name: "Register",
   data: () => ({
@@ -78,12 +79,14 @@ export default {
       if (this.$refs.form.validate()) {
         e.preventDefault();
         let currentObj = this;
+        console.log(this.email)
         this.axios
           .post(
-            "https://dev.api.project.devg.cz/api/newUser",
+            "https://ampeditor.dev/script/register.php",
             {
               email: this.email,
               password: this.password,
+              request: 2,
             },
             { withCredentials: true }
           )
@@ -113,49 +116,4 @@ export default {
 </script>
 
 <style scoped>
-.signup-buttons {
-  margin-top: 15px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  position: relative;
-}
-.facebook-signup,
-.google-signup {
-  color: #031b4e;
-  background: #f2f8ff;
-  border: 1px solid rgba(0, 105, 255, 0.2);
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  border-radius: 3px;
-  display: inline-block;
-  margin-top: 0;
-  width: 47.5%;
-  padding: 15px;
-  text-align: center;
-  position: inherit;
-  vertical-align: middle;
-  text-decoration: none;
-}
-.signup-buttons svg {
-  left: 16px;
-  position: absolute;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-  transform: translateY(-50%);
-}
-h1 {
-  text-align: center;
-  margin-top: 3%;
-}
-.title,
-.v-list-item__subtitle {
-  text-align: center;
-}
-.registerBtn {
-  margin-left: 3%;
-}
 </style>
