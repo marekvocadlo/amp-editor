@@ -1,7 +1,14 @@
 <template>
   <v-app>
     <!--Menu-->
-    <v-app-bar app dark absolute elevate-on-scroll color="primary">
+    <v-app-bar
+      v-if="getUser"
+      app
+      dark
+      absolute
+      elevate-on-scroll
+      color="primary"
+    >
       <div class="d-flex align-center">
         <router-link to="/">
           <v-img
@@ -34,6 +41,9 @@
         <!--        </router-link>-->
       </div>
       <v-spacer></v-spacer>
+      <router-link to="/settings">
+        <v-list-item class="mx-2">Nastavení</v-list-item>
+      </router-link>
       <div class="d-flex align-center">
         <v-avatar color="white" size="35">
           <span class="text--primary">MV</span>
@@ -52,12 +62,15 @@
 <script>
 export default {
   name: "App",
-
   components: {},
-
-  data: () => ({
-    //
-  }),
+  created() {
+    this.$store.dispatch("getUser");
+  },
+  computed: {
+    getUser() {
+      return this.$store.state.user;
+    },
+  },
 };
 </script>
 

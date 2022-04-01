@@ -1,10 +1,10 @@
 <template>
   <v-container fluid>
     <v-layout row wrap>
-      <v-flex xs12 class="text-xs-center" mt-5>
+      <v-flex xs12 class="text-center" mt-10>
         <h1>Vytvořit nový účet</h1>
       </v-flex>
-      <v-flex xs12 sm6 offset-sm3 mt-3>
+      <v-flex xs12 sm4 offset-sm4 mt-3>
         <v-form ref="form" v-model="valid" lazy-validation>
           <v-layout column>
             <v-flex>
@@ -38,16 +38,11 @@
                 :rules="confirmPasswordRules.concat(passwordConfirmationRule)"
               ></v-text-field>
             </v-flex>
-            <v-flex class="text-xs-center" mt-5>
+            <v-flex class="text-center" mt-5>
               <v-btn :disabled="!valid" color="success" @click="registerUser">
-                Registrovat se pomocí e-mailu
+                Registrovat se
               </v-btn>
-              <v-btn
-                color="secondary"
-                outlined
-                class="ml-5"
-                to="/login"
-              >
+              <v-btn color="secondary" outlined class="ml-5" to="/login">
                 Zpět na přihlášení
               </v-btn>
             </v-flex>
@@ -59,7 +54,6 @@
 </template>
 
 <script>
-
 export default {
   name: "Register",
   data: () => ({
@@ -75,33 +69,24 @@ export default {
     confirmPasswordRules: [(v) => !!v || "Potvrzení hesla je požadováno!"],
   }),
   methods: {
-    registerUser(e) {
+    registerUser() {
       if (this.$refs.form.validate()) {
-        e.preventDefault();
-        let currentObj = this;
-        console.log(this.email)
         this.axios
-          .post(
-            "https://ampeditor.dev/script/register.php",
-            {
-              email: this.email,
-              password: this.password,
-              request: 2,
-            },
-            { withCredentials: true }
-          )
-          .then(function (response) {
-            currentObj.output = response.data;
-            if (response.data.status === "alreadyExists") {
-              alert("Tento email je již zaregistrovaný.");
+          .post("https://ampeditor.dev/script/register.php", {
+            email: this.email,
+            password: this.password,
+            request: 2,
+          })
+          .then(function (data) {
+            console.log(data.data);
+            if (data.data === "Username already exists.") {
+              alert("Username already exists.");
             } else {
-              //currentObj.$router.push('/')
-              alert("Úspěšně zaregistrován!");
               window.location.href = "/";
             }
           })
-          .catch(function (error) {
-            currentObj.output = error;
+          .catch(function () {
+            console.log("FAILURE!!");
           });
       }
     },
@@ -115,5 +100,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

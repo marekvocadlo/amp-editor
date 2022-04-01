@@ -1,12 +1,10 @@
 <template>
   <div class="home text-center">
-    <h1 class="mt-10 mb-5">AMP editor</h1>
-    <v-btn to="/help" color="primary" class="hp-button">Jak začít?</v-btn>
-    <h2 class="mt-10 mb-5">Příprava kampaně</h2>
-    <v-btn to="/templates" color="success" class="hp-button mr-4"
-      >Vytvořit AMP email</v-btn
+    <h1 v-if="!getUser" class="mt-10 mb-5">AMP editor</h1>
+    <v-btn v-if="!getUser" to="/login" color="success" class="hp-button mr-4"
+      >Přihlásit se</v-btn
     >
-    <v-btn to="/register" color="success" class="hp-button mr-4"
+    <v-btn v-if="!getUser" to="/register" color="success" class="hp-button mr-4"
       >Registrace</v-btn
     >
   </div>
@@ -16,6 +14,14 @@
 export default {
   name: "Home",
   components: {},
+  created() {
+    this.$store.dispatch("getUser");
+  },
+  computed: {
+    getUser() {
+      return this.$store.state.user;
+    },
+  },
 };
 </script>
 

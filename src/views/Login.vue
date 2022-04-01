@@ -1,11 +1,11 @@
 <template>
   <v-container fluid>
     <v-layout row wrap>
-      <v-flex xs12 class="text-xs-center" mt-5>
+      <v-flex xs12 class="text-center" mt-10>
         <h1>Přihlásit se</h1>
       </v-flex>
-      <v-flex xs12 sm6 offset-sm3 mt-3>
-        <v-form @submit="loginForm" ref="form" v-model="valid" lazy-validation>
+      <v-flex xs12 sm4 offset-sm4 mt-3>
+        <v-form ref="form" v-model="valid" lazy-validation>
           <v-layout column>
             <v-flex>
               <v-text-field
@@ -13,8 +13,8 @@
                 name="email"
                 label="E-mail"
                 type="email"
-                :rules="emailRules"
                 required
+                :rules="emailRules"
               ></v-text-field>
             </v-flex>
             <v-flex>
@@ -23,21 +23,16 @@
                 name="password"
                 label="Heslo"
                 type="password"
-                :rules="passwordRules"
                 required
-              ></v-text-field>
+                :rules="passwordRules"
+              >
+              </v-text-field>
             </v-flex>
-            <v-flex class="text-xs-center" mt-5>
-              <v-btn :disabled="!valid" color="primary" type="submit"
-                >Přihlásit se</v-btn
-              >
-
-              <v-btn
-                color="secondary"
-                outlined
-                class="registerBtn"
-                to="/register"
-              >
+            <v-flex class="text-center" mt-5>
+              <v-btn :disabled="!valid" color="success" @click="loginUser">
+                Přihlásit se
+              </v-btn>
+              <v-btn color="secondary" outlined class="ml-5" to="/register">
                 Registrovat
               </v-btn>
             </v-flex>
@@ -45,6 +40,15 @@
         </v-form>
       </v-flex>
     </v-layout>
+    <v-snackbar top color="red darken-2" v-model="snackbar" :timeout="timeout">
+      {{ text }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -53,66 +57,48 @@ export default {
   name: "Login",
   data: () => ({
     valid: true,
-    name: "",
     email: "",
-    password: "",
     emailRules: [
-      (v) => !!v || "E-mail je požadován!",
-      (v) => /.+@.+/.test(v) || "E-mail musí být validní!",
+      (v) => !!v || "E-mail je požadován",
+      (v) => /.+@.+/.test(v) || "E-mail musí být ve správném formátu",
     ],
+    password: "",
+    confirmPassword: "",
     passwordRules: [(v) => !!v || "Heslo je požadováno!"],
+    confirmPasswordRules: [(v) => !!v || "Potvrzení hesla je požadováno!"],
+    snackbar: false,
+    text: "Přihlašovací email nebo heslo jste zadali špatně.",
+    timeout: 4000,
   }),
-  created() {
-    this.getUser();
+  methods: {
+    loginUser() {
+      if (this.$refs.form.validate()) {
+        this.axios
+          .post("https://ampeditor.dev/script/login.php", {
+            email: this.email,
+            password: this.password,
+          })
+          .then((data) => {
+            if (data.data === "Successfully log") {
+              console.log("Successfully log from PHP script");
+              window.location.href = "/";
+            } else {
+              this.snackbar = true;
+            }
+          })
+          .catch(function () {
+            console.log("FAILURE!!");
+          });
+      }
+    },
   },
-  methods: {},
+  computed: {
+    passwordConfirmationRule() {
+      return () =>
+        this.password === this.confirmPassword || "Password must match";
+    },
+  },
 };
 </script>
 
-<style scoped>
-h1 {
-  text-align: center;
-  margin-top: 3%;
-}
-.title,
-.v-list-item__subtitle {
-  text-align: center;
-}
-.registerBtn {
-  margin-left: 3%;
-}
-.signup-buttons {
-  margin-top: 15px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  position: relative;
-}
-.facebook-signup,
-.google-signup {
-  color: #031b4e;
-  background: #f2f8ff;
-  border: 1px solid rgba(0, 105, 255, 0.2);
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  border-radius: 3px;
-  display: inline-block;
-  margin-top: 0;
-  width: 47.5%;
-  padding: 15px;
-  text-align: center;
-  position: inherit;
-  vertical-align: middle;
-  text-decoration: none;
-}
-.signup-buttons svg {
-  left: 16px;
-  position: absolute;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-  transform: translateY(-50%);
-}
-</style>
+<style scoped></style>
