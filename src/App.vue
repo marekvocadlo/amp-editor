@@ -2,7 +2,7 @@
   <v-app>
     <!--Menu-->
     <v-app-bar
-      v-if="getUser"
+      v-if="getUser.name"
       app
       dark
       absolute
@@ -44,6 +44,7 @@
       <router-link to="/settings">
         <v-list-item class="mx-2">Nastavení</v-list-item>
       </router-link>
+      <v-btn @click="logout" class="mx-2">Odhlásit se</v-btn>
       <div class="d-flex align-center">
         <v-avatar color="white" size="35">
           <span class="text--primary">MV</span>
@@ -63,6 +64,18 @@
 export default {
   name: "App",
   components: {},
+  methods: {
+    logout() {
+      this.axios
+        .post("https://ampeditor.dev/script/logout.php")
+        .then(() => {
+          window.location.href = "/";
+        })
+        .catch(function () {
+          console.log("FAILURE!!");
+        });
+    },
+  },
   created() {
     this.$store.dispatch("getUser");
   },

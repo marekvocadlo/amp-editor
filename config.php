@@ -1,5 +1,4 @@
 <?php
-
 $host = "a043um.forpsi.com"; /* Host name */
 $user = "f145366"; /* User */
 $password = "QDFHxx64"; /* Password */

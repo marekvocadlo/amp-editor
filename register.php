@@ -1,4 +1,5 @@
 <?php
+header("Access-Control-Allow-Origin: *");
 session_start();
 include "config.php";
 $data = json_decode(file_get_contents("php://input"));
@@ -18,6 +19,10 @@ if($request == 2){
     $userData2 = mysqli_query($con,"SELECT * FROM user WHERE email='".$email."'");
     $resultId2 = mysqli_fetch_row($userData2);
     $_SESSION['user_id']=$resultId2[0];
+    $user_data = [];
+    $user_data = array($resultId2[0], $resultId2[1], $resultId2[3], $resultId2[4]);
+    $_SESSION['user'] = $user_data;
+
   }else{
     echo "Username already exists.";
   }

@@ -14,6 +14,7 @@ $resultId = mysqli_fetch_row($userData);
 if(password_verify($password, $resultId[2])) {
   echo "Successfully log";
   $_SESSION['user_id']=$resultId[0];
+  $_SESSION['user_email']=$resultId[1];
   exit();
 } else {
   echo "Wrong password or login";
