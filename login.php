@@ -6,7 +6,6 @@ $data = json_decode(file_get_contents("php://input"));
 // login
 $email = $data->email;
 $password = $data->password;
-$hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
 $userData = mysqli_query($con,"SELECT * FROM user WHERE email='".$email."'");
 $resultId = mysqli_fetch_row($userData);
