@@ -6,7 +6,7 @@ $data = json_decode(file_get_contents("php://input"));
 
 $request = $data->request;
 
-// Add new user
+// Register new user
 if($request == 2){
   $email = $data->email;
   $password = $data->password;
@@ -30,7 +30,7 @@ if($request == 2){
 
 // Update user
 if($request == 3){
-  $id = $data->id;
+  $id = $_SESSION['user_id'];
   $name = $data->name;
   $surname = $data->surname;
 

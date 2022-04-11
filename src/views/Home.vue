@@ -15,7 +15,7 @@
       class="hp-button mr-4"
       >Registrace</v-btn
     >
-    <h1 v-if="getUser.name">Vítejte {{ getUser.name }}</h1>
+    <h1 v-if="getUser.name">Vítejte {{ getUser.name }}{{ getUser.surname }}</h1>
   </div>
 </template>
 

@@ -19,7 +19,7 @@ export default new Vuex.Store({
   },
   actions: {
     getUser({ commit }) {
-      axios.get("https://ampeditor.dev/script/verify.php").then((response) => {
+      axios.get("https://ampeditor.dev/verify.php").then((response) => {
         commit("GET_NAME", response.data);
       });
     },

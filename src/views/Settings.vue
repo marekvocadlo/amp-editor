@@ -2,20 +2,11 @@
   <v-container fluid>
     <v-layout row wrap>
       <v-flex xs12 class="text-center" mt-10>
-        <h1>Upravit údaje</h1>
+        <h1>Doplnit údaje</h1>
       </v-flex>
       <v-flex xs12 sm4 offset-sm4 mt-3>
         <v-form ref="form" v-model="valid" lazy-validation>
           <v-layout column>
-            <v-flex>
-              <v-text-field
-                v-model="id"
-                name="id"
-                label="ID"
-                type="id"
-                required
-              ></v-text-field>
-            </v-flex>
             <v-flex>
               <v-text-field
                 v-model="name"
@@ -65,7 +56,7 @@ export default {
         let currentObj = this;
         this.axios
           .post(
-            "https://ampeditor.dev/script/register.php",
+            "https://ampeditor.dev/register.php",
             {
               id: this.id,
               name: this.name,
@@ -90,7 +81,7 @@ export default {
         let currentObj = this;
         this.axios
           .post(
-            "https://ampeditor.dev/script/register.php",
+            "https://ampeditor.dev/register.php",
             {
               id: this.id,
               request: 4,

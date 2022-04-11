@@ -50,6 +50,15 @@
         </v-form>
       </v-flex>
     </v-layout>
+    <v-snackbar top color="red darken-2" v-model="snackbar" :timeout="timeout">
+      {{ text }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -67,22 +76,25 @@ export default {
     confirmPassword: "",
     passwordRules: [(v) => !!v || "Heslo je požadováno!"],
     confirmPasswordRules: [(v) => !!v || "Potvrzení hesla je požadováno!"],
+    snackbar: false,
+    text: "Tento email je již zaregistrovaný.",
+    timeout: 4000,
   }),
   methods: {
     registerUser() {
       if (this.$refs.form.validate()) {
         this.axios
-          .post("https://ampeditor.dev/script/register.php", {
+          .post("https://ampeditor.dev/register.php", {
             email: this.email,
             password: this.password,
             request: 2,
           })
-          .then(function (data) {
-            console.log(data.data);
-            if (data.data === "Username already exists.") {
-              alert("Username already exists.");
-            } else {
+          .then((data) => {
+            if (data.data === "Insert successfully") {
+              console.log("Successfully create new user");
               window.location.href = "/";
+            } else {
+              this.snackbar = true;
             }
           })
           .catch(function () {
