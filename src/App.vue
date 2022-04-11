@@ -2,7 +2,7 @@
   <v-app>
     <!--Menu-->
     <v-app-bar
-      v-if="getUser.name"
+      v-if="getUser.email"
       app
       dark
       absolute
@@ -35,14 +35,28 @@
       <router-link to="/help">
         <v-list-item class="mx-2">Návod</v-list-item>
       </router-link>
-      <router-link to="/settings">
-        <v-list-item class="mx-2">Nastavení</v-list-item>
-      </router-link>
-      <v-btn @click="logout" class="mx-2">Odhlásit se</v-btn>
       <div class="d-flex align-center">
-        <v-avatar color="white" size="35">
-          <span class="text--primary">MV</span>
-        </v-avatar>
+        <v-menu offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <v-avatar color="white" size="35" v-bind="attrs" v-on="on">
+              <span class="text--primary">{{ getUser.initials }}</span>
+            </v-avatar>
+          </template>
+          <v-list>
+            <v-list-item>
+              <router-link to="/settings">
+                <v-list-item-title class="avatar-dropdown"
+                  >Nastavení</v-list-item-title
+                >
+              </router-link>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-title @click="logout" class="avatar-dropdown"
+                >Odhlásit se</v-list-item-title
+              >
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </div>
     </v-app-bar>
     <!--Dynamic content-->
@@ -84,5 +98,18 @@ export default {
 <style>
 .v-application {
   font-family: Poppins, sans-serif !important;
+}
+.v-list-item,
+.v-list-item a {
+  text-decoration: none;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.87) !important;
+}
+.v-list-item:hover,
+.v-list-item a:hover {
+  text-decoration: underline !important;
+}
+.v-avatar span {
+  text-transform: uppercase;
 }
 </style>

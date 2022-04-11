@@ -1,22 +1,22 @@
 <template>
   <div class="home text-center">
-    <h1 v-if="!getUser.name" class="mt-10 mb-5">AMP editor</h1>
+    <h1 v-if="!getUser.email" class="mt-10 mb-5">AMP editor</h1>
     <v-btn
-      v-if="!getUser.name"
+      v-if="!getUser.email"
       to="/login"
       color="success"
       class="hp-button mr-4"
       >Přihlásit se</v-btn
     >
     <v-btn
-      v-if="!getUser.name"
+      v-if="!getUser.email"
       to="/register"
       color="success"
       class="hp-button mr-4"
       >Registrace</v-btn
     >
-    <div v-if="getUser.name">
-      <h1>Vítejte {{ getUser.name }}{{ getUser.surname }}</h1>
+    <div v-if="getUser.email">
+      <h1>Vítejte {{ getUser.name }} {{ getUser.surname }}</h1>
     </div>
   </div>
 </template>

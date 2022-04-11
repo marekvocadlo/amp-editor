@@ -14,7 +14,7 @@ if(password_verify($password, $resultId[2])) {
   echo "Successfully log";
   $_SESSION['user_id']=$resultId[0];
   $user_data = [];
-  $user_data = array($resultId[0], $resultId[1], $resultId[3], $resultId[4]);
+  $user_data = array($resultId[0], $resultId[1], $resultId[3], $resultId[4], $resultId[5], $resultId[6]);
   $_SESSION['user'] = $user_data;
   exit();
 } else {

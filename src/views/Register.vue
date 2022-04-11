@@ -84,7 +84,7 @@ export default {
     registerUser() {
       if (this.$refs.form.validate()) {
         this.axios
-          .post("https://ampeditor.dev/register.php", {
+          .post("https://ampeditor.dev/user.php", {
             email: this.email,
             password: this.password,
             request: 2,

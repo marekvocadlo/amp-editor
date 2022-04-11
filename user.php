@@ -1,12 +1,11 @@
 <?php
-header("Access-Control-Allow-Origin: *");
 session_start();
 include "config.php";
 $data = json_decode(file_get_contents("php://input"));
 
 $request = $data->request;
 
-// Register new user
+// Create user
 if($request == 2){
   $email = $data->email;
   $password = $data->password;
@@ -20,7 +19,7 @@ if($request == 2){
     $resultId2 = mysqli_fetch_row($userData2);
     $_SESSION['user_id']=$resultId2[0];
     $user_data = [];
-    $user_data = array($resultId2[0], $resultId2[1], $resultId2[3], $resultId2[4]);
+    $user_data = array($resultId2[0], $resultId2[1], $resultId2[3], $resultId2[4], $resultId2[5], $resultId2[6]);
     $_SESSION['user'] = $user_data;
 
   }else{
@@ -31,21 +30,27 @@ if($request == 2){
 // Update user
 if($request == 3){
   $id = $_SESSION['user_id'];
+  $email = $data->email;
   $name = $data->name;
   $surname = $data->surname;
 
-  mysqli_query($con,"UPDATE user SET name='".$name."',surname='".$surname."' WHERE id=".$id);
+  mysqli_query($con,"UPDATE user SET email='".$email."',name='".$name."',surname='".$surname."' WHERE id=".$id);
 
+  $_SESSION['user'][1] = $email;
+  $_SESSION['user'][2] = $name;
+  $_SESSION['user'][3] = $surname;
   echo "Update successfully";
   exit;
 }
 
 // Delete user
 if($request == 4){
-  $id = $data->id;
+  $id = $_SESSION['user_id'];
 
   mysqli_query($con,"DELETE FROM user WHERE id=".$id);
 
+  session_unset();
+  session_destroy();
   echo "Delete successfully";
   exit;
 }
