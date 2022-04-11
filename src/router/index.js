@@ -8,6 +8,7 @@ import Register from "../views/Register";
 import Editor from "../views/Editor";
 import Help from "../views/Help";
 import Settings from "../views/Settings";
+import Campaign from "../views/Campaign";
 
 Vue.use(VueRouter);
 
@@ -51,6 +52,11 @@ const routes = [
     path: "/settings",
     name: "settings",
     component: Settings,
+  },
+  {
+    path: "/campaign",
+    name: "campaign",
+    component: Campaign,
   },
 ];
 
