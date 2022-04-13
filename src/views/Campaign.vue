@@ -14,13 +14,29 @@
                 label="Předmět emailu"
                 type="text"
                 required
+                :rules="subjectRules"
               ></v-text-field>
             </v-flex>
             <v-flex>
               <v-select
-                v-model="contactGroup"
-                :items="contactGroups"
+                v-model="group_id"
+                :items="groups"
+                item-text="name"
+                item-value="id"
                 label="Skupina kontaktů"
+                required
+                :rules="groupRules"
+              ></v-select>
+            </v-flex>
+            <v-flex>
+              <v-select
+                v-model="template_id"
+                :items="templates"
+                item-text="name"
+                item-value="id"
+                label="Šablony"
+                required
+                :rules="templatesRules"
               ></v-select>
             </v-flex>
             <v-flex class="text-center" mt-5>
@@ -32,7 +48,12 @@
         </v-form>
       </v-flex>
     </v-layout>
-    <v-snackbar top color="red darken-2" v-model="snackbar" :timeout="timeout">
+    <v-snackbar
+      top
+      :color="snackbar_color"
+      v-model="snackbar"
+      :timeout="timeout"
+    >
       {{ snackbar_text }}
       <template v-slot:action="{ attrs }">
         <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
@@ -51,9 +72,15 @@ export default {
     subject: "",
     snackbar: false,
     snackbar_text: "",
+    snackbar_color: "red darken-2",
     timeout: 4000,
-    contactGroup: 0,
-    contactGroups: [],
+    group_id: 0,
+    groups: [],
+    template_id: 0,
+    templates: [],
+    subjectRules: [(v) => !!v || "Předmět musí být vyplněný."],
+    groupRules: [(v) => !!v || "Musíte zvolit skupinu kontaktů."],
+    templatesRules: [(v) => !!v || "Musíte zvolit šablonu."],
   }),
   methods: {
     sendCampaign() {
@@ -61,10 +88,12 @@ export default {
         this.axios
           .post("https://ampeditor.dev/sendCampaign.php", {
             subject: this.subject,
-            contactGroup: this.contactGroup,
+            group_id: this.group_id,
+            template_id: this.template_id,
           })
           .then((data) => {
             if (data.data === "Successfully sent") {
+              this.snackbar_color = "green darken-2";
               this.snackbar_text = "Kampaň úspěšně rozeslána.";
               this.snackbar = true;
             } else if (data.data === "Contact list is empty") {
@@ -88,12 +117,24 @@ export default {
         request: 1,
       })
       .then((response) => {
-        this.contactGroups = response.data;
-        console.log(response.data);
-
-        // if (data.data === "Skupina 1") {
-        //   this.contactGroups = ["Skupina 1"];
-        // }
+        for (let i = 0; i < response.data.length; i++) {
+          let groupLocal = {};
+          groupLocal.id = response.data[i][0];
+          groupLocal.name = response.data[i][1];
+          this.groups.push(groupLocal);
+        }
+      });
+    this.axios
+      .post("https://ampeditor.dev/template.php", {
+        request: 1,
+      })
+      .then((response) => {
+        for (let i = 0; i < response.data.length; i++) {
+          let templateLocal = {};
+          templateLocal.id = response.data[i][0];
+          templateLocal.name = response.data[i][1];
+          this.templates.push(templateLocal);
+        }
       });
   },
   computed: {

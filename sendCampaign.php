@@ -4,16 +4,21 @@ $data = json_decode(file_get_contents("php://input"));
 
 $result = 0;
 
-// login
 $subject = $data->subject;
-$contactGroup = $data->contactGroup;
+$group_id = $data->group_id;
+$template_id = $data->template_id;
 
-$q = mysqli_query($con,"SELECT * FROM contactGroup WHERE name = '".$contactGroup."'");
-$contactGroupIDResult = mysqli_fetch_row($q);
-$contactGroupID = $contactGroupIDResult[0];
+//$q = mysqli_query($con,"SELECT * FROM contactGroup WHERE name = '".$contactGroup."'");
+//$contactGroupIDResult = mysqli_fetch_row($q);
+//$contactGroupID = $contactGroupIDResult[0];
 
-$userData = mysqli_query($con,"SELECT * FROM contact WHERE contactGroup_id = '".$contactGroupID."'");
+$userData = mysqli_query($con,"SELECT * FROM contact WHERE contactGroup_id = '".$group_id."'");
 $contacts = mysqli_fetch_all($userData);
+
+$templateQuery = mysqli_query($con,"SELECT * FROM template WHERE id = '".$template_id."'");
+$template = mysqli_fetch_row($templateQuery);
+$templateHTML = $template[2];
+$templateAMP = $template[3];
 
 if (empty($contacts)){
   echo "Contact list is empty";
@@ -25,27 +30,8 @@ foreach ($contacts as $contact){
     'security'=>'UXTxb8SJJhKQhtjA',
     'recipient'=>$contact[2],
     'subject'=>$subject,
-    'htmlbody'=>'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-  <html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="utf-8">
-  
-  </head>
-  <body style="width: 100%; font-family: Montserrat, Verdana, Arial, sans-serif; font-size: 12px; margin: 0; padding: 0; background-color: #f1f1f1">
-    <h1>HTML part</h1>
-  </body>
-  </html>',
-    'ampbody'=>'<!doctype html>
-  <html ⚡4email data-css-strict>
-  <head>
-    <meta charset="utf-8">
-    <script async src="https://cdn.ampproject.org/v0.js"></script>
-    <style amp4email-boilerplate>body{visibility:hidden}</style>
-    </head>
-  <body style="width: 100%; font-family: Montserrat, Verdana, Arial, sans-serif; font-size: 12px; margin: 0; padding: 0; background-color: #f1f1f1">
-    <h1>AMP part</h1>
-  </body>
-  </html>'
+    'htmlbody'=>$templateHTML,
+    'ampbody'=>$templateAMP
   );
 
   $ch = curl_init('https://www.emailkampane.cz/global/function/amp_final.php');

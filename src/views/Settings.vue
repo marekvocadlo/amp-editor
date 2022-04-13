@@ -45,7 +45,7 @@
               <v-btn :disabled="!valid" color="success" @click="updateUser">
                 Aktualizovat údaje
               </v-btn>
-              <v-btn class="ml-5" color="warning" @click="deleteUser">
+              <v-btn class="ml-5" color="danger" @click="deleteUser">
                 Smazat účet
               </v-btn>
             </v-flex>

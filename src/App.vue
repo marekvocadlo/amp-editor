@@ -30,11 +30,11 @@
         <router-link to="/campaign">
           <v-list-item class="mx-2">Rozeslání</v-list-item>
         </router-link>
+        <router-link to="/help">
+          <v-list-item class="mx-2">Návod</v-list-item>
+        </router-link>
       </div>
       <v-spacer></v-spacer>
-      <router-link to="/help">
-        <v-list-item class="mx-2">Návod</v-list-item>
-      </router-link>
       <div class="d-flex align-center">
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
