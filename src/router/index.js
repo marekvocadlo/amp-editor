@@ -9,6 +9,7 @@ import Editor from "../views/Editor";
 import Help from "../views/Help";
 import Settings from "../views/Settings";
 import Campaign from "../views/Campaign";
+import Contacts from "../views/Contacts";
 
 Vue.use(VueRouter);
 
@@ -57,6 +58,11 @@ const routes = [
     path: "/campaign",
     name: "campaign",
     component: Campaign,
+  },
+  {
+    path: "/contacts",
+    name: "contacts",
+    component: Contacts,
   },
 ];
 

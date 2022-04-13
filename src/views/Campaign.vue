@@ -16,6 +16,13 @@
                 required
               ></v-text-field>
             </v-flex>
+            <v-flex>
+              <v-select
+                v-model="contactGroup"
+                :items="contactGroups"
+                label="Skupina kontaktů"
+              ></v-select>
+            </v-flex>
             <v-flex class="text-center" mt-5>
               <v-btn :disabled="!valid" color="success" @click="sendCampaign">
                 Rozeslat
@@ -45,6 +52,8 @@ export default {
     snackbar: false,
     snackbar_text: "",
     timeout: 4000,
+    contactGroup: 0,
+    contactGroups: [1, 2, 3],
   }),
   methods: {
     sendCampaign() {
@@ -52,13 +61,17 @@ export default {
         this.axios
           .post("https://ampeditor.dev/sendCampaign.php", {
             subject: this.subject,
+            contactGroup: this.contactGroup,
           })
           .then((data) => {
             if (data.data === "Successfully sent") {
               this.snackbar_text = "Kampaň úspěšně rozeslána.";
               this.snackbar = true;
+            } else if (data.data === "Contact list is empty") {
+              this.snackbar_text = "Kontaktní skupina neobsahuje žádné emaily.";
+              this.snackbar = true;
             } else {
-              this.snackbar_text = "Došlo k chybě.";
+              this.snackbar_text = "Došlo k chybě na rozesílači.";
               this.snackbar = true;
             }
           })
@@ -66,6 +79,23 @@ export default {
             console.log("FAILURE!!");
           });
       }
+    },
+  },
+  created() {
+    this.$store.dispatch("getUser");
+    this.axios
+      .post("https://ampeditor.dev/contact.php", {
+        request: 1,
+      })
+      .then((data) => {
+        if (data.data === "Skupina 1") {
+          this.contactGroups = ["Skupina 1"];
+        }
+      });
+  },
+  computed: {
+    getUser() {
+      return this.$store.state.user;
     },
   },
 };
