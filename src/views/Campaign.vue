@@ -53,7 +53,7 @@ export default {
     snackbar_text: "",
     timeout: 4000,
     contactGroup: 0,
-    contactGroups: [1, 2, 3],
+    contactGroups: [],
   }),
   methods: {
     sendCampaign() {
@@ -87,10 +87,13 @@ export default {
       .post("https://ampeditor.dev/contact.php", {
         request: 1,
       })
-      .then((data) => {
-        if (data.data === "Skupina 1") {
-          this.contactGroups = ["Skupina 1"];
-        }
+      .then((response) => {
+        this.contactGroups = response.data;
+        console.log(response.data);
+
+        // if (data.data === "Skupina 1") {
+        //   this.contactGroups = ["Skupina 1"];
+        // }
       });
   },
   computed: {

@@ -6,7 +6,11 @@ $result = 0;
 
 // login
 $subject = $data->subject;
-$contactGroupID = $data->contactGroup;
+$contactGroup = $data->contactGroup;
+
+$q = mysqli_query($con,"SELECT * FROM contactGroup WHERE name = '".$contactGroup."'");
+$contactGroupIDResult = mysqli_fetch_row($q);
+$contactGroupID = $contactGroupIDResult[0];
 
 $userData = mysqli_query($con,"SELECT * FROM contact WHERE contactGroup_id = '".$contactGroupID."'");
 $contacts = mysqli_fetch_all($userData);
