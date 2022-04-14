@@ -21,6 +21,9 @@
           />
         </router-link>
         <v-spacer></v-spacer>
+        <router-link to="/editor">
+          <v-list-item class="mx-2">Editor</v-list-item>
+        </router-link>
         <router-link to="/templates">
           <v-list-item class="mx-2">Šablony</v-list-item>
         </router-link>
