@@ -15,11 +15,23 @@
             <thead>
               <tr>
                 <th class="text-left">Název skupiny</th>
+                <th class="text-left">Akce</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="item in groups" :key="item.id">
-                <td>{{ item.name }}</td>
+                <td>
+                  {{ item.name }}
+                </td>
+                <td>
+                  <v-btn
+                    class="white--text"
+                    small
+                    color="red"
+                    @click="deleteGroup(item.id)"
+                    >Smazat</v-btn
+                  >
+                </td>
               </tr>
             </tbody>
           </template>
@@ -134,6 +146,28 @@ export default {
             console.log("FAILURE!!");
           });
       }
+    },
+    deleteGroup(id) {
+      this.axios
+        .post("https://ampeditor.dev/contact.php", {
+          request: 3,
+          group_id: id,
+        })
+        .then((data) => {
+          if (data.data === "List deleted") {
+            this.snackbar_color = "green darken-2";
+            this.snackbar_text = "Skupina úspěšně smazána.";
+            this.snackbar = true;
+            this.dialog = false;
+            this.refreshTable();
+          } else {
+            this.snackbar_text = "Došlo k chybě.";
+            this.snackbar = true;
+          }
+        })
+        .catch(function () {
+          console.log("FAILURE!!");
+        });
     },
   },
   created() {
