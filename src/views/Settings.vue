@@ -45,7 +45,7 @@
               <v-btn :disabled="!valid" color="success" @click="updateUser">
                 Aktualizovat údaje
               </v-btn>
-              <v-btn class="ml-5" color="red" @click="deleteUser">
+              <v-btn class="ml-5 white--text" color="red" @click="deleteUser">
                 Smazat účet
               </v-btn>
             </v-flex>
@@ -86,7 +86,7 @@ export default {
     snackbar: false,
     snackbar_text: "",
     snackbar_color: "red darken-2",
-    timeout: 4000,
+    timeout: 8000,
   }),
   created() {
     this.$store.dispatch("getUser");

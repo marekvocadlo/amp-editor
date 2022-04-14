@@ -3,14 +3,16 @@
     <v-layout row wrap>
       <v-flex xs12 sm4 offset-sm4 mt-3>
         <h1 class="mb-5">Kontakty</h1>
-        <v-btn class="mb-5 mr-3" color="success" @click="dialog = true"
+        <v-btn class="mb-5 mr-5" color="success" @click="dialog = true"
           >Přidat skupinu kontaktů</v-btn
         >
-        <v-btn class="mb-5" color="success">Přidat kontakty</v-btn>
+        <v-btn class="mb-5" color="success" @click="dialog2 = true"
+          >Přidat kontakty</v-btn
+        >
       </v-flex>
       <v-flex xs12 sm4 offset-sm4 mt-5>
         <h2 class="mb-5">Skupiny kontaktů</h2>
-        <v-simple-table dense>
+        <v-simple-table class="mb-10" dense>
           <template v-slot:default>
             <thead>
               <tr>
@@ -38,45 +40,94 @@
         </v-simple-table>
       </v-flex>
     </v-layout>
-    <v-row justify="center">
-      <v-dialog v-model="dialog" persistent max-width="600px">
-        <v-card>
-          <v-card-title>
-            <span class="text-h5">Nová skupina kontaktů</span>
-          </v-card-title>
-          <v-card-text>
-            <v-container>
-              <v-form ref="form" v-model="valid" lazy-validation>
-                <v-row>
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="name"
-                      label="Název skupiny"
-                      required
-                      :rules="nameRules"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-form>
-            </v-container>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="dialog = false">
-              Zavřít
-            </v-btn>
-            <v-btn
-              :disabled="!valid"
-              color="blue darken-1"
-              text
-              @click="createGroup()"
-            >
-              Vytvořit
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-row>
+    <v-dialog v-model="dialog" persistent max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="text-h5">Nová skupina kontaktů</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-form ref="form" v-model="valid" lazy-validation>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="name"
+                    label="Název skupiny"
+                    required
+                    :rules="nameRules"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-form>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="dialog = false">
+            Zavřít
+          </v-btn>
+          <v-btn
+            :disabled="!valid"
+            color="blue darken-1"
+            text
+            @click="createGroup()"
+          >
+            Vytvořit
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialog2" persistent max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="text-h5">Nahrávání nových kontaktů</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-form ref="form" v-model="valid" lazy-validation>
+              <v-layout column>
+                <v-flex>
+                  <v-select
+                    v-model="group_id"
+                    :items="groups"
+                    item-text="name"
+                    item-value="id"
+                    label="Skupina kontaktů"
+                    required
+                    :rules="groupRules"
+                  ></v-select>
+                </v-flex>
+                <v-flex>
+                  <v-textarea
+                    v-model="contacts"
+                    name="contacts"
+                    label="Kontakty"
+                    type="text"
+                    required
+                    :rules="contactsRules"
+                    hint="Vložte emailové adresy oddělené čárkou."
+                  ></v-textarea>
+                </v-flex>
+              </v-layout>
+            </v-form>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="dialog2 = false">
+            Zavřít
+          </v-btn>
+          <v-btn
+            :disabled="!valid"
+            color="blue darken-1"
+            text
+            @click="createContact()"
+          >
+            Vložit kontakty
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-snackbar
       top
       :color="snackbar_color"
@@ -99,13 +150,18 @@ export default {
   data: () => ({
     valid: true,
     dialog: false,
+    dialog2: false,
     name: "",
+    contacts: "",
+    group_id: 0,
     groups: [],
     snackbar: false,
     snackbar_text: "",
     snackbar_color: "red darken-2",
-    timeout: 4000,
+    timeout: 8000,
     nameRules: [(v) => !!v || "Název musí být vyplněný."],
+    groupRules: [(v) => !!v || "Musíte zvolit skupinu kontaktů."],
+    contactsRules: [(v) => !!v || "Musíte nahrát alespoň jeden kontakt."],
   }),
   methods: {
     refreshTable() {
@@ -168,6 +224,31 @@ export default {
         .catch(function () {
           console.log("FAILURE!!");
         });
+    },
+    createContact() {
+      if (this.$refs.form.validate()) {
+        this.axios
+          .post("https://ampeditor.dev/contact.php", {
+            request: 4,
+            group_id: this.group_id,
+            contacts: this.contacts,
+          })
+          .then((data) => {
+            if (data.data === "Insert successfully") {
+              this.snackbar_color = "green darken-2";
+              this.snackbar_text = "Kontakty úspěšně vloženy.";
+              this.snackbar = true;
+              this.dialog2 = false;
+              this.refreshTable();
+            } else {
+              this.snackbar_text = "Došlo k chybě.";
+              this.snackbar = true;
+            }
+          })
+          .catch(function () {
+            console.log("FAILURE!!");
+          });
+      }
     },
   },
   created() {

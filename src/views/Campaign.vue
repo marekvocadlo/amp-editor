@@ -73,7 +73,7 @@ export default {
     snackbar: false,
     snackbar_text: "",
     snackbar_color: "red darken-2",
-    timeout: 4000,
+    timeout: 8000,
     group_id: 0,
     groups: [],
     template_id: 0,

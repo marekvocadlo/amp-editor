@@ -68,7 +68,7 @@ export default {
     confirmPasswordRules: [(v) => !!v || "Potvrzení hesla je požadováno!"],
     snackbar: false,
     text: "Přihlašovací email nebo heslo jste zadali špatně.",
-    timeout: 4000,
+    timeout: 8000,
   }),
   methods: {
     loginUser() {

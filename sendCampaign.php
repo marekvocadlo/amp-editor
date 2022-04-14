@@ -12,7 +12,7 @@ $template_id = $data->template_id;
 //$contactGroupIDResult = mysqli_fetch_row($q);
 //$contactGroupID = $contactGroupIDResult[0];
 
-$userData = mysqli_query($con,"SELECT * FROM contact WHERE contactGroup_id = '".$group_id."'");
+$userData = mysqli_query($con,"SELECT * FROM contact WHERE list_id = '".$group_id."'");
 $contacts = mysqli_fetch_all($userData);
 
 $templateQuery = mysqli_query($con,"SELECT * FROM template WHERE id = '".$template_id."'");
