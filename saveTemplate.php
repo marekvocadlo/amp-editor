@@ -6,6 +6,14 @@ $data = json_decode(file_get_contents("php://input"));
 $cText = $data->cText;
 $cCarousel = $data->cCarousel;
 
+//helpers
+$loop = ($cCarousel->loop) ? "loop" : "";
+$images = "";
+for ($i = 0; $i < count($cCarousel->img); $i++) {
+  $img = '<amp-img width="'.$cCarousel->width.'" height="'.$cCarousel->height.'" src="'.$cCarousel->img[$i]->src.'"></amp-img>';
+  $images .= $img;
+}
+
 $ampTemplate = '<!DOCTYPE html>
 <html ⚡4email data-css-strict>
 <head>
@@ -47,12 +55,8 @@ $ampTemplate = '<!DOCTYPE html>
         layout="responsive"
         type="slides"
         role="region"
-        loop
-    >
-      <amp-img width="'.$cCarousel->width.'" height="'.$cCarousel->height.'" src="'.$cCarousel->img[0]->src.'"></amp-img>
-      <amp-img width="'.$cCarousel->width.'" height="'.$cCarousel->height.'" src="'.$cCarousel->img[1]->src.'"></amp-img>
-      <amp-img width="'.$cCarousel->width.'" height="'.$cCarousel->height.'" src="'.$cCarousel->img[2]->src.'"></amp-img>
-    </amp-carousel>
+        '.$loop.'
+    >'.$images.'</amp-carousel>
   </div>
   <div class="container">
     <div style="text-align: center; font-size: '.$cText->font_size.'px; line-height: '.$cText->line_height.'px; color: '.$cText->color.'">'.$cText->text.'</div>

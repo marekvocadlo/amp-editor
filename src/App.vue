@@ -2,7 +2,7 @@
   <v-app>
     <!--Menu-->
     <v-app-bar
-      v-if="!getUser.email"
+      v-if="getUser.email"
       app
       dark
       absolute

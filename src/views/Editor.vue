@@ -10,7 +10,12 @@
               class="component"
               @click="displayCCarousel"
             >
-              <v-card :width="cCarousel.width" style="margin: 0 auto" tile elevation="0">
+              <v-card
+                :width="cCarousel.width"
+                style="margin: 0 auto"
+                tile
+                elevation="0"
+              >
                 <v-carousel :height="cCarousel.height" hide-delimiters>
                   <v-carousel-item
                     v-for="(item, i) in cCarousel.img"
@@ -93,21 +98,33 @@
                 type="number"
                 label="Výška"
               ></v-text-field>
+              <v-switch
+                v-model="cCarousel.loop"
+                label="Opakování obrázků"
+              ></v-switch>
               <v-text-field
+                v-for="(item, i) in cCarousel.img"
+                :key="i"
+                :src="item.src"
                 type="text"
-                v-model="cCarousel.img[0].src"
+                v-model="cCarousel.img[i].src"
                 label="URL obrázku"
               ></v-text-field>
-              <v-text-field
-                type="text"
-                v-model="cCarousel.img[1].src"
-                label="URL obrázku"
-              ></v-text-field>
-              <v-text-field
-                type="text"
-                v-model="cCarousel.img[2].src"
-                label="URL obrázku"
-              ></v-text-field>
+              <v-btn
+                small
+                class="mr-3 mb-5"
+                color="primary"
+                @click="addCarouselImg"
+                >Přidat obrázek</v-btn
+              >
+              <v-btn
+                v-if="cCarousel.img.length > 1"
+                small
+                class="mr-3 mb-5 white--text"
+                color="red"
+                @click="removeCarouselImg"
+                >Odebrat obrázek</v-btn
+              >
             </v-form>
           </v-card>
         </v-col>
@@ -144,22 +161,15 @@ export default {
     },
     model: 0,
     cCarousel: {
-      display: "none",
+      display: "block",
       width: 700,
       height: 200,
       autoplay: "",
       delay: "",
-      loop: "loop",
-      numberOfImages: 1,
+      loop: true,
       img: [
         {
           src: "https://picsum.photos/700/200?random=1",
-        },
-        {
-          src: "https://picsum.photos/700/200?random=2",
-        },
-        {
-          src: "https://picsum.photos/700/200?random=3",
         },
       ],
     },
@@ -175,6 +185,13 @@ export default {
     displayCCarousel() {
       this.cText.display = "none";
       this.cCarousel.display = "block";
+    },
+    addCarouselImg() {
+      let carouselImg = {};
+      this.cCarousel.img.push(carouselImg);
+    },
+    removeCarouselImg() {
+      this.cCarousel.img.pop();
     },
     displayCText() {
       this.cCarousel.display = "none";
