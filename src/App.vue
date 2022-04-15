@@ -2,7 +2,7 @@
   <v-app>
     <!--Menu-->
     <v-app-bar
-      v-if="getUser.email"
+      v-if="!getUser.email"
       app
       dark
       absolute
@@ -64,7 +64,7 @@
     </v-app-bar>
     <!--Dynamic content-->
     <v-main>
-      <v-container fluid>
+      <v-container fluid class="pa-0">
         <router-view></router-view>
       </v-container>
     </v-main>

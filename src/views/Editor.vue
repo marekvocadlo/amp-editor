@@ -1,106 +1,132 @@
 <template>
-  <v-container class="grey lighten-5">
-    <v-row no-gutters>
-      <v-col cols="12" sm="6" md="8">
-        <v-card class="pa-2" outlined tile>
-          <h2>Obsah</h2>
-          <div
-            id="cTextComponent"
-            :style="{
-              color: cText.color,
-              fontSize: cText.font_size + 'px',
-              lineHeight: cText.line_height + 'px',
-            }"
-            @click="displaycText"
-          >
-            {{ cText.text }}
+  <div class="editor">
+    <v-container class="container-editor">
+      <v-row no-gutters>
+        <v-col class="text-center py-5" cols="12" sm="6" md="8">
+          <div class="card-email">
+            <!-- Component carousel -->
+            <div
+              id="cCarouselComponent"
+              class="component"
+              @click="displayCCarousel"
+            >
+              <v-card :width="cCarousel.width" style="margin: 0 auto" tile elevation="0">
+                <v-carousel :height="cCarousel.height" hide-delimiters>
+                  <v-carousel-item
+                    v-for="(item, i) in cCarousel.img"
+                    :key="i"
+                    :src="item.src"
+                  ></v-carousel-item>
+                </v-carousel>
+              </v-card>
+            </div>
+            <!-- Component text -->
+            <div
+              id="cTextComponent"
+              class="component"
+              :style="{
+                color: cText.color,
+                fontSize: cText.font_size + 'px',
+                lineHeight: cText.line_height + 'px',
+              }"
+              @click="displayCText"
+            >
+              {{ cText.text }}
+            </div>
           </div>
-          <div
-            id="cTextSmallComponent"
-            :style="{
-              color: cTextSmall.color,
-              fontSize: cTextSmall.font_size + 'px',
-              lineHeight: cTextSmall.line_height + 'px',
-            }"
-            @click="displaycTextSmall"
-          >
-            {{ cTextSmall.text }}
-          </div>
-        </v-card>
-      </v-col>
-      <v-col cols="6" md="4">
-        <v-card class="pa-2" outlined tile>
-          <h2>Nastavení</h2>
-          <v-form
-            id="cText"
-            ref="form"
-            :style="{
-              display: cText.display,
-            }"
-          >
-            <v-text-field v-model="cText.text" label="Text"></v-text-field>
-            <v-text-field
-              type="number"
-              v-model="cText.font_size"
-              label="Velikost fontu"
-            ></v-text-field>
-            <v-text-field
-              type="number"
-              v-model="cText.line_height"
-              label="Výška řádku"
-            ></v-text-field>
-            <v-text-field
-              type="color"
-              v-model="cText.color"
-              label="Barva"
-            ></v-text-field>
-          </v-form>
-          <v-form
-            id="cTextSmall"
-            ref="form"
-            :style="{
-              display: cTextSmall.display,
-            }"
-          >
-            <v-text-field v-model="cTextSmall.text" label="Text"></v-text-field>
-            <v-text-field
-              type="number"
-              v-model="cTextSmall.font_size"
-              label="Velikost fontu"
-            ></v-text-field>
-            <v-text-field
-              type="number"
-              v-model="cTextSmall.line_height"
-              label="Výška řádku"
-            ></v-text-field>
-            <v-text-field
-              type="color"
-              v-model="cTextSmall.color"
-              label="Barva"
-            ></v-text-field>
-          </v-form>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row no-gutters>
-      <v-col cols="12" sm="6" md="8">
-        <v-btn color="primary" @click="saveTemplate">Uložit</v-btn>
-      </v-col>
-    </v-row>
-    <v-snackbar
+        </v-col>
+        <v-col class="pt-5" cols="6" md="4">
+          <v-card class="pa-5 editor-settings" shaped>
+            <v-row no-gutters class="justify-space-between align-center">
+              <v-col>
+                <h3>Nastavení</h3>
+              </v-col>
+              <v-col class="text-right">
+                <v-btn class="mr-3" color="primary" @click="saveTemplate"
+                  >Uložit</v-btn
+                >
+                <v-btn color="secondary" @click="closeTemplate">Zavřít</v-btn>
+              </v-col>
+            </v-row>
+            <!-- Settings text -->
+            <v-form
+              id="cText"
+              ref="form"
+              :style="{
+                display: cText.display,
+              }"
+            >
+              <v-text-field v-model="cText.text" label="Text"></v-text-field>
+              <v-text-field
+                type="number"
+                v-model="cText.font_size"
+                label="Velikost fontu"
+              ></v-text-field>
+              <v-text-field
+                type="number"
+                v-model="cText.line_height"
+                label="Výška řádku"
+              ></v-text-field>
+              <v-text-field
+                type="color"
+                v-model="cText.color"
+                label="Barva"
+              ></v-text-field>
+            </v-form>
+            <!-- Settings carousel -->
+            <v-form
+              id="cCarousel"
+              class="mt-5"
+              ref="form"
+              :style="{
+                display: cCarousel.display,
+              }"
+            >
+              <h4>Carousel</h4>
+              <v-text-field
+                v-model="cCarousel.width"
+                type="number"
+                label="Šířka"
+              ></v-text-field>
+              <v-text-field
+                v-model="cCarousel.height"
+                type="number"
+                label="Výška"
+              ></v-text-field>
+              <v-text-field
+                type="text"
+                v-model="cCarousel.img[0].src"
+                label="URL obrázku"
+              ></v-text-field>
+              <v-text-field
+                type="text"
+                v-model="cCarousel.img[1].src"
+                label="URL obrázku"
+              ></v-text-field>
+              <v-text-field
+                type="text"
+                v-model="cCarousel.img[2].src"
+                label="URL obrázku"
+              ></v-text-field>
+            </v-form>
+          </v-card>
+        </v-col>
+      </v-row>
+      <v-snackbar
         top
         :color="snackbar_color"
         v-model="snackbar"
         :timeout="timeout"
-    >
-      {{ snackbar_text }}
-      <template v-slot:action="{ attrs }">
-        <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
-  </v-container>
+      >
+        {{ snackbar_text }}
+        <template v-slot:action="{ attrs }">
+          <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -110,44 +136,55 @@ export default {
     templateAMP: ``,
     templateHTML: "",
     cText: {
+      display: "none",
       text: "Komponenta text",
       font_size: "16",
       line_height: "22",
       color: "#000000",
+    },
+    model: 0,
+    cCarousel: {
       display: "none",
+      width: 700,
+      height: 200,
+      autoplay: "",
+      delay: "",
+      loop: "loop",
+      numberOfImages: 1,
+      img: [
+        {
+          src: "https://picsum.photos/700/200?random=1",
+        },
+        {
+          src: "https://picsum.photos/700/200?random=2",
+        },
+        {
+          src: "https://picsum.photos/700/200?random=3",
+        },
+      ],
     },
-    cTextSmall: {
-      text: "Komponenta text small",
-      font_size: "12",
-      line_height: "18",
-      color: "#000000",
-      display: "none",
-    },
-    carousel: {
-      width: 0,
-      height: 0,
-      img: {
-        src: "img/logo-blue.svg",
-        width: 0,
-      },
-    },
+    snackbar: false,
+    snackbar_text: "",
+    snackbar_color: "red darken-2",
+    timeout: 8000,
   }),
   created() {
     //this.displayTemplate();
   },
   methods: {
-    displaycText() {
-      this.cTextSmall.display = "none";
-      this.cText.display = "block";
-    },
-    displaycTextSmall() {
+    displayCCarousel() {
       this.cText.display = "none";
-      this.cTextSmall.display = "block";
+      this.cCarousel.display = "block";
+    },
+    displayCText() {
+      this.cCarousel.display = "none";
+      this.cText.display = "block";
     },
     saveTemplate() {
       this.axios
         .post("https://ampeditor.dev/saveTemplate.php", {
           cText: this.cText,
+          cCarousel: this.cCarousel,
         })
         .then((response) => {
           if (response.data === "Template saved") {
@@ -163,18 +200,37 @@ export default {
           console.log(error);
         });
     },
+    closeTemplate() {
+      this.saveTemplate();
+      window.location.href = "/templates";
+    },
   },
 };
 </script>
 
 <style scoped>
-#cText,
-#cTextSmall {
-  display: none;
+.editor {
+  background-color: #f3f5f7;
+  min-height: calc(100vh - 64px);
 }
-#cTextComponent:hover,
-#cTextSmallComponent:hover {
+.editor-settings {
+  min-height: calc(90vh - 64px);
+}
+.container {
+  padding: 0;
+  margin-right: unset;
+}
+.card-email {
+  width: 700px;
+  margin: 0 auto;
+  background-color: #ffffff;
+}
+.component:hover {
   border: #1976d2 1px solid;
   cursor: pointer;
+}
+#cText,
+#cCarousel {
+  display: none;
 }
 </style>
