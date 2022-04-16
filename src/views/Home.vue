@@ -1,20 +1,22 @@
 <template>
   <div class="home text-center">
-    <h1 v-if="!getUser.email" class="mt-10 mb-5">AMP editor</h1>
-    <v-btn
-      v-if="!getUser.email"
-      to="/login"
-      color="success"
-      class="hp-button mr-4"
-      >Přihlásit se</v-btn
-    >
-    <v-btn
-      v-if="!getUser.email"
-      to="/register"
-      color="success"
-      class="hp-button mr-4"
-      >Registrace</v-btn
-    >
+    <div v-if="!getUser.email" class="text-center">
+      <v-img
+        alt="AMP editor Logo"
+        class="mt-10 mx-auto"
+        contain
+        :src="require('@/assets/amp-icon-color.svg')"
+        transition="scale-transition"
+        width="80"
+      />
+      <h1 class="mt-3 mb-10">AMP editor</h1>
+      <v-btn to="/login" color="primary" class="hp-button mr-4"
+        >Přihlásit se</v-btn
+      >
+      <v-btn to="/register" color="success" class="hp-button mr-4"
+        >Registrace</v-btn
+      >
+    </div>
     <div v-if="getUser.email">
       <h1>Vítejte {{ getUser.name }} {{ getUser.surname }}</h1>
     </div>

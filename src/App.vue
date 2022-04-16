@@ -41,8 +41,8 @@
       <div class="d-flex align-center">
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
-            <v-avatar color="white" size="35" v-bind="attrs" v-on="on">
-              <span class="text--primary">{{ getUser.initials }}</span>
+            <v-avatar color="white" size="40" v-bind="attrs" v-on="on">
+              <v-icon color="blue">{{ icons.mdiAccount }}</v-icon>
             </v-avatar>
           </template>
           <v-list>
@@ -72,8 +72,14 @@
 </template>
 
 <script>
+import { mdiAccount } from "@mdi/js";
 export default {
   name: "App",
+  data: () => ({
+    icons: {
+      mdiAccount,
+    },
+  }),
   components: {},
   methods: {
     logout() {
@@ -102,6 +108,9 @@ export default {
 .v-application {
   font-family: Poppins, sans-serif !important;
 }
+.v-main {
+  background: linear-gradient(45deg, #fff, #eee);
+}
 .v-list-item,
 .v-list-item a {
   text-decoration: none;
@@ -112,7 +121,7 @@ export default {
 .v-list-item a:hover {
   text-decoration: underline !important;
 }
-.v-avatar span {
-  text-transform: uppercase;
+.v-avatar svg {
+  width: 25px;
 }
 </style>

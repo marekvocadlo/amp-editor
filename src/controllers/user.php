@@ -1,29 +1,35 @@
 <?php
 session_start();
-include "config.php";
-$data = json_decode(file_get_contents("php://input"));
+include "configNEW.php";
 
+// Data from app
+$data = json_decode(file_get_contents("php://input"));
 $request = $data->request;
 
 // Create user
-if($request == 2){
+if($request === "createUser") {
   $email = $data->email;
   $password = $data->password;
   $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-  $userData = mysqli_query($con,"SELECT * FROM user WHERE email='".$email."'");
-  if(mysqli_num_rows($userData) == 0){
-    mysqli_query($con,"INSERT INTO user(password,email) VALUES('".$hashed_password."','".$email."')");
-    echo "Insert successfully";
-    $userData2 = mysqli_query($con,"SELECT * FROM user WHERE email='".$email."'");
-    $resultId2 = mysqli_fetch_row($userData2);
-    $_SESSION['user_id']=$resultId2[0];
-    $user_data = [];
-    $user_data = array($resultId2[0], $resultId2[1], $resultId2[3], $resultId2[4], $resultId2[5], $resultId2[6]);
-    $_SESSION['user'] = $user_data;
+  $query = $pdo->prepare("SELECT * FROM user WHERE email = :email");
+  $query->execute(array(
+    ":email" => $email
+  ));
+  if($query->rowCount() == 0) {
+    $query = $pdo->prepare("INSERT INTO user (email,password) VALUES(?, ?)");
+    $query->execute(array(
+      $email,
+      $hashed_password
+    ));
+    $insertId = $pdo->lastInsertId(); //last inserted item id
 
-  }else{
-    echo "Username already exists.";
+    $user_data = [];
+    $user_data = array($insertId, $email, "", "", date("d. m. Y H:i:s"),date("d. m. Y H:i:s"));
+    $_SESSION['user'] = $user_data;
+    echo "1";
+  } else {
+    echo "0";
   }
 }
 
