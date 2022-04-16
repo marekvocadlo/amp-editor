@@ -4,9 +4,9 @@
       <v-flex xs12 class="text-center" mt-10>
         Přihlášený uživatel:
         <h2>{{ getUser.email }}</h2>
-        Zaregistrován dne: {{ getUser.created_at }}
       </v-flex>
       <v-flex xs12 sm4 offset-sm4 mt-3>
+        <h3 class="mt-10">Aktualizovat osobní údaje</h3>
         <v-form ref="form" v-model="valid" lazy-validation>
           <v-layout column>
             <v-flex>
@@ -17,6 +17,7 @@
                 type="email"
                 required
                 :rules="emailRules"
+                :placeholder="email"
               ></v-text-field>
             </v-flex>
             <v-flex>
@@ -25,8 +26,7 @@
                 name="name"
                 label="Jméno"
                 type="text"
-                required
-                :rules="nameRules"
+                :placeholder="name"
               >
               </v-text-field>
             </v-flex>
@@ -36,16 +36,19 @@
                 surname="surname"
                 label="Příjmení"
                 type="text"
-                required
-                :rules="surnameRules"
+                :value="surname"
               >
               </v-text-field>
             </v-flex>
             <v-flex class="text-center" mt-5>
-              <v-btn :disabled="!valid" color="success" @click="updateUser">
+              <v-btn :disabled="!valid" color="primary" @click="updateUser">
                 Aktualizovat údaje
               </v-btn>
-              <v-btn class="ml-5 white--text" color="red" @click="deleteUser">
+              <v-btn
+                class="ml-5 white--text"
+                color="red"
+                @click="dialog = true"
+              >
                 Smazat účet
               </v-btn>
             </v-flex>
@@ -53,13 +56,30 @@
         </v-form>
       </v-flex>
     </v-layout>
+    <v-dialog v-model="dialog" width="300">
+      <v-card>
+        <v-card-title class="text-h5 grey lighten-2">
+          Smazání účtu
+        </v-card-title>
+        <v-card-text class="pt-3">
+          Určitě chcete Váš účet smazat? Přijdete tím o veškerá uložená data.
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red" text @click="deleteUser"
+            >Smazat trvale účet</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-snackbar
       top
       v-model="snackbar"
-      :color="snackbar_color"
-      :timeout="timeout"
+      :color="snackbarColor"
+      :timeout="snackbarTimeout"
     >
-      {{ snackbar_text }}
+      {{ snackbarText }}
       <template v-slot:action="{ attrs }">
         <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
           Close
@@ -81,15 +101,15 @@ export default {
     ],
     name: "",
     surname: "",
-    nameRules: [(v) => !!v || "Jméno je požadováno!"],
-    surnameRules: [(v) => !!v || "Příjmení je požadováno!"],
     snackbar: false,
-    snackbar_text: "",
-    snackbar_color: "red darken-2",
-    timeout: 8000,
+    snackbarText: "",
+    snackbarColor: "red darken-2",
+    snackbarTimeout: 10000,
+    dialog: false,
   }),
   created() {
     this.$store.dispatch("getUser");
+    this.readUser();
   },
   computed: {
     getUser() {
@@ -97,26 +117,38 @@ export default {
     },
   },
   methods: {
+    readUser() {
+      this.axios
+        .post("https://ampeditor.dev/app/user.php", {
+          request: "readUserData",
+        })
+        .then((response) => {
+          this.email = response.data[1];
+          this.name = response.data[3];
+          this.surname = response.data[4];
+        });
+    },
     updateUser() {
       if (this.$refs.form.validate()) {
         this.axios
           .post(
             "https://ampeditor.dev/app/user.php",
             {
+              request: "updateUser",
               email: this.email,
               name: this.name,
               surname: this.surname,
-              request: 3,
             },
             { withCredentials: true }
           )
           .then((data) => {
-            if (data.data === "Update successfully") {
-              this.snackbar_color = "green darken-2";
-              this.snackbar_text = "Uživatelské údaje úspěšně aktualizovány.";
+            if (data.data === 1) {
+              this.snackbarText = "Uživatelské údaje úspěšně aktualizovány.";
+              this.snackbarColor = "green darken-2";
               this.snackbar = true;
             } else {
-              this.snackbar_text = "Něco se nepovedlo.";
+              this.snackbarText = "Vámi zadaný email už někdo používá.";
+              this.snackbarColor = "red darken-2";
               this.snackbar = true;
             }
           })
@@ -127,15 +159,11 @@ export default {
     },
     deleteUser() {
       this.axios
-        .post(
-          "https://ampeditor.dev/app/user.php",
-          {
-            request: 4,
-          },
-          { withCredentials: true }
-        )
+        .post("https://ampeditor.dev/app/user.php", {
+          request: "deleteUser",
+        })
         .then(() => {
-          alert("Váš účet byl smazaný!");
+          alert("Váš účet byl smazán!");
           window.location.href = "/";
         })
         .catch(function (error) {

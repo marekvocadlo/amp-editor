@@ -4,7 +4,7 @@
       <v-flex xs12 class="text-center" mt-10>
         <h1>Přihlásit se</h1>
       </v-flex>
-      <v-flex xs12 sm4 offset-sm4 mt-3>
+      <v-flex xs12 sm2 offset-sm5 mt-5>
         <v-form ref="form" v-model="valid" lazy-validation>
           <v-layout column>
             <v-flex>
@@ -40,9 +40,13 @@
         </v-form>
       </v-flex>
     </v-layout>
-    <v-snackbar top color="red darken-2" v-model="snackbar" :timeout="timeout">
-      {{ text }}
-
+    <v-snackbar
+      top
+      color="red darken-2"
+      v-model="snackbar"
+      :timeout="snackbarTimeout"
+    >
+      {{ snackbarText }}
       <template v-slot:action="{ attrs }">
         <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
           Close
@@ -67,20 +71,20 @@ export default {
     passwordRules: [(v) => !!v || "Heslo je požadováno!"],
     confirmPasswordRules: [(v) => !!v || "Potvrzení hesla je požadováno!"],
     snackbar: false,
-    text: "Přihlašovací email nebo heslo jste zadali špatně.",
-    timeout: 8000,
+    snackbarText: "Přihlašovací údaje byly zadány špatně.",
+    snackbarTimeout: 10000,
   }),
   methods: {
     loginUser() {
       if (this.$refs.form.validate()) {
         this.axios
-          .post("https://ampeditor.dev/app/login.php", {
+          .post("https://ampeditor.dev/app/user.php", {
+            request: "loginUser",
             email: this.email,
             password: this.password,
           })
-          .then((data) => {
-            if (data.data === "Successfully log") {
-              console.log("Successfully log from PHP script");
+          .then((response) => {
+            if (response.data === 1) {
               window.location.href = "/";
             } else {
               this.snackbar = true;
