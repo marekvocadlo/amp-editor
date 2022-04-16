@@ -166,7 +166,7 @@ export default {
   methods: {
     refreshTable() {
       this.axios
-        .post("https://ampeditor.dev/contact.php", {
+        .post("https://ampeditor.dev/app/contact.php", {
           request: 1,
         })
         .then((response) => {
@@ -182,7 +182,7 @@ export default {
     createGroup() {
       if (this.$refs.form.validate()) {
         this.axios
-          .post("https://ampeditor.dev/contact.php", {
+          .post("https://ampeditor.dev/app/contact.php", {
             request: 2,
             name: this.name,
           })
@@ -205,7 +205,7 @@ export default {
     },
     deleteGroup(id) {
       this.axios
-        .post("https://ampeditor.dev/contact.php", {
+        .post("https://ampeditor.dev/app/contact.php", {
           request: 3,
           group_id: id,
         })
@@ -228,7 +228,7 @@ export default {
     createContact() {
       if (this.$refs.form.validate()) {
         this.axios
-          .post("https://ampeditor.dev/contact.php", {
+          .post("https://ampeditor.dev/app/contact.php", {
             request: 4,
             group_id: this.group_id,
             contacts: this.contacts,

@@ -199,7 +199,7 @@ export default {
     },
     saveTemplate() {
       this.axios
-        .post("https://ampeditor.dev/saveTemplate.php", {
+        .post("https://ampeditor.dev/app/saveTemplate.php", {
           cText: this.cText,
           cCarousel: this.cCarousel,
         })

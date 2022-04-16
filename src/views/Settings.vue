@@ -101,7 +101,7 @@ export default {
       if (this.$refs.form.validate()) {
         this.axios
           .post(
-            "https://ampeditor.dev/user.php",
+            "https://ampeditor.dev/app/user.php",
             {
               email: this.email,
               name: this.name,
@@ -128,7 +128,7 @@ export default {
     deleteUser() {
       this.axios
         .post(
-          "https://ampeditor.dev/user.php",
+          "https://ampeditor.dev/app/user.php",
           {
             request: 4,
           },

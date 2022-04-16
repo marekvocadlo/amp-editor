@@ -86,7 +86,7 @@ export default {
     sendCampaign() {
       if (this.$refs.form.validate()) {
         this.axios
-          .post("https://ampeditor.dev/sendCampaign.php", {
+          .post("https://ampeditor.dev/app/sendCampaign.php", {
             subject: this.subject,
             group_id: this.group_id,
             template_id: this.template_id,
@@ -113,7 +113,7 @@ export default {
   created() {
     this.$store.dispatch("getUser");
     this.axios
-      .post("https://ampeditor.dev/contact.php", {
+      .post("https://ampeditor.dev/app/contact.php", {
         request: 1,
       })
       .then((response) => {
@@ -125,7 +125,7 @@ export default {
         }
       });
     this.axios
-      .post("https://ampeditor.dev/template.php", {
+      .post("https://ampeditor.dev/app/template.php", {
         request: 1,
       })
       .then((response) => {

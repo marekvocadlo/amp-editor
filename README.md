@@ -14,6 +14,7 @@ npm run serve
 ```
 npm run build
 ```
+Then copy files from controllers folder to production server path /www/app/
 
 ### Lints and fixes files
 ```
