@@ -5,47 +5,8 @@ include "configNEW.php";
 $data = json_decode(file_get_contents("php://input"));
 $request = $data->request;
 
-// Read group
-if($request == 1){
-  $id = $_SESSION['user_id'];
-  $query = $pdo->prepare("SELECT * FROM list WHERE user_id = :user_id");
-  $query->execute(array(
-    ":user_id" => $id
-  ));
-
-  $contactGroups = $query->fetchAll();
-
-  echo json_encode($contactGroups);
-  exit();
-}
-
-// Create group
-if($request == 2){
-  $name = $data->name;
-  $id = $_SESSION['user_id'];
-  $query = $pdo->prepare("INSERT INTO list (name,user_id) VALUES(?, ?)");
-  $result = $query->execute(array(
-    $name,
-    $id
-  ));
-
-  echo "Insert successfully";
-  exit();
-}
-
-// Delete group
-if($request == 3){
-  $id = $data->group_id;
-  $query = $pdo->prepare("DELETE FROM list WHERE id = ?");
-  $result = $query->execute(array(
-    $id
-  ));
-  echo "List deleted";
-  exit();
-}
-
 // Create contacts
-if($request == 4){
+if($request === "createContact"){
   $id = $data->group_id;
   $contacts = $data->contacts;
   $contacts_arr = explode (",", $contacts);
@@ -58,7 +19,30 @@ if($request == 4){
     ));
   }
 
-  echo "Insert successfully";
+  echo 1;
+  exit();
+}
+
+// Read contacts
+if ($request === "readContacts") {
+  $id = $_SESSION['user'][0];
+  $query = $pdo->prepare("SELECT * FROM contact");
+  $query->execute();
+
+  $contacts = $query->fetchAll();
+
+  echo json_encode($contacts);
+  exit();
+}
+
+// Delete contact
+if ($request === "deleteContact") {
+  $id = $data->contactId;
+  $query = $pdo->prepare("DELETE FROM contact WHERE id = ?");
+  $result = $query->execute(array(
+    $id
+  ));
+  echo 1;
   exit();
 }
 

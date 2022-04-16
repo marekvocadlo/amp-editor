@@ -1,18 +1,12 @@
 <template>
   <v-container fluid>
-    <v-layout row wrap>
-      <v-flex xs12 sm4 offset-sm4 mt-3>
-        <h1 class="mb-5">Kontakty</h1>
+    <v-row no-gutters class="justify-center">
+      <v-col cols="4" class="mr-16">
+        <h2 class="mb-5">Skupiny kontaktů</h2>
         <v-btn class="mb-5 mr-5" color="success" @click="dialog = true"
           >Přidat skupinu kontaktů</v-btn
         >
-        <v-btn class="mb-5" color="success" @click="dialog2 = true"
-          >Přidat kontakty</v-btn
-        >
-      </v-flex>
-      <v-flex xs12 sm4 offset-sm4 mt-5>
-        <h2 class="mb-5">Skupiny kontaktů</h2>
-        <v-simple-table class="mb-10" dense>
+        <v-simple-table class="mb-10 elevation-1" dense>
           <template v-slot:default>
             <thead>
               <tr>
@@ -30,16 +24,54 @@
                     class="white--text"
                     small
                     color="red"
+                    outlined
                     @click="deleteGroup(item.id)"
-                    >Smazat</v-btn
+                    ><v-icon color="red">{{ icons.mdiDelete }}</v-icon></v-btn
                   >
                 </td>
               </tr>
             </tbody>
           </template>
         </v-simple-table>
-      </v-flex>
-    </v-layout>
+      </v-col>
+      <v-col cols="4">
+        <h2 class="mb-5">Kontakty</h2>
+        <v-btn class="mb-5" color="success" @click="dialog2 = true"
+          >Přidat kontakty</v-btn
+        >
+        <v-simple-table class="mb-10 elevation-1" dense>
+          <template v-slot:default>
+            <thead>
+              <tr>
+                <th class="text-left">Email</th>
+                <th class="text-left">Skupina</th>
+                <th class="text-left">Akce</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in allContacts" :key="item.id">
+                <td>
+                  {{ item.email }}
+                </td>
+                <td>
+                  {{ item.groupId }}
+                </td>
+                <td>
+                  <v-btn
+                    class="white--text"
+                    small
+                    color="red"
+                    outlined
+                    @click="deleteContact(item.id)"
+                    ><v-icon color="red">{{ icons.mdiDelete }}</v-icon></v-btn
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+      </v-col>
+    </v-row>
     <v-dialog v-model="dialog" persistent max-width="600px">
       <v-card>
         <v-card-title>
@@ -130,11 +162,11 @@
     </v-dialog>
     <v-snackbar
       top
-      :color="snackbar_color"
+      :color="snackbarColor"
       v-model="snackbar"
-      :timeout="timeout"
+      :timeout="snackbarTimeout"
     >
-      {{ snackbar_text }}
+      {{ snackbarText }}
       <template v-slot:action="{ attrs }">
         <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
           Close
@@ -145,6 +177,7 @@
 </template>
 
 <script>
+import { mdiDelete } from "@mdi/js";
 export default {
   name: "Contacts",
   data: () => ({
@@ -155,19 +188,39 @@ export default {
     contacts: "",
     group_id: 0,
     groups: [],
+    contactId: 0,
+    allContacts: [],
     snackbar: false,
-    snackbar_text: "",
-    snackbar_color: "red darken-2",
-    timeout: 8000,
+    snackbarText: "",
+    snackbarColor: "red darken-2",
+    snackbarTimeout: 10000,
     nameRules: [(v) => !!v || "Název musí být vyplněný."],
     groupRules: [(v) => !!v || "Musíte zvolit skupinu kontaktů."],
     contactsRules: [(v) => !!v || "Musíte nahrát alespoň jeden kontakt."],
+    icons: {
+      mdiDelete,
+    },
   }),
+  computed: {
+    headers() {
+      return [
+        {
+          text: "Název skupiny",
+          align: "start",
+          value: "groupName",
+        },
+        {
+          text: "Akce",
+          value: "action",
+        },
+      ];
+    },
+  },
   methods: {
     refreshTable() {
       this.axios
-        .post("https://ampeditor.dev/app/contact.php", {
-          request: 1,
+        .post("https://ampeditor.dev/app/group.php", {
+          request: "readGroup",
         })
         .then((response) => {
           this.groups = [];
@@ -179,22 +232,38 @@ export default {
           }
         });
     },
+    refreshContacts() {
+      this.axios
+        .post("https://ampeditor.dev/app/contact.php", {
+          request: "readContacts",
+        })
+        .then((response) => {
+          this.allContacts = [];
+          for (let i = 0; i < response.data.length; i++) {
+            let contactLocal = {};
+            contactLocal.id = response.data[i][0];
+            contactLocal.groupId = response.data[i][1];
+            contactLocal.email = response.data[i][2];
+            this.allContacts.push(contactLocal);
+          }
+        });
+    },
     createGroup() {
       if (this.$refs.form.validate()) {
         this.axios
-          .post("https://ampeditor.dev/app/contact.php", {
-            request: 2,
+          .post("https://ampeditor.dev/app/group.php", {
+            request: "createGroup",
             name: this.name,
           })
-          .then((data) => {
-            if (data.data === "Insert successfully") {
-              this.snackbar_color = "green darken-2";
-              this.snackbar_text = "Skupina úspěšně vytvořena.";
+          .then((response) => {
+            if (response.data === 1) {
+              this.snackbarText = "Skupina kontaktů úspěšně vytvořena.";
+              this.snackbarColor = "green darken-2";
               this.snackbar = true;
               this.dialog = false;
               this.refreshTable();
             } else {
-              this.snackbar_text = "Došlo k chybě.";
+              this.snackbarText = "Skupina s tímto názvem již existuje.";
               this.snackbar = true;
             }
           })
@@ -205,19 +274,19 @@ export default {
     },
     deleteGroup(id) {
       this.axios
-        .post("https://ampeditor.dev/app/contact.php", {
-          request: 3,
+        .post("https://ampeditor.dev/app/group.php", {
+          request: "deleteGroup",
           group_id: id,
         })
-        .then((data) => {
-          if (data.data === "List deleted") {
-            this.snackbar_color = "green darken-2";
-            this.snackbar_text = "Skupina úspěšně smazána.";
+        .then((response) => {
+          if (response.data === 1) {
+            this.snackbarText = "Skupina úspěšně smazána.";
+            this.snackbarColor = "green darken-2";
             this.snackbar = true;
             this.dialog = false;
             this.refreshTable();
           } else {
-            this.snackbar_text = "Došlo k chybě.";
+            this.snackbarText = "Došlo k chybě.";
             this.snackbar = true;
           }
         })
@@ -229,19 +298,19 @@ export default {
       if (this.$refs.form.validate()) {
         this.axios
           .post("https://ampeditor.dev/app/contact.php", {
-            request: 4,
+            request: "createContact",
             group_id: this.group_id,
             contacts: this.contacts,
           })
-          .then((data) => {
-            if (data.data === "Insert successfully") {
-              this.snackbar_color = "green darken-2";
-              this.snackbar_text = "Kontakty úspěšně vloženy.";
+          .then((response) => {
+            if (response.data === 1) {
+              this.snackbarText = "Kontakty úspěšně vloženy.";
+              this.snackbarColor = "green darken-2";
               this.snackbar = true;
               this.dialog2 = false;
-              this.refreshTable();
+              this.refreshContacts();
             } else {
-              this.snackbar_text = "Došlo k chybě.";
+              this.snackbarText = "Došlo k chybě.";
               this.snackbar = true;
             }
           })
@@ -250,9 +319,32 @@ export default {
           });
       }
     },
+    deleteContact(id) {
+      this.axios
+        .post("https://ampeditor.dev/app/contact.php", {
+          request: "deleteContact",
+          contactId: id,
+        })
+        .then((response) => {
+          if (response.data === 1) {
+            this.snackbarText = "Kontakt úspěšně smazán.";
+            this.snackbarColor = "green darken-2";
+            this.snackbar = true;
+            this.dialog = false;
+            this.refreshContacts();
+          } else {
+            this.snackbarText = "Došlo k chybě.";
+            this.snackbar = true;
+          }
+        })
+        .catch(function () {
+          console.log("FAILURE!!");
+        });
+    },
   },
   created() {
     this.refreshTable();
+    this.refreshContacts();
   },
 };
 </script>

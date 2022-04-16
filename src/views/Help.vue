@@ -9,6 +9,7 @@
             <li>
               Kontrola požadavků dle
               <a
+                class="help-link"
                 href="https://developers.google.com/gmail/ampemail/register#registration_guidelines"
                 target="_blank"
                 >Google guidelines</a
@@ -17,7 +18,9 @@
             <li>
               Poslat skutečný produkční email z produkčních serverů se správně
               nastavenými DNS záznamy (SPF, DKIM, DMARC) na adresu
-              <a href="mailto:ampforemail.whitelisting@gmail.com"
+              <a
+                class="help-link"
+                href="mailto:ampforemail.whitelisting@gmail.com"
                 >ampforemail.whitelisting@gmail.com</a
               >
             </li>
@@ -27,6 +30,7 @@
                 <template v-slot:activator="{ on, attrs }">
                   <span v-bind="attrs" v-on="on"
                     ><a
+                      class="help-link"
                       href="https://forms.gle/fDqLE1gh4wMB6BeQ6"
                       target="_blank"
                       >registrační formulář</a
@@ -45,6 +49,7 @@
             <li>
               Kontrola požadavků dle
               <a
+                class="help-link"
                 href="https://developers.google.com/gmail/ampemail/register#registration_guidelines"
                 target="_blank"
               >
@@ -54,7 +59,7 @@
             <li>
               Poslat skutečný produkční email z produkčních serverů se správně
               nastavenými DNS záznamy (SPF, DKIM, DMARC) na adresu
-              <a href="mailto:ampverification@yahoo.com">
+              <a class="help-link" href="mailto:ampverification@yahoo.com">
                 ampverification@yahoo.com
               </a>
             </li>
@@ -64,6 +69,7 @@
                 <template v-slot:activator="{ on, attrs }">
                   <span v-bind="attrs" v-on="on">
                     <a
+                      class="help-link"
                       href="https://forms.gle/fDqLE1gh4wMB6BeQ6"
                       target="_blank"
                     >
@@ -96,5 +102,9 @@ export default {
 <style scoped>
 li {
   margin-bottom: 10px;
+}
+.help-link {
+  color: #1976d2 !important;
+  text-decoration: underline !important;
 }
 </style>
