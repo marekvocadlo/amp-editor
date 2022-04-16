@@ -17,16 +17,49 @@
         >Registrace</v-btn
       >
     </div>
-    <div v-if="getUser.email">
-      <h1>Vítejte {{ getUser.name }} {{ getUser.surname }}</h1>
+    <div v-if="getUser.email" class="mt-10">
+      <h1>Dashboard</h1>
     </div>
+    <v-row no-gutters class="justify-center">
+      <DashboardCard
+        img="help.jpg"
+        title="Jak začít?"
+        text="Rozeslat AMP email je s touto aplikací hračka. Zjistěte jak na to."
+        btnText="Zjistit více"
+        btnHref="/help"
+      />
+      <DashboardCard
+        img="contacts.jpg"
+        title="Kontakty"
+        text="Začněte vytvořením skupiny kontaktů nebo nahráním emailových adres."
+        btnText="Nahrát kontakty"
+        btnHref="/contacts"
+      />
+      <DashboardCard
+        img="editor.png"
+        title="Šablony"
+        text="Vytvořte jedinečnou interaktivní šablonu optimalizovanou pro všechny klienty."
+        btnText="Vytvořit šablonu"
+        btnHref="/contacts"
+      />
+      <DashboardCard
+        img="campaign.jpg"
+        title="Rozeslání"
+        text="Vymyslete předmět a pošlete kampaň všem vašim kontaktům."
+        btnText="Rozeslat kampaň"
+        btnHref="/campaign"
+      />
+    </v-row>
   </div>
 </template>
 
 <script>
+import DashboardCard from "../components/DashboardCard";
 export default {
   name: "Home",
-  components: {},
+  components: {
+    DashboardCard,
+  },
   data: () => ({}),
   created() {
     this.$store.dispatch("getUser");

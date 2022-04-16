@@ -41,8 +41,8 @@
       <div class="d-flex align-center">
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
-            <v-avatar color="white" size="40" v-bind="attrs" v-on="on">
-              <v-icon color="blue">{{ icons.mdiAccount }}</v-icon>
+            <v-avatar color="white" size="35" v-bind="attrs" v-on="on">
+              <v-icon color="#2763b0">{{ icons.mdiAccount }}</v-icon>
             </v-avatar>
           </template>
           <v-list>
@@ -68,6 +68,11 @@
         <router-view></router-view>
       </v-container>
     </v-main>
+    <v-footer padless>
+      <v-col class="text-center" cols="12">
+        Copyright © {{ new Date().getFullYear() }} — <strong>AMP editor</strong>
+      </v-col>
+    </v-footer>
   </v-app>
 </template>
 
@@ -110,6 +115,9 @@ export default {
 .v-application {
   font-family: Poppins, sans-serif !important;
 }
+.v-application a {
+  color: transparent !important;
+}
 .v-main {
   background: linear-gradient(45deg, #fff, #eee);
 }
@@ -124,6 +132,6 @@ export default {
   text-decoration: underline !important;
 }
 .v-avatar svg {
-  width: 25px;
+  width: 25px !important;
 }
 </style>
