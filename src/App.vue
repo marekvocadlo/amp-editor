@@ -116,7 +116,8 @@ export default {
   font-family: Poppins, sans-serif !important;
 }
 .v-application a {
-  color: transparent !important;
+  color: #ffffff !important;
+  text-decoration: none !important;
 }
 .v-main {
   background: linear-gradient(45deg, #fff, #eee);
