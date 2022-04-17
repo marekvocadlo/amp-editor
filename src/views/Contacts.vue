@@ -20,13 +20,11 @@
                   {{ item.name }}
                 </td>
                 <td>
-                  <v-btn
-                    class="white--text"
-                    small
+                  <v-icon
+                    title="Smazat skupinu"
                     color="red"
-                    outlined
                     @click="deleteGroup(item.id)"
-                    ><v-icon color="red">{{ icons.mdiDelete }}</v-icon></v-btn
+                    >{{ icons.mdiDelete }}</v-icon
                   >
                 </td>
               </tr>
@@ -57,13 +55,11 @@
                   {{ item.groupId }}
                 </td>
                 <td>
-                  <v-btn
-                    class="white--text"
-                    small
+                  <v-icon
+                    title="Smazat kontakt"
                     color="red"
-                    outlined
                     @click="deleteContact(item.id)"
-                    ><v-icon color="red">{{ icons.mdiDelete }}</v-icon></v-btn
+                    >{{ icons.mdiDelete }}</v-icon
                   >
                 </td>
               </tr>
@@ -72,7 +68,7 @@
         </v-simple-table>
       </v-col>
     </v-row>
-    <v-dialog v-model="dialog" persistent max-width="600px">
+    <v-dialog v-model="dialog" max-width="600px">
       <v-card>
         <v-card-title>
           <span class="text-h5">Nová skupina kontaktů</span>
@@ -109,7 +105,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="dialog2" persistent max-width="600px">
+    <v-dialog v-model="dialog2" max-width="600px">
       <v-card>
         <v-card-title>
           <span class="text-h5">Nahrávání nových kontaktů</span>
@@ -217,7 +213,7 @@ export default {
     },
   },
   methods: {
-    refreshTable() {
+    loadTable() {
       this.axios
         .post("https://ampeditor.dev/app/group.php", {
           request: "readGroup",
@@ -232,19 +228,21 @@ export default {
           }
         });
     },
-    refreshContacts() {
+    loadContacts() {
       this.axios
         .post("https://ampeditor.dev/app/contact.php", {
           request: "readContacts",
         })
         .then((response) => {
           this.allContacts = [];
-          for (let i = 0; i < response.data.length; i++) {
-            let contactLocal = {};
-            contactLocal.id = response.data[i][0];
-            contactLocal.groupId = response.data[i][1];
-            contactLocal.email = response.data[i][2];
-            this.allContacts.push(contactLocal);
+          for (let j = 0; j < response.data.length; j++) {
+            for (let i = 0; i < response.data[j].length; i++) {
+              let contactLocal = {};
+              contactLocal.id = response.data[j][i][0];
+              contactLocal.groupId = response.data[j][i][1];
+              contactLocal.email = response.data[j][i][2];
+              this.allContacts.push(contactLocal);
+            }
           }
         });
     },
@@ -261,7 +259,7 @@ export default {
               this.snackbarColor = "green darken-2";
               this.snackbar = true;
               this.dialog = false;
-              this.refreshTable();
+              this.loadTable();
             } else {
               this.snackbarText = "Skupina s tímto názvem již existuje.";
               this.snackbar = true;
@@ -284,7 +282,8 @@ export default {
             this.snackbarColor = "green darken-2";
             this.snackbar = true;
             this.dialog = false;
-            this.refreshTable();
+            this.loadTable();
+            this.loadContacts();
           } else {
             this.snackbarText = "Došlo k chybě.";
             this.snackbar = true;
@@ -308,7 +307,7 @@ export default {
               this.snackbarColor = "green darken-2";
               this.snackbar = true;
               this.dialog2 = false;
-              this.refreshContacts();
+              this.loadContacts();
             } else {
               this.snackbarText = "Došlo k chybě.";
               this.snackbar = true;
@@ -331,7 +330,7 @@ export default {
             this.snackbarColor = "green darken-2";
             this.snackbar = true;
             this.dialog = false;
-            this.refreshContacts();
+            this.loadContacts();
           } else {
             this.snackbarText = "Došlo k chybě.";
             this.snackbar = true;
@@ -343,8 +342,8 @@ export default {
     },
   },
   created() {
-    this.refreshTable();
-    this.refreshContacts();
+    this.loadTable();
+    this.loadContacts();
   },
 };
 </script>
