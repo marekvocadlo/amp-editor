@@ -22,7 +22,13 @@
                 class="help-link"
                 href="mailto:ampforemail.whitelisting@gmail.com"
                 >ampforemail.whitelisting@gmail.com</a
-              >
+              ><br />* V případě, že budete registrační email posílat z tohoto
+              nástroje, je potřeba nastavit DNS záznamy dle
+              <a
+                class="help-link"
+                href="https://www.emailkampane.cz/cs/podpora/blog/zlepseni-dorucitelnosti-nastaveni-domeny/"
+                >tohoto návodu</a
+              >.
             </li>
             <li>
               Vyplnit
@@ -60,8 +66,14 @@
               Poslat skutečný produkční email z produkčních serverů se správně
               nastavenými DNS záznamy (SPF, DKIM, DMARC) na adresu
               <a class="help-link" href="mailto:ampverification@yahoo.com">
-                ampverification@yahoo.com
-              </a>
+                ampverification@yahoo.com </a
+              ><br />* V případě, že budete registrační email posílat z tohoto
+              nástroje, je potřeba nastavit DNS záznamy dle
+              <a
+                class="help-link"
+                href="https://www.emailkampane.cz/cs/podpora/blog/zlepseni-dorucitelnosti-nastaveni-domeny/"
+                >tohoto návodu</a
+              >.
             </li>
             <li>
               Vyplnit
