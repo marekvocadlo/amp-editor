@@ -197,21 +197,7 @@ export default {
       mdiDelete,
     },
   }),
-  computed: {
-    headers() {
-      return [
-        {
-          text: "Název skupiny",
-          align: "start",
-          value: "groupName",
-        },
-        {
-          text: "Akce",
-          value: "action",
-        },
-      ];
-    },
-  },
+  computed: {},
   methods: {
     loadGroup() {
       this.axios

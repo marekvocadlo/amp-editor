@@ -30,8 +30,8 @@
         <router-link to="/contacts">
           <v-list-item class="mx-2">Kontakty</v-list-item>
         </router-link>
-        <router-link to="/campaign">
-          <v-list-item class="mx-2">Rozeslání</v-list-item>
+        <router-link to="/campaigns">
+          <v-list-item class="mx-2">Kampaně</v-list-item>
         </router-link>
         <router-link to="/help">
           <v-list-item class="mx-2">Návod</v-list-item>

@@ -78,3 +78,28 @@ if($request === "sendCampaign"){
     echo "1";
   }
 }
+
+// Read campaigns
+if ($request === "readCampaigns") {
+  $id = $_SESSION['user'][0];
+  $query = $pdo->prepare("SELECT * FROM campaign WHERE user_id = :user_id");
+  $query->execute(array(
+    ":user_id" => $id
+  ));
+
+  $campaigns = $query->fetchAll();
+
+  echo json_encode($campaigns);
+  exit();
+}
+
+// Delete campaign
+if ($request === "deleteCampaign") {
+  $id = $data->campaignId;
+  $query = $pdo->prepare("DELETE FROM campaign WHERE id = ?");
+  $result = $query->execute(array(
+    $id
+  ));
+  echo 1;
+  exit();
+}

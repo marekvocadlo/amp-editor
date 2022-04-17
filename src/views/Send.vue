@@ -77,7 +77,7 @@
 
 <script>
 export default {
-  name: "Campaign",
+  name: "Campaigns",
   data: () => ({
     valid: true,
     name: "",
@@ -93,7 +93,7 @@ export default {
     templatesRules: [(v) => !!v || "Musíte zvolit šablonu."],
     snackbarText: "",
     snackbarColor: "red darken-2",
-    snackbarTimeout: 8000,
+    snackbarTimeout: 10000,
   }),
   created() {
     this.$store.dispatch("getUser");

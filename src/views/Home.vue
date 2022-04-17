@@ -43,10 +43,10 @@
         />
         <DashboardCard
           img="campaign.jpg"
-          title="Rozeslání"
+          title="Kampaně"
           text="Vymyslete předmět a pošlete kampaň všem vašim kontaktům."
-          btnText="Rozeslat kampaň"
-          btnHref="/campaign"
+          btnText="Vytvořit kampaň"
+          btnHref="/campaigns"
         />
       </v-row>
     </div>

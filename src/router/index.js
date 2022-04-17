@@ -7,8 +7,9 @@ import Register from "../views/Register";
 import Editor from "../views/Editor";
 import Help from "../views/Help";
 import Settings from "../views/Settings";
-import Campaign from "../views/Campaign";
+import Campaigns from "../views/Campaigns";
 import Contacts from "../views/Contacts";
+import Send from "../views/Send";
 
 Vue.use(VueRouter);
 
@@ -49,14 +50,19 @@ const routes = [
     component: Settings,
   },
   {
-    path: "/campaign",
-    name: "campaign",
-    component: Campaign,
+    path: "/campaigns",
+    name: "campaigns",
+    component: Campaigns,
   },
   {
     path: "/contacts",
     name: "contacts",
     component: Contacts,
+  },
+  {
+    path: "/send",
+    name: "send",
+    component: Send,
   },
 ];
 
