@@ -63,6 +63,7 @@
 
 <script>
 import { mdiDelete } from "@mdi/js";
+import moment from "moment";
 export default {
   name: "Campaigns",
   data: () => ({
@@ -94,7 +95,9 @@ export default {
             tempCampaign.name = response.data[i][1];
             tempCampaign.email = response.data[i][2];
             tempCampaign.subject = response.data[i][3];
-            tempCampaign.date = response.data[i][5];
+            tempCampaign.date = moment(response.data[i][5]).format(
+              "DD. MM. YYYY HH:mm"
+            );
             this.campaigns.push(tempCampaign);
           }
         });
