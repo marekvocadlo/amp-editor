@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "configNEW.php";
+include "config.php";
 
 // Data from app
 $data = json_decode(file_get_contents("php://input"));

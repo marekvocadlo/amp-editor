@@ -213,7 +213,7 @@ export default {
     },
   },
   methods: {
-    loadTable() {
+    loadGroup() {
       this.axios
         .post("https://ampeditor.dev/app/group.php", {
           request: "readGroup",
@@ -259,7 +259,7 @@ export default {
               this.snackbarColor = "green darken-2";
               this.snackbar = true;
               this.dialog = false;
-              this.loadTable();
+              this.loadGroup();
             } else {
               this.snackbarText = "Skupina s tímto názvem již existuje.";
               this.snackbar = true;
@@ -282,7 +282,7 @@ export default {
             this.snackbarColor = "green darken-2";
             this.snackbar = true;
             this.dialog = false;
-            this.loadTable();
+            this.loadGroup();
             this.loadContacts();
           } else {
             this.snackbarText = "Došlo k chybě.";
@@ -342,7 +342,7 @@ export default {
     },
   },
   created() {
-    this.loadTable();
+    this.loadGroup();
     this.loadContacts();
   },
 };
