@@ -8,6 +8,8 @@ $request = $data->request;
 // Send campaign
 if($request === "sendCampaign"){
   $name = $data->name;
+  $senderName = $data->senderName;
+  $senderEmail = $data->senderEmail;
   $subject = $data->subject;
   $group_id = $data->group_id;
   $template_id = $data->template_id;
@@ -42,6 +44,8 @@ if($request === "sendCampaign"){
     }
     $data2 = array(
       'security'=>'UXTxb8SJJhKQhtjA',
+      'sender_name'=>$senderName,
+      'sender_email'=>$senderEmail,
       'recipient'=>$contact[2],
       'subject'=>$subject,
       'htmlbody'=>$templateHTML,

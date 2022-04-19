@@ -20,6 +20,26 @@
             </v-flex>
             <v-flex>
               <v-text-field
+                v-model="senderName"
+                name="senderName"
+                label="Jméno odesílatele"
+                type="text"
+                required
+                :rules="senderNameRules"
+              ></v-text-field>
+            </v-flex>
+            <v-flex>
+              <v-text-field
+                v-model="senderEmail"
+                name="senderEmail"
+                label="Email odesílatele"
+                type="text"
+                required
+                :rules="senderEmailRules"
+              ></v-text-field>
+            </v-flex>
+            <v-flex>
+              <v-text-field
                 v-model="subject"
                 name="subject"
                 label="Předmět emailu"
@@ -81,6 +101,8 @@ export default {
   data: () => ({
     valid: true,
     name: "",
+    senderName: "",
+    senderEmail: "",
     subject: "",
     snackbar: false,
     group_id: 0,
@@ -88,6 +110,8 @@ export default {
     template_id: 0,
     templates: [],
     nameRules: [(v) => !!v || "Název musí být vyplněný."],
+    senderNameRules: [(v) => !!v || "Jméno odesílatele musí být vyplněno."],
+    senderEmailRules: [(v) => !!v || "Email odesílatele musí být vyplněn."],
     subjectRules: [(v) => !!v || "Předmět musí být vyplněný."],
     groupRules: [(v) => !!v || "Musíte zvolit skupinu kontaktů."],
     templatesRules: [(v) => !!v || "Musíte zvolit šablonu."],
@@ -107,6 +131,8 @@ export default {
           .post("https://ampeditor.dev/app/campaign.php", {
             request: "sendCampaign",
             name: this.name,
+            senderName: this.senderName,
+            senderEmail: this.senderEmail,
             subject: this.subject,
             group_id: this.group_id,
             template_id: this.template_id,
