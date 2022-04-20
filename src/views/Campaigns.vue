@@ -19,6 +19,7 @@
             <thead>
               <tr>
                 <th class="text-left">Název kampaně</th>
+                <th class="text-left">Jméno odesílatele</th>
                 <th class="text-left">Odesílací email</th>
                 <th class="text-left">Předmět</th>
                 <th class="text-left">Odesláno</th>
@@ -28,6 +29,7 @@
             <tbody>
               <tr v-for="item in campaigns" :key="item.id">
                 <td>{{ item.name }}</td>
+                <td>{{ item.senderName }}</td>
                 <td>{{ item.email }}</td>
                 <td>{{ item.subject }}</td>
                 <td>{{ item.date }}</td>
@@ -93,9 +95,10 @@ export default {
             let tempCampaign = {};
             tempCampaign.id = response.data[i][0];
             tempCampaign.name = response.data[i][1];
-            tempCampaign.email = response.data[i][2];
-            tempCampaign.subject = response.data[i][3];
-            tempCampaign.date = moment(response.data[i][5]).format(
+            tempCampaign.senderName = response.data[i][2];
+            tempCampaign.email = response.data[i][3];
+            tempCampaign.subject = response.data[i][4];
+            tempCampaign.date = moment(response.data[i][6]).format(
               "DD. MM. YYYY HH:mm"
             );
             this.campaigns.push(tempCampaign);

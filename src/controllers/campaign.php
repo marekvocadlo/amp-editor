@@ -70,10 +70,11 @@ if (!empty($_SESSION['user'])) {
     $contacts = $data->contacts;
     $contacts_arr = explode (",", $contacts);
 
-    $query = $pdo->prepare("INSERT INTO campaign (name,email,subject,user_id,list_id,template_id) VALUES(?, ?, ?, ?, ?, ?)");
+    $query = $pdo->prepare("INSERT INTO campaign (name,senderName,email,subject,user_id,list_id,template_id) VALUES(?, ?, ?, ?, ?, ?, ?)");
     $result = $query->execute(array(
       $name,
-      $_SESSION['user'][1],
+      $senderName,
+      $senderEmail,
       $subject,
       $_SESSION['user'][0],
       $group_id,
