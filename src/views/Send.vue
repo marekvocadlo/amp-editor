@@ -29,14 +29,16 @@
               ></v-text-field>
             </v-flex>
             <v-flex>
-              <v-text-field
+              <v-select
                 v-model="senderEmail"
-                name="senderEmail"
+                :items="senderEmails"
+                item-text="email"
+                item-value="email"
                 label="Email odesílatele"
-                type="text"
                 required
                 :rules="senderEmailRules"
-              ></v-text-field>
+                hint="V případě, že zatím nemáte u Googlu autorizovanou vlastní rozesílací adresu, můžete pro testovací účely použít adresu amptest@emailkampane.cz"
+              ></v-select>
             </v-flex>
             <v-flex>
               <v-text-field
@@ -109,6 +111,7 @@ export default {
     groups: [],
     template_id: 0,
     templates: [],
+    senderEmails: [],
     nameRules: [(v) => !!v || "Název musí být vyplněný."],
     senderNameRules: [(v) => !!v || "Jméno odesílatele musí být vyplněno."],
     senderEmailRules: [(v) => !!v || "Email odesílatele musí být vyplněn."],
@@ -123,6 +126,7 @@ export default {
     this.$store.dispatch("getUser");
     this.loadGroup();
     this.loadTemplates();
+    this.loadSenderEmails();
   },
   methods: {
     sendCampaign() {
@@ -183,6 +187,16 @@ export default {
             templateLocal.name = response.data[i][1];
             this.templates.push(templateLocal);
           }
+        });
+    },
+    loadSenderEmails() {
+      this.axios
+        .post("https://ampeditor.dev/app/user.php", {
+          request: "readUserData",
+        })
+        .then((response) => {
+          this.senderEmails.push({ email: response.data[1] });
+          this.senderEmails.push({ email: "amptest@emailkampane.cz" });
         });
     },
   },
