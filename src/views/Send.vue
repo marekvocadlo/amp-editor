@@ -146,6 +146,7 @@ export default {
               this.snackbarText = "Kampaň úspěšně rozeslána.";
               this.snackbarColor = "green darken-2";
               this.snackbar = true;
+              window.location.href = "/campaigns";
             } else if (data.data === 2) {
               this.snackbarText = "Kontaktní skupina neobsahuje žádné emaily.";
               this.snackbar = true;
