@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container v-if="getUser.email" fluid>
     <v-layout row wrap justify-center>
       <v-flex xs6 mt-10>
         <h1 class="mb-10">Postup pro úspěšné rozeslání AMP e-mailu</h1>
@@ -109,6 +109,14 @@ export default {
   data: () => ({
     //
   }),
+  created() {
+    this.$store.dispatch("getUser");
+  },
+  computed: {
+    getUser() {
+      return this.$store.state.user;
+    },
+  },
 };
 </script>
 <style scoped>

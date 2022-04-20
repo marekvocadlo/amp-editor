@@ -1,5 +1,5 @@
 <template>
-  <div class="editor">
+  <div v-if="getUser.email" class="editor">
     <v-container class="container-editor">
       <v-row no-gutters>
         <v-col class="text-center py-5" cols="12" sm="6" md="8">
@@ -179,7 +179,7 @@ export default {
     timeout: 8000,
   }),
   created() {
-    //this.displayTemplate();
+    this.$store.dispatch("getUser");
   },
   methods: {
     displayCCarousel() {
@@ -220,6 +220,11 @@ export default {
     closeTemplate() {
       this.saveTemplate();
       window.location.href = "/templates";
+    },
+  },
+  computed: {
+    getUser() {
+      return this.$store.state.user;
     },
   },
 };

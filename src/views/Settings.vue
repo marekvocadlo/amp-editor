@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container v-if="getUser.email" fluid>
     <v-layout row wrap>
       <v-flex xs12 class="text-center" mt-10>
         Přihlášený uživatel:

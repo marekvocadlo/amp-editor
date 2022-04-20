@@ -70,61 +70,66 @@ if ($request === "readUser") {
   }
 }
 
-// Read user data
-if ($request === "readUserData") {
-  $id = $_SESSION['user'][0];
-  $query = $pdo->prepare("SELECT * FROM user WHERE id = :id");
-  $query->execute(array(
-    ":id" => $id
-  ));
-  $userData = $query->fetch();
-  echo json_encode($userData);
-  exit();
-}
+// Control logged user
+if (!empty($_SESSION['user'])) {
 
-// Update user
-if($request === "updateUser"){
-  $id = $_SESSION['user'][0];
-  $email = $data->email;
-  $name = $data->name;
-  $surname = $data->surname;
+  // Read user data
+    if ($request === "readUserData") {
+      $id = $_SESSION['user'][0];
+      $query = $pdo->prepare("SELECT * FROM user WHERE id = :id");
+      $query->execute(array(
+        ":id" => $id
+      ));
+      $userData = $query->fetch();
+      echo json_encode($userData);
+      exit();
+    }
 
-  $query = $pdo->prepare("SELECT * FROM user WHERE id = :id");
-  $query->execute(array(
-    ":id" => $id
-  ));
-  $query2 = $pdo->prepare("SELECT * FROM user WHERE email = :email");
-  $query2->execute(array(
-    ":email" => $email
-  ));
-  $result = $query->fetch();
-  if ($query2->rowCount() == 0 || $result[1] == $email) {
-    $query = $pdo->prepare("UPDATE user SET email = ?, name = ?, surname = ? WHERE id = ?");
-    $query->execute(array(
-      $email,
-      $name,
-      $surname,
-      $id
-    ));
-    $_SESSION['user'][1] = $email;
-    $_SESSION['user'][2] = $name;
-    $_SESSION['user'][3] = $surname;
-    echo "1";
-  } else {
-    echo "0";
-  }
-  exit;
-}
+  // Update user
+    if ($request === "updateUser") {
+      $id = $_SESSION['user'][0];
+      $email = $data->email;
+      $name = $data->name;
+      $surname = $data->surname;
 
-// Delete user
-if ($request === "deleteUser") {
-  $id = $_SESSION['user'][0];
-  $query = $pdo->prepare("DELETE FROM user WHERE id = ?");
-  $query->execute(array(
-    $id
-  ));
-  session_unset();
-  session_destroy();
-  echo 1;
-  exit;
+      $query = $pdo->prepare("SELECT * FROM user WHERE id = :id");
+      $query->execute(array(
+        ":id" => $id
+      ));
+      $query2 = $pdo->prepare("SELECT * FROM user WHERE email = :email");
+      $query2->execute(array(
+        ":email" => $email
+      ));
+      $result = $query->fetch();
+      if ($query2->rowCount() == 0 || $result[1] == $email) {
+        $query = $pdo->prepare("UPDATE user SET email = ?, name = ?, surname = ? WHERE id = ?");
+        $query->execute(array(
+          $email,
+          $name,
+          $surname,
+          $id
+        ));
+        $_SESSION['user'][1] = $email;
+        $_SESSION['user'][2] = $name;
+        $_SESSION['user'][3] = $surname;
+        echo "1";
+      } else {
+        echo "0";
+      }
+      exit;
+    }
+
+  // Delete user
+    if ($request === "deleteUser") {
+      $id = $_SESSION['user'][0];
+      $query = $pdo->prepare("DELETE FROM user WHERE id = ?");
+      $query->execute(array(
+        $id
+      ));
+      session_unset();
+      session_destroy();
+      echo 1;
+      exit;
+    }
+
 }

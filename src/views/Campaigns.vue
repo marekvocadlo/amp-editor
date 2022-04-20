@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container v-if="getUser.email" fluid>
     <v-row no-gutters class="justify-center">
       <v-col cols="8">
         <v-row no-gutters class="justify-space-between align-center">

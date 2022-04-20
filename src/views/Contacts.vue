@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container v-if="getUser.email" fluid>
     <v-row no-gutters class="justify-center">
       <v-col cols="4" class="mr-16">
         <h2 class="mb-5">Skupiny kontaktů</h2>
@@ -197,7 +197,11 @@ export default {
       mdiDelete,
     },
   }),
-  computed: {},
+  computed: {
+    getUser() {
+      return this.$store.state.user;
+    },
+  },
   methods: {
     loadGroup() {
       this.axios
@@ -328,6 +332,7 @@ export default {
     },
   },
   created() {
+    this.$store.dispatch("getUser");
     this.loadGroup();
     this.loadContacts();
   },

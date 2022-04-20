@@ -5,29 +5,35 @@ include "config.php";
 $data = json_decode(file_get_contents("php://input"));
 $request = $data->request;
 
-// Read templates
-if($request === "readTemplates"){
-  $id = $_SESSION['user'][0];
-  $query = $pdo->prepare("SELECT * FROM template WHERE user_id = :user_id");
-  $query->execute(array(
-    ":user_id" => $id
-  ));
+// Control logged user
+if (!empty($_SESSION['user'])) {
 
-  $templates = $query->fetchAll();
+  // Read templates
+  if($request === "readTemplates"){
+    $id = $_SESSION['user'][0];
+    $query = $pdo->prepare("SELECT * FROM template WHERE user_id = :user_id");
+    $query->execute(array(
+      ":user_id" => $id
+    ));
 
-  echo json_encode($templates);
-  exit();
-}
+    $templates = $query->fetchAll();
 
-// Read template
-if($request == 2){
-  $query = $pdo->prepare("SELECT * FROM template WHERE id = :template_id");
-  $query->execute(array(
-    ":template_id" => 2
-  ));
+    echo json_encode($templates);
+    exit();
+  }
 
-  $templates = $query->fetch();
+  // Read template
+  if($request == 2){
+    $query = $pdo->prepare("SELECT * FROM template WHERE id = :template_id");
+    $query->execute(array(
+      ":template_id" => 2
+    ));
 
-  echo json_encode($templates);
-  exit();
+    $templates = $query->fetch();
+
+    echo json_encode($templates);
+    exit();
+  }
+} else {
+  echo "Pro tento úkon nemáte oprávnění.";
 }
