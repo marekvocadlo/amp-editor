@@ -67,9 +67,7 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" text @click="deleteUser"
-            >Smazat trvale účet</v-btn
-          >
+          <v-btn color="red" text @click="deleteUser">Smazat trvale účet</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -118,23 +116,18 @@ export default {
   },
   methods: {
     readUser() {
-      this.axios
-        .post("https://ampeditor.dev/app/user.php", {
-          request: "readUserData",
-        })
-        .then((response) => {
-          this.email = response.data[1];
-          this.name = response.data[3];
-          this.surname = response.data[4];
-        });
+      this.axios.get("/app/user.php").then((response) => {
+        this.email = response.data[1];
+        this.name = response.data[3];
+        this.surname = response.data[4];
+      });
     },
     updateUser() {
       if (this.$refs.form.validate()) {
         this.axios
-          .post(
-            "https://ampeditor.dev/app/user.php",
+          .put(
+            "/app/user.php",
             {
-              request: "updateUser",
               email: this.email,
               name: this.name,
               surname: this.surname,
@@ -159,9 +152,7 @@ export default {
     },
     deleteUser() {
       this.axios
-        .post("https://ampeditor.dev/app/user.php", {
-          request: "deleteUser",
-        })
+        .delete("/app/user.php")
         .then(() => {
           alert("Váš účet byl smazán!");
           window.location.href = "/";

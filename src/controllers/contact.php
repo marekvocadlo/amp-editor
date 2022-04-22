@@ -2,73 +2,68 @@
 session_start();
 include "config.php";
 
-$data = json_decode(file_get_contents("php://input"));
-$request = $data->request;
+$requestMethod = $_SERVER['REQUEST_METHOD'];
 
-// Control logged user
-if (!empty($_SESSION['user'])) {
+// Create contact
+if ($requestMethod === "POST") {
+  $_POST = json_decode(file_get_contents("php://input"),true);
+  $groupId = htmlspecialchars($_POST["group_id"]);
+  $contacts = htmlspecialchars($_POST["contacts"]);
 
-  // Create contacts
-  if ($request === "createContact") {
-    $id = $data->group_id;
-    $contacts = $data->contacts;
-    $contacts_arr = explode(",", $contacts);
+  $contacts_arr = explode(",", $contacts);
 
-    foreach ($contacts_arr as $contact) {
-      $query = $pdo->prepare("INSERT INTO contact (list_id,email) VALUES(?, ?)");
-      $result = $query->execute(array(
-        $id,
-        $contact
-      ));
-    }
-
-    echo 1;
-    exit();
-  }
-
-  // Read contacts
-  if ($request === "readContacts") {
-
-    // Select all contact groups of logged user
-    $id = $_SESSION['user'][0];
-    $queryGroups = $pdo->prepare("SELECT * FROM list WHERE user_id = ?");
-    $queryGroups->execute(array(
-      $id
-    ));
-    $userGroups = $queryGroups->fetchAll();
-
-    // Find all contact from user groups and connect them into 2dim array
-    $contacts = [];
-    foreach ($userGroups as $userGroup) {
-      $query = $pdo->prepare("SELECT * FROM contact WHERE list_id = ?");
-      $query->execute(array(
-        $userGroup[0]
-      ));
-
-      // Change group id to group name
-      $tempContacts = $query->fetchAll();
-      for ($i = 0; $i < count($tempContacts); $i++) {
-        $tempContacts[$i][1] = $userGroup[1];
-      }
-
-      array_push($contacts, $tempContacts);
-    }
-
-    echo json_encode($contacts);
-    exit();
-  }
-
-  // Delete contact
-  if ($request === "deleteContact") {
-    $id = $data->contactId;
-    $query = $pdo->prepare("DELETE FROM contact WHERE id = ?");
+  foreach ($contacts_arr as $contact) {
+    $query = $pdo->prepare("INSERT INTO contact (list_id,email) VALUES(:group_id, :email)");
     $result = $query->execute(array(
-      $id
+      ":group_id" => $groupId,
+      ":email" => $contact
     ));
-    echo 1;
-    exit();
   }
 
-} else {
-  echo "Pro tento úkon nemáte oprávnění.";
+  echo 1;
+  exit();
+}
+
+// Read contacts
+if ($requestMethod === "GET") {
+
+  // Select all contact groups of logged user
+  $userId = $_SESSION['user'][0];
+  $queryGroups = $pdo->prepare("SELECT * FROM list WHERE user_id = :user_id");
+  $queryGroups->execute(array(
+    ":user_id" => $userId
+  ));
+  $userGroups = $queryGroups->fetchAll();
+
+  // Find all contact from user groups and connect them into 2dim array
+  $contacts = [];
+  foreach ($userGroups as $userGroup) {
+    $query = $pdo->prepare("SELECT * FROM contact WHERE list_id = ?");
+    $query->execute(array(
+      $userGroup[0]
+    ));
+
+    // Change group id to group name
+    $tempContacts = $query->fetchAll();
+    for ($i = 0; $i < count($tempContacts); $i++) {
+      $tempContacts[$i][1] = $userGroup[1];
+    }
+
+    array_push($contacts, $tempContacts);
+  }
+
+  echo json_encode($contacts);
+  exit();
+}
+
+// Delete contact
+if ($requestMethod === "DELETE") {
+  $_DELETE = json_decode(file_get_contents("php://input"),true);
+  $id = htmlspecialchars($_DELETE["contact_id"]);
+  $query = $pdo->prepare("DELETE FROM contact WHERE id = :id");
+  $result = $query->execute(array(
+    ":id" => $id
+  ));
+  echo 1;
+  exit();
 }

@@ -88,13 +88,12 @@ export default {
     registerUser() {
       if (this.$refs.form.validate()) {
         this.axios
-          .post("https://ampeditor.dev/app/user.php", {
+          .post("/app/user.php", {
+            action: "register",
             email: this.email,
             password: this.password,
-            request: "createUser",
           })
           .then((response) => {
-            console.log(response.data);
             if (response.data === 1) {
               window.location.href = "/";
             } else {

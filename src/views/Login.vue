@@ -78,8 +78,8 @@ export default {
     loginUser() {
       if (this.$refs.form.validate()) {
         this.axios
-          .post("https://ampeditor.dev/app/user.php", {
-            request: "loginUser",
+          .post("/app/user.php", {
+            action: "login",
             email: this.email,
             password: this.password,
           })

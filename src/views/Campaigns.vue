@@ -8,9 +8,7 @@
           </v-col>
           <v-col class="text-right">
             <router-link to="/send">
-              <v-btn color="success"
-                >Poslat novou kampaň</v-btn
-              >
+              <v-btn color="success">Poslat novou kampaň</v-btn>
             </router-link>
           </v-col>
         </v-row>
@@ -81,44 +79,41 @@ export default {
   }),
   created() {
     this.$store.dispatch("getUser");
-    this.loadCampaigns();
+    this.readCampaigns();
   },
   methods: {
-    loadCampaigns() {
-      this.axios
-        .post("https://ampeditor.dev/app/campaign.php", {
-          request: "readCampaigns",
-        })
-        .then((response) => {
-          this.campaigns = [];
-          for (let i = 0; i < response.data.length; i++) {
-            let tempCampaign = {};
-            tempCampaign.id = response.data[i][0];
-            tempCampaign.name = response.data[i][1];
-            tempCampaign.senderName = response.data[i][2];
-            tempCampaign.email = response.data[i][3];
-            tempCampaign.subject = response.data[i][4];
-            tempCampaign.date = moment(response.data[i][6]).format(
-              "DD. MM. YYYY HH:mm"
-            );
-            this.campaigns.push(tempCampaign);
-          }
-        });
+    readCampaigns() {
+      this.axios.get("/app/campaign.php").then((response) => {
+        this.campaigns = [];
+        for (let i = 0; i < response.data.length; i++) {
+          let tempCampaign = {};
+          tempCampaign.id = response.data[i][0];
+          tempCampaign.name = response.data[i][1];
+          tempCampaign.senderName = response.data[i][2];
+          tempCampaign.email = response.data[i][3];
+          tempCampaign.subject = response.data[i][4];
+          tempCampaign.date = moment(response.data[i][6]).format(
+            "DD. MM. YYYY HH:mm"
+          );
+          this.campaigns.push(tempCampaign);
+        }
+      });
     },
     deleteCampaign(id) {
       this.axios
-        .post("https://ampeditor.dev/app/campaign.php", {
-          request: "deleteCampaign",
-          campaignId: id,
+        .delete("/app/campaign.php", {
+          data: {
+            campaignId: id,
+          },
         })
         .then((response) => {
           if (response.data === 1) {
             this.snackbarText = "Kampaň úspěšně smazána.";
             this.snackbarColor = "green darken-2";
             this.snackbar = true;
-            this.loadCampaigns();
+            this.readCampaigns();
           } else {
-            this.snackbarText = "Došlo k chybě.";
+            this.snackbarText = "Nastala neočekávaná chyba.";
             this.snackbar = true;
           }
         })

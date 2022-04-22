@@ -89,8 +89,8 @@ export default {
   methods: {
     logout() {
       this.axios
-        .post("https://ampeditor.dev/app/user.php", {
-          request: "logoutUser",
+        .post("/app/user.php", {
+          action: "logout",
         })
         .then(() => {
           window.location.href = "/";

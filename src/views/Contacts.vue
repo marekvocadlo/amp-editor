@@ -20,6 +20,9 @@
                   {{ item.name }}
                 </td>
                 <td>
+                  <!--                  <v-icon title="Zobrazit skupinu" color="#1976d2">{{-->
+                  <!--                    icons.mdiEye-->
+                  <!--                  }}</v-icon>-->
                   <v-icon
                     title="Smazat skupinu"
                     color="red"
@@ -79,10 +82,10 @@
               <v-row>
                 <v-col cols="12">
                   <v-text-field
-                    v-model="name"
+                    v-model="groupName"
                     label="Název skupiny"
                     required
-                    :rules="nameRules"
+                    :rules="groupNameRules"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -112,11 +115,11 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-form ref="form" v-model="valid" lazy-validation>
+            <v-form ref="form2" v-model="valid2" lazy-validation>
               <v-layout column>
                 <v-flex>
                   <v-select
-                    v-model="group_id"
+                    v-model="groupId"
                     :items="groups"
                     item-text="name"
                     item-value="id"
@@ -146,7 +149,7 @@
             Zavřít
           </v-btn>
           <v-btn
-            :disabled="!valid"
+            :disabled="!valid2"
             color="blue darken-1"
             text
             @click="createContact()"
@@ -173,16 +176,17 @@
 </template>
 
 <script>
-import { mdiDelete } from "@mdi/js";
+import { mdiDelete, mdiEye } from "@mdi/js";
 export default {
   name: "Contacts",
   data: () => ({
     valid: true,
+    valid2: true,
     dialog: false,
     dialog2: false,
-    name: "",
+    groupName: "",
     contacts: "",
-    group_id: 0,
+    groupId: 0,
     groups: [],
     contactId: 0,
     allContacts: [],
@@ -190,11 +194,12 @@ export default {
     snackbarText: "",
     snackbarColor: "red darken-2",
     snackbarTimeout: 10000,
-    nameRules: [(v) => !!v || "Název musí být vyplněný."],
+    groupNameRules: [(v) => !!v || "Název musí být vyplněný."],
     groupRules: [(v) => !!v || "Musíte zvolit skupinu kontaktů."],
     contactsRules: [(v) => !!v || "Musíte nahrát alespoň jeden kontakt."],
     icons: {
       mdiDelete,
+      mdiEye,
     },
   }),
   computed: {
@@ -203,45 +208,11 @@ export default {
     },
   },
   methods: {
-    loadGroup() {
-      this.axios
-        .post("https://ampeditor.dev/app/group.php", {
-          request: "readGroup",
-        })
-        .then((response) => {
-          this.groups = [];
-          for (let i = 0; i < response.data.length; i++) {
-            let groupLocal = {};
-            groupLocal.id = response.data[i][0];
-            groupLocal.name = response.data[i][1];
-            this.groups.push(groupLocal);
-          }
-        });
-    },
-    loadContacts() {
-      this.axios
-        .post("https://ampeditor.dev/app/contact.php", {
-          request: "readContacts",
-        })
-        .then((response) => {
-          this.allContacts = [];
-          for (let j = 0; j < response.data.length; j++) {
-            for (let i = 0; i < response.data[j].length; i++) {
-              let contactLocal = {};
-              contactLocal.id = response.data[j][i][0];
-              contactLocal.groupId = response.data[j][i][1];
-              contactLocal.email = response.data[j][i][2];
-              this.allContacts.push(contactLocal);
-            }
-          }
-        });
-    },
     createGroup() {
       if (this.$refs.form.validate()) {
         this.axios
-          .post("https://ampeditor.dev/app/group.php", {
-            request: "createGroup",
-            name: this.name,
+          .post("/app/group.php", {
+            groupName: this.groupName,
           })
           .then((response) => {
             if (response.data === 1) {
@@ -249,9 +220,12 @@ export default {
               this.snackbarColor = "green darken-2";
               this.snackbar = true;
               this.dialog = false;
-              this.loadGroup();
-            } else {
+              this.readGroup();
+            } else if (response.data === 0) {
               this.snackbarText = "Skupina s tímto názvem již existuje.";
+              this.snackbar = true;
+            } else {
+              this.snackbarText = "Došlo k neočekávané chybě.";
               this.snackbar = true;
             }
           })
@@ -260,35 +234,11 @@ export default {
           });
       }
     },
-    deleteGroup(id) {
-      this.axios
-        .post("https://ampeditor.dev/app/group.php", {
-          request: "deleteGroup",
-          group_id: id,
-        })
-        .then((response) => {
-          if (response.data === 1) {
-            this.snackbarText = "Skupina úspěšně smazána.";
-            this.snackbarColor = "green darken-2";
-            this.snackbar = true;
-            this.dialog = false;
-            this.loadGroup();
-            this.loadContacts();
-          } else {
-            this.snackbarText = "Došlo k chybě.";
-            this.snackbar = true;
-          }
-        })
-        .catch(function () {
-          console.log("FAILURE!!");
-        });
-    },
     createContact() {
-      if (this.$refs.form.validate()) {
+      if (this.$refs.form2.validate()) {
         this.axios
-          .post("https://ampeditor.dev/app/contact.php", {
-            request: "createContact",
-            group_id: this.group_id,
+          .post("/app/contact.php", {
+            group_id: this.groupId,
             contacts: this.contacts,
           })
           .then((response) => {
@@ -297,7 +247,7 @@ export default {
               this.snackbarColor = "green darken-2";
               this.snackbar = true;
               this.dialog2 = false;
-              this.loadContacts();
+              this.readContacts();
             } else {
               this.snackbarText = "Došlo k chybě.";
               this.snackbar = true;
@@ -308,11 +258,61 @@ export default {
           });
       }
     },
+    readGroup() {
+      this.axios.get("/app/group.php").then((response) => {
+        this.groups = [];
+        for (let i = 0; i < response.data.length; i++) {
+          let groupLocal = {};
+          groupLocal.id = response.data[i][0];
+          groupLocal.name = response.data[i][1];
+          this.groups.push(groupLocal);
+        }
+      });
+    },
+    readContacts() {
+      this.axios.get("/app/contact.php").then((response) => {
+        this.allContacts = [];
+        for (let j = 0; j < response.data.length; j++) {
+          for (let i = 0; i < response.data[j].length; i++) {
+            let contactLocal = {};
+            contactLocal.id = response.data[j][i][0];
+            contactLocal.groupId = response.data[j][i][1];
+            contactLocal.email = response.data[j][i][2];
+            this.allContacts.push(contactLocal);
+          }
+        }
+      });
+    },
+    deleteGroup(id) {
+      this.axios
+        .delete("/app/group.php", {
+          data: {
+            group_id: id,
+          },
+        })
+        .then((response) => {
+          if (response.data === 1) {
+            this.snackbarText = "Skupina úspěšně smazána.";
+            this.snackbarColor = "green darken-2";
+            this.snackbar = true;
+            this.dialog = false;
+            this.readGroup();
+            this.readContacts();
+          } else {
+            this.snackbarText = "Nastala neočekávaná chyba.";
+            this.snackbar = true;
+          }
+        })
+        .catch(function () {
+          console.log("FAILURE!!");
+        });
+    },
     deleteContact(id) {
       this.axios
-        .post("https://ampeditor.dev/app/contact.php", {
-          request: "deleteContact",
-          contactId: id,
+        .delete("/app/contact.php", {
+          data: {
+            contact_id: id,
+          },
         })
         .then((response) => {
           if (response.data === 1) {
@@ -320,7 +320,7 @@ export default {
             this.snackbarColor = "green darken-2";
             this.snackbar = true;
             this.dialog = false;
-            this.loadContacts();
+            this.readContacts();
           } else {
             this.snackbarText = "Došlo k chybě.";
             this.snackbar = true;
@@ -333,8 +333,8 @@ export default {
   },
   created() {
     this.$store.dispatch("getUser");
-    this.loadGroup();
-    this.loadContacts();
+    this.readGroup();
+    this.readContacts();
   },
 };
 </script>

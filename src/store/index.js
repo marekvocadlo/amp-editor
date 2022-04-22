@@ -25,13 +25,9 @@ export default new Vuex.Store({
   },
   actions: {
     getUser({ commit }) {
-      axios
-        .post("https://ampeditor.dev/app/user.php", {
-          request: "readUser",
-        })
-        .then((response) => {
-          commit("GET_NAME", response.data);
-        });
+      axios.get("/app/user.php").then((response) => {
+        commit("GET_NAME", response.data);
+      });
     },
   },
   modules: {},

@@ -52,7 +52,7 @@
             </v-flex>
             <v-flex>
               <v-select
-                v-model="group_id"
+                v-model="groupId"
                 :items="groups"
                 item-text="name"
                 item-value="id"
@@ -63,7 +63,7 @@
             </v-flex>
             <v-flex>
               <v-select
-                v-model="template_id"
+                v-model="templateId"
                 :items="templates"
                 item-text="name"
                 item-value="id"
@@ -107,9 +107,9 @@ export default {
     senderEmail: "",
     subject: "",
     snackbar: false,
-    group_id: 0,
+    groupId: 0,
     groups: [],
-    template_id: 0,
+    templateId: 0,
     templates: [],
     senderEmails: [],
     nameRules: [(v) => !!v || "Název musí být vyplněný."],
@@ -124,22 +124,22 @@ export default {
   }),
   created() {
     this.$store.dispatch("getUser");
-    this.loadGroup();
-    this.loadTemplates();
-    this.loadSenderEmails();
+    this.readGroups();
+    this.readTemplates();
+    this.readUserEmails();
   },
   methods: {
     sendCampaign() {
       if (this.$refs.form.validate()) {
         this.axios
-          .post("https://ampeditor.dev/app/campaign.php", {
-            request: "sendCampaign",
+          .post("/app/campaign.php", {
+            action: "send",
             name: this.name,
             senderName: this.senderName,
             senderEmail: this.senderEmail,
             subject: this.subject,
-            group_id: this.group_id,
-            template_id: this.template_id,
+            group_id: this.groupId,
+            template_id: this.templateId,
           })
           .then((data) => {
             if (data.data === 1) {
@@ -161,44 +161,32 @@ export default {
           });
       }
     },
-    loadGroup() {
-      this.axios
-        .post("https://ampeditor.dev/app/group.php", {
-          request: "readGroup",
-        })
-        .then((response) => {
-          this.groups = [];
-          for (let i = 0; i < response.data.length; i++) {
-            let groupLocal = {};
-            groupLocal.id = response.data[i][0];
-            groupLocal.name = response.data[i][1];
-            this.groups.push(groupLocal);
-          }
-        });
+    readGroups() {
+      this.axios.get("/app/group.php").then((response) => {
+        this.groups = [];
+        for (let i = 0; i < response.data.length; i++) {
+          let groupLocal = {};
+          groupLocal.id = response.data[i][0];
+          groupLocal.name = response.data[i][1];
+          this.groups.push(groupLocal);
+        }
+      });
     },
-    loadTemplates() {
-      this.axios
-        .post("https://ampeditor.dev/app/template.php", {
-          request: "readTemplates",
-        })
-        .then((response) => {
-          for (let i = 0; i < response.data.length; i++) {
-            let templateLocal = {};
-            templateLocal.id = response.data[i][0];
-            templateLocal.name = response.data[i][1];
-            this.templates.push(templateLocal);
-          }
-        });
+    readTemplates() {
+      this.axios.get("/app/template.php").then((response) => {
+        for (let i = 0; i < response.data.length; i++) {
+          let templateLocal = {};
+          templateLocal.id = response.data[i][0];
+          templateLocal.name = response.data[i][1];
+          this.templates.push(templateLocal);
+        }
+      });
     },
-    loadSenderEmails() {
-      this.axios
-        .post("https://ampeditor.dev/app/user.php", {
-          request: "readUserData",
-        })
-        .then((response) => {
-          this.senderEmails.push({ email: response.data[1] });
-          this.senderEmails.push({ email: "amptest@emailkampane.cz" });
-        });
+    readUserEmails() {
+      this.axios.get("/app/user.php").then((response) => {
+        this.senderEmails.push({ email: response.data[1] });
+        this.senderEmails.push({ email: "amptest@emailkampane.cz" });
+      });
     },
   },
   computed: {

@@ -2,38 +2,21 @@
 session_start();
 include "config.php";
 
+$requestMethod = $_SERVER['REQUEST_METHOD'];
+
 $data = json_decode(file_get_contents("php://input"));
 $request = $data->request;
 
-// Control logged user
-if (!empty($_SESSION['user'])) {
+// Read templates
+if($requestMethod === "GET"){
+  $user_id = $_SESSION['user'][0];
+  $query = $pdo->prepare("SELECT * FROM template WHERE user_id = :user_id");
+  $query->execute(array(
+    ":user_id" => $user_id
+  ));
 
-  // Read templates
-  if($request === "readTemplates"){
-    $id = $_SESSION['user'][0];
-    $query = $pdo->prepare("SELECT * FROM template WHERE user_id = :user_id");
-    $query->execute(array(
-      ":user_id" => $id
-    ));
+  $templates = $query->fetchAll();
 
-    $templates = $query->fetchAll();
-
-    echo json_encode($templates);
-    exit();
-  }
-
-  // Read template
-  if($request == 2){
-    $query = $pdo->prepare("SELECT * FROM template WHERE id = :template_id");
-    $query->execute(array(
-      ":template_id" => 2
-    ));
-
-    $templates = $query->fetch();
-
-    echo json_encode($templates);
-    exit();
-  }
-} else {
-  echo "Pro tento úkon nemáte oprávnění.";
+  echo json_encode($templates);
+  exit();
 }
