@@ -20,6 +20,7 @@
     <div v-if="getUser.email" class="mt-10">
       <h1>Dashboard</h1>
       <v-row no-gutters class="justify-center">
+        <!--
         <DashboardCard
           img="help.jpg"
           title="Jak začít?"
@@ -27,11 +28,12 @@
           btnText="Zjistit více"
           btnHref="/help"
         />
+        -->
         <DashboardCard
           img="contacts.jpg"
           title="Kontakty"
           text="Začněte vytvořením skupiny kontaktů nebo nahráním emailových adres."
-          btnText="Nahrát kontakty"
+          btnText="Zobrazit kontakty"
           btnHref="/contacts"
         />
         <DashboardCard

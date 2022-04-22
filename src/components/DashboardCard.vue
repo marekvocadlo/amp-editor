@@ -25,7 +25,7 @@
 export default {
   name: "DashboardCard",
   data: () => ({}),
-  props: ["img", "title", "text", "btnText", "btnHref", "btn2Text", "btn2Href"],
+  props: ["img", "title", "text", "btnText", "btnHref"],
 };
 </script>
 
