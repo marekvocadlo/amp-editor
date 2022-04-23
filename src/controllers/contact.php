@@ -25,8 +25,8 @@ if ($requestMethod === "POST") {
 }
 
 // Read contacts from group
-if ($requestMethod === "GET" && isset($_GET['group_id'])) {
-  $groupId = $_GET['group_id'];
+if ($requestMethod === "GET" && isset($_GET['id'])) {
+  $groupId = $_GET['id'];
 
   // Find all contact from user groups and connect them into 2dim array
   $contacts = [];

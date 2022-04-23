@@ -34,11 +34,37 @@ if ($requestMethod === "GET") {
   $query->execute(array(
     ":user_id" => $user_id
   ));
-
   $contactGroups = $query->fetchAll();
+
+  // Add number of contacts
+  for ($i = 0; $i < count($contactGroups); $i++) {
+    $query2 = $pdo->prepare("SELECT * FROM contact WHERE list_id = :group_id");
+    $query2->execute(array(
+      ":group_id" => $contactGroups[$i][0]
+    ));
+    $numberOfContact = $query2->rowCount();
+    $contactGroups[$i][3] = $numberOfContact;
+  }
+
 
   echo json_encode($contactGroups);
   exit();
+}
+
+// Update group
+if ($requestMethod === "PUT") {
+  $_PUT = json_decode(file_get_contents("php://input"),true);
+  $id = htmlspecialchars($_PUT["id"]);
+  $name = htmlspecialchars($_PUT["name"]);
+
+  $query = $pdo->prepare("UPDATE list SET name = :name WHERE id = :id");
+  $query->execute(array(
+    ":name" => $name,
+    ":id" => $id
+  ));
+  echo "1";
+} else {
+  echo "0";
 }
 
 // Delete group
