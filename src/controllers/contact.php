@@ -24,37 +24,61 @@ if ($requestMethod === "POST") {
   exit();
 }
 
-// Read contacts
-if ($requestMethod === "GET") {
-
-  // Select all contact groups of logged user
-  $userId = $_SESSION['user'][0];
-  $queryGroups = $pdo->prepare("SELECT * FROM list WHERE user_id = :user_id");
-  $queryGroups->execute(array(
-    ":user_id" => $userId
-  ));
-  $userGroups = $queryGroups->fetchAll();
+// Read contacts from group
+if ($requestMethod === "GET" && isset($_GET['group_id'])) {
+  $groupId = $_GET['group_id'];
 
   // Find all contact from user groups and connect them into 2dim array
   $contacts = [];
-  foreach ($userGroups as $userGroup) {
-    $query = $pdo->prepare("SELECT * FROM contact WHERE list_id = ?");
-    $query->execute(array(
-      $userGroup[0]
-    ));
+  $query = $pdo->prepare("SELECT * FROM contact WHERE list_id = :group_id");
+  $query->execute(array(
+    ":group_id" => $groupId
+  ));
 
-    // Change group id to group name
-    $tempContacts = $query->fetchAll();
-    for ($i = 0; $i < count($tempContacts); $i++) {
-      $tempContacts[$i][1] = $userGroup[1];
-    }
-
-    array_push($contacts, $tempContacts);
+  // Change group id to group name
+  $tempContacts = $query->fetchAll();
+  for ($i = 0; $i < count($tempContacts); $i++) {
+    $tempContacts[$i][1] = $userGroup[1];
   }
+
+  array_push($contacts, $tempContacts);
 
   echo json_encode($contacts);
   exit();
 }
+
+// Read contacts
+//if ($requestMethod === "GET") {
+//
+//  // Select all contact groups of logged user
+//  $userId = $_SESSION['user'][0];
+//  $queryGroups = $pdo->prepare("SELECT * FROM list WHERE user_id = :user_id");
+//  $queryGroups->execute(array(
+//    ":user_id" => $userId
+//  ));
+//  $userGroups = $queryGroups->fetchAll();
+//
+//  // Find all contact from user groups and connect them into 2dim array
+//  $contacts = [];
+//  foreach ($userGroups as $userGroup) {
+//    $query = $pdo->prepare("SELECT * FROM contact WHERE list_id = ?");
+//    $query->execute(array(
+//      $userGroup[0]
+//    ));
+//
+//    // Change group id to group name
+//    $tempContacts = $query->fetchAll();
+//    for ($i = 0; $i < count($tempContacts); $i++) {
+//      $tempContacts[$i][1] = $userGroup[1];
+//    }
+//
+//    array_push($contacts, $tempContacts);
+//  }
+//
+//  echo json_encode($contacts);
+//  exit();
+//}
+
 
 // Delete contact
 if ($requestMethod === "DELETE") {
