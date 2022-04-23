@@ -146,39 +146,44 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <!-- Form to show contacts in group -->
-    <v-dialog v-model="dialogReadGroup" max-width="600px">
-      <v-card>
+    <!-- Modal with contacts in group -->
+    <v-dialog v-model="dialogReadGroup" max-width="800px">
+      <v-card class="pa-5">
         <v-card-title>
           <span class="text-h5">Kontakty ve skupině</span>
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-simple-table class="mb-10 elevation-1" dense>
-              <template v-slot:default>
-                <thead>
-                  <tr>
-                    <th class="text-left">Email</th>
-                    <th class="text-left">Akce</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in allContacts" :key="item.id">
-                    <td>
-                      {{ item.email }}
-                    </td>
-                    <td>
-                      <v-icon
-                        title="Smazat kontakt"
-                        color="red"
-                        @click="deleteContact(item.id)"
-                        >{{ icons.mdiDelete }}</v-icon
-                      >
-                    </td>
-                  </tr>
-                </tbody>
+            <v-data-table
+              v-model="selected"
+              :headers="headers"
+              :items="allContacts"
+              item-key="id"
+              class="elevation-1"
+              :search="search"
+              :custom-filter="filterText"
+              show-select
+              :footer-props="{
+                'items-per-page-text': 'Počet záznamů na stránce',
+              }"
+            >
+              <template v-slot:top>
+                <v-text-field
+                  v-model="search"
+                  label="Hledat"
+                  class="mx-4"
+                ></v-text-field>
+                <v-btn
+                  v-if="selected.length"
+                  class="white--text ma-3"
+                  small
+                  title="Smazat vybrané kontakty"
+                  color="red"
+                  @click="deleteContacts()"
+                  >Smazat</v-btn
+                >
               </template>
-            </v-simple-table>
+            </v-data-table>
           </v-container>
         </v-card-text>
         <v-card-actions>
@@ -263,6 +268,8 @@ import { mdiDelete, mdiEye } from "@mdi/js";
 export default {
   name: "Contacts",
   data: () => ({
+    selected: [],
+    search: "",
     groupName: "",
     groupNameUpdate: "",
     groupId: 0,
@@ -294,8 +301,26 @@ export default {
     getUser() {
       return this.$store.state.user;
     },
+    headers() {
+      return [
+        {
+          text: "Email",
+          align: "start",
+          sortable: false,
+          value: "email",
+        },
+      ];
+    },
   },
   methods: {
+    filterText(value, search) {
+      return (
+        value != null &&
+        search != null &&
+        typeof value === "string" &&
+        value.toString().indexOf(search) !== -1
+      );
+    },
     createGroup() {
       if (this.$refs.form.validate()) {
         this.axios
@@ -422,22 +447,25 @@ export default {
           console.log("FAILURE!!");
         });
     },
-    deleteContact(id) {
+    deleteContacts() {
+      console.log(this.selected);
       this.axios
         .delete("/app/contact.php", {
           data: {
-            contact_id: id,
+            contacts: this.selected,
           },
         })
         .then((response) => {
           if (response.data === 1) {
-            this.snackbarText = "Kontakt úspěšně smazán.";
+            this.snackbarText = "Kontakty úspěšně smazány.";
             this.snackbarColor = "green darken-2";
             this.snackbar = true;
             this.dialogReadGroup = false;
             this.readGroup();
+            this.selected = [];
           } else {
             this.snackbarText = "Došlo k chybě.";
+            this.snackbarColor = "red darken-2";
             this.snackbar = true;
           }
         })

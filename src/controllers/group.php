@@ -63,8 +63,6 @@ if ($requestMethod === "PUT") {
     ":id" => $id
   ));
   echo "1";
-} else {
-  echo "0";
 }
 
 // Delete group

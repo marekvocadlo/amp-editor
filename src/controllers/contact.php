@@ -83,11 +83,14 @@ if ($requestMethod === "GET" && isset($_GET['id'])) {
 // Delete contact
 if ($requestMethod === "DELETE") {
   $_DELETE = json_decode(file_get_contents("php://input"),true);
-  $id = htmlspecialchars($_DELETE["contact_id"]);
-  $query = $pdo->prepare("DELETE FROM contact WHERE id = :id");
-  $result = $query->execute(array(
-    ":id" => $id
-  ));
+  $contacts = $_DELETE["contacts"];
+
+  foreach ($contacts as $contact) {
+    $query = $pdo->prepare("DELETE FROM contact WHERE id = :id");
+    $result = $query->execute(array(
+      ":id" => $contact["id"]
+    ));
+  }
   echo 1;
   exit();
 }
