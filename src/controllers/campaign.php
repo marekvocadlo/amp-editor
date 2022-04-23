@@ -15,17 +15,7 @@ if($requestMethod === "POST"){
   $group_id = htmlspecialchars($_POST["group_id"]);
   $template_id = htmlspecialchars($_POST["template_id"]);
 
-  // Create campaign
-  $query = $pdo->prepare("INSERT INTO campaign (name,senderName,email,subject,user_id,list_id,template_id) VALUES(:name, :senderName, :email, :subject, :user_id, :list_id, :template_id)");
-  $result = $query->execute(array(
-    ":name" => $name,
-    ":senderName" => $senderName,
-    ":email" => $senderEmail,
-    ":subject" => $subject,
-    ":user_id" => $_SESSION['user'][0],
-    ":list_id" => $group_id,
-    ":template_id" => $template_id
-  ));
+
 
   // Send campaign
   if ($action === "send") {
@@ -53,7 +43,9 @@ if($requestMethod === "POST"){
     // Sending via Emailkampane.cz
     $result = 1;
     $sendingError = 0;
+    $numberOfRecipients = 0;
     foreach ($contacts as $contact){
+      $numberOfRecipients++;
       if ($result === 0) {
         $sendingError = 1;
       }
@@ -75,6 +67,19 @@ if($requestMethod === "POST"){
       $result = @curl_exec($ch); //value 1 if the mailing was successful
       curl_close($ch);
     }
+
+    // Create campaign
+    $query = $pdo->prepare("INSERT INTO campaign (name,senderName,email,subject,user_id,list_id,template_id,number_of_recipients) VALUES(:name, :senderName, :email, :subject, :user_id, :list_id, :template_id, :number_of_recipients)");
+    $result = $query->execute(array(
+      ":name" => $name,
+      ":senderName" => $senderName,
+      ":email" => $senderEmail,
+      ":subject" => $subject,
+      ":user_id" => $_SESSION['user'][0],
+      ":list_id" => $group_id,
+      ":template_id" => $template_id,
+      ":number_of_recipients" => $numberOfRecipients
+    ));
 
     if($sendingError === 1) {
       echo "0";

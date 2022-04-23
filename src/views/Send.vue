@@ -67,7 +67,7 @@
                 :items="templates"
                 item-text="name"
                 item-value="id"
-                label="Šablony"
+                label="Připravený e-mail"
                 required
                 :rules="templatesRules"
               ></v-select>
@@ -117,7 +117,7 @@ export default {
     senderEmailRules: [(v) => !!v || "Email odesílatele musí být vyplněn."],
     subjectRules: [(v) => !!v || "Předmět musí být vyplněný."],
     groupRules: [(v) => !!v || "Musíte zvolit skupinu kontaktů."],
-    templatesRules: [(v) => !!v || "Musíte zvolit šablonu."],
+    templatesRules: [(v) => !!v || "Musíte zvolit upravenou šablonu."],
     snackbarText: "",
     snackbarColor: "red darken-2",
     snackbarTimeout: 10000,

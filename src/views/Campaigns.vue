@@ -20,7 +20,8 @@
                 <th class="text-left">Jméno odesílatele</th>
                 <th class="text-left">Odesílací email</th>
                 <th class="text-left">Předmět</th>
-                <th class="text-left">Odesláno</th>
+                <th class="text-left">Počet příjemců</th>
+                <th class="text-left">Datum</th>
                 <th class="text-left">Akce</th>
               </tr>
             </thead>
@@ -30,10 +31,17 @@
                 <td>{{ item.senderName }}</td>
                 <td>{{ item.email }}</td>
                 <td>{{ item.subject }}</td>
+                <td>{{ item.numberOfRecipients }}</td>
                 <td>{{ item.date }}</td>
                 <td>
                   <v-icon
-                    title="Smazat kontakt"
+                    title="Zobrazit kampaň"
+                    color="primary"
+                    @click="readCampaignAMP(item.id)"
+                    >{{ icons.mdiEye }}</v-icon
+                  >
+                  <v-icon
+                    title="Smazat kampaň"
                     color="red"
                     @click="deleteCampaign(item.id)"
                     >{{ icons.mdiDelete }}</v-icon
@@ -62,7 +70,7 @@
 </template>
 
 <script>
-import { mdiDelete } from "@mdi/js";
+import { mdiDelete, mdiEye } from "@mdi/js";
 import moment from "moment";
 export default {
   name: "Campaigns",
@@ -71,6 +79,7 @@ export default {
     campaigns: [],
     icons: {
       mdiDelete,
+      mdiEye
     },
     snackbar: false,
     snackbarText: "",
@@ -92,6 +101,7 @@ export default {
           tempCampaign.senderName = response.data[i][2];
           tempCampaign.email = response.data[i][3];
           tempCampaign.subject = response.data[i][4];
+          tempCampaign.numberOfRecipients = response.data[i][10];
           tempCampaign.date = moment(response.data[i][6]).format(
             "DD. MM. YYYY HH:mm"
           );
