@@ -136,7 +136,8 @@ export default {
               this.snackbarText = "Šablona úspěšně vytvořena.";
               this.snackbarColor = "green darken-2";
               this.snackbar = true;
-              this.dialogCreateGroup = false;
+              this.dialogCreateTemplate = false;
+              this.myTemplateName = "";
               this.readUserTemplates();
             } else {
               this.snackbarText = "Došlo k neočekávané chybě.";

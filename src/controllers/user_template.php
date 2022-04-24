@@ -9,6 +9,7 @@ if ($requestMethod === "POST") {
   $_POST = json_decode(file_get_contents("php://input"),true);
   $name = htmlspecialchars($_POST["name"]);
   $template_id = $_POST["template_id"];
+  $user_id = $_SESSION['user'][0];
 
   // Template settings
   $query = $pdo->prepare("SELECT settings FROM template WHERE id = :id");
@@ -21,7 +22,7 @@ if ($requestMethod === "POST") {
   $result = $query2->execute(array(
     ":name" => $name,
     ":user_id" => $user_id,
-    ":settings" => $settings,
+    ":settings" => $settings[0],
     ":template_id" => $template_id,
   ));
   echo "1";

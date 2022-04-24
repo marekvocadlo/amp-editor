@@ -284,7 +284,7 @@ export default {
   min-height: calc(100vh - 64px);
 }
 .editor-settings {
-  min-height: calc(90vh - 64px);
+  min-height: calc(100vh - 110px);
 }
 .container {
   padding: 0;

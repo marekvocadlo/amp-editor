@@ -175,7 +175,7 @@ export default {
       });
     },
     readTemplates() {
-      this.axios.get("/app/template.php").then((response) => {
+      this.axios.get("/app/user_template.php").then((response) => {
         for (let i = 0; i < response.data.length; i++) {
           let templateLocal = {};
           templateLocal.id = response.data[i][0];
