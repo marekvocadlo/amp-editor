@@ -1,14 +1,147 @@
 <template>
-  <div v-if="getUser.email" class="templates">
-    <h1>This is templates page</h1>
-  </div>
+  <v-container v-if="getUser.email">
+    <v-row no-gutters class="justify-center">
+      <v-col cols="6">
+        <h2 class="mt-10 mb-5">Šablony</h2>
+        <v-btn color="success" @click="dialogCreateTemplate = true"
+          >Vytvořit nový e-mail</v-btn
+        >
+        <h3 class="mt-10 mb-5">Moje vytvořené e-maily</h3>
+        <!-- User templates table -->
+        <v-simple-table class="mb-10 elevation-1" dense>
+          <template v-slot:default>
+            <thead>
+              <tr>
+                <th class="text-left">Název</th>
+                <th class="text-left">Vytvořeno</th>
+                <th class="text-left">Poslední úprava</th>
+                <th class="text-left">Akce</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in userTemplates" :key="item.id">
+                <td>
+                  {{ item.name }}
+                </td>
+                <td>
+                  {{ item.created }}
+                </td>
+                <td>
+                  {{ item.updated }}
+                </td>
+                <td class="pa-2"></td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+      </v-col>
+    </v-row>
+    <!-- Form to create new group -->
+    <v-dialog v-model="dialogCreateTemplate" max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="text-h5">Nový e-mail</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-form ref="form" v-model="valid" lazy-validation>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="myTemplateName"
+                    label="Název mojí šablony"
+                    required
+                    :rules="templateNameRules"
+                  ></v-text-field>
+                  <v-select
+                    v-model="templateId"
+                    :items="templates"
+                    item-text="name"
+                    item-value="id"
+                    label="Šablona"
+                    required
+                    :rules="templatesRules"
+                  ></v-select>
+                </v-col>
+              </v-row>
+            </v-form>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="dialogCreateTemplate = false"
+          >
+            Zavřít
+          </v-btn>
+          <v-btn
+            :disabled="!valid"
+            color="blue darken-1"
+            text
+            @click="createGroup()"
+          >
+            Vytvořit
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-container>
 </template>
 
 <script>
+import moment from "moment";
+
 export default {
   name: "Templates",
+  data: () => ({
+    myTemplateName: "",
+    templateId: 0,
+    templateName: "",
+    templates: [],
+    userTemplateId: 0,
+    userTemplateName: "",
+    userTemplates: [],
+    valid: true,
+    dialogCreateTemplate: false,
+    templateNameRules: [(v) => !!v || "Musíte zvolit název šablony."],
+    templatesRules: [(v) => !!v || "Musíte zvolit šablonu."],
+  }),
   created() {
     this.$store.dispatch("getUser");
+    this.readTemplates();
+    this.readUserTemplates();
+  },
+  methods: {
+    readTemplates() {
+      this.axios.get("/app/template.php").then((response) => {
+        this.templates = [];
+        for (let i = 0; i < response.data.length; i++) {
+          let tempTemplate = {};
+          tempTemplate.id = response.data[i][0];
+          tempTemplate.name = response.data[i][1];
+          this.templates.push(tempTemplate);
+        }
+      });
+    },
+    readUserTemplates() {
+      this.axios.get("/app/user_template.php").then((response) => {
+        this.userTemplates = [];
+        for (let i = 0; i < response.data.length; i++) {
+          let tempTemplate = {};
+          tempTemplate.id = response.data[i][0];
+          tempTemplate.name = response.data[i][1];
+          tempTemplate.created = moment(response.data[i][4]).format(
+            "DD. MM. YYYY HH:mm"
+          );
+          tempTemplate.updated = moment(response.data[i][5]).format(
+            "DD. MM. YYYY HH:mm"
+          );
+          this.userTemplates.push(tempTemplate);
+        }
+      });
+    },
   },
   computed: {
     getUser() {
