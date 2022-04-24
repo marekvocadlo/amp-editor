@@ -4,41 +4,82 @@
       <v-row no-gutters>
         <v-col class="text-center py-5" cols="12" sm="6" md="8">
           <div class="card-email">
+            <!-- Component logo -->
+            <div
+              id="galleryLogo"
+              class="component"
+              @click="galleryLogoDisplay"
+              :style="{
+                paddingTop: gallery.logo.paddingTop + 'px',
+                paddingBottom: gallery.logo.paddingBottom + 'px',
+                paddingLeft: gallery.logo.paddingLeft + 'px',
+                paddingRight: gallery.logo.paddingRight + 'px',
+                textAlign: gallery.logo.align,
+              }"
+            >
+              <img
+                :src="gallery.logo.src"
+                alt=""
+                :width="gallery.logo.width"
+                :height="gallery.logo.height"
+              />
+            </div>
             <!-- Component carousel -->
             <div
-              id="cCarouselComponent"
+              id="galleryCarousel"
               class="component"
-              @click="displayCCarousel"
+              @click="galleryCarouselDisplay"
             >
               <v-card
-                :width="gallery.cCarousel.width"
+                :width="gallery.carousel.width"
                 style="margin: 0 auto"
                 tile
                 elevation="0"
               >
-                <v-carousel :height="gallery.cCarousel.height" hide-delimiters>
+                <v-carousel :height="gallery.carousel.height" hide-delimiters>
                   <v-carousel-item
-                    v-for="(item, i) in gallery.cCarousel.img"
+                    v-for="(item, i) in gallery.carousel.img"
                     :key="i"
                     :src="item.src"
                   ></v-carousel-item>
                 </v-carousel>
               </v-card>
             </div>
-            <!-- Component text -->
+            <!-- Component title -->
             <div
-              id="cTextComponent"
+              id="galleryTitle"
               class="component"
               :style="{
-                paddingTop: gallery.cText.padding + 'px',
-                paddingBottom: gallery.cText.padding + 'px',
-                color: gallery.cText.color,
-                fontSize: gallery.cText.font_size + 'px',
-                lineHeight: gallery.cText.line_height + 'px',
+                textAlign: gallery.title.align,
+                paddingTop: gallery.title.paddingTop + 'px',
+                paddingBottom: gallery.title.paddingBottom + 'px',
+                paddingLeft: gallery.title.paddingLeft + 'px',
+                paddingRight: gallery.title.paddingRight + 'px',
+                color: gallery.title.color,
+                fontSize: gallery.title.font_size + 'px',
+                lineHeight: gallery.title.line_height + 'px',
               }"
-              @click="displayCText"
+              @click="galleryTitleDisplay"
             >
-              {{ gallery.cText.text }}
+              {{ gallery.title.text }}
+            </div>
+            <!-- Component text -->
+            <div
+              id="galleryText"
+              class="component"
+              :style="{
+                textAlign: gallery.text.align,
+                paddingTop: gallery.text.paddingTop + 'px',
+                paddingRight: gallery.text.paddingRight + 'px',
+                paddingBottom: gallery.text.paddingBottom + 'px',
+                paddingLeft: gallery.text.paddingLeft + 'px',
+                color: gallery.text.color,
+                fontSize: gallery.text.font_size + 'px',
+                lineHeight: gallery.text.line_height + 'px',
+              }"
+              @click="galleryTextDisplay"
+            >
+              {{ gallery.text.text }}
             </div>
           </div>
         </v-col>
@@ -56,88 +97,297 @@
                 <v-btn color="secondary" @click="closeTemplate">Zavřít</v-btn>
               </v-col>
             </v-row>
-            <!-- Settings text -->
+            <h3
+              class="mt-10"
+              :style="{
+                display: introDisplay,
+              }"
+            >
+              Začněte kliknutí na obsah e-mailu...
+            </h3>
+            <!-- Settings logo -->
             <v-form
-              id="cText"
+              id="logo"
               class="mt-5"
               ref="form"
               :style="{
-                display: gallery.cText.display,
+                display: gallery.logo.display,
               }"
             >
-              <h4>Textový blok</h4>
+              <h4 class="mb-3">Logo</h4>
+              <v-radio-group
+                v-model="gallery.logo.align"
+                row
+                label="Pozice loga: "
+              >
+                <v-radio label="Vlevo" value="left"></v-radio>
+                <v-radio label="Na střed" value="center"></v-radio>
+                <v-radio label="Vpravo" value="right"></v-radio>
+              </v-radio-group>
               <v-text-field
-                v-model="gallery.cText.text"
-                label="Text"
+                v-model="gallery.logo.src"
+                type="text"
+                label="URL loga"
               ></v-text-field>
               <v-text-field
-                type="number"
-                v-model="gallery.cText.padding"
-                label="Horní a spodní odsazení"
+                v-model="gallery.logo.alt"
+                type="text"
+                label="Alternativní text"
               ></v-text-field>
-              <v-text-field
-                type="number"
-                v-model="gallery.cText.font_size"
-                label="Velikost fontu"
-              ></v-text-field>
-              <v-text-field
-                type="number"
-                v-model="gallery.cText.line_height"
-                label="Výška řádku"
-              ></v-text-field>
-              <v-text-field
-                type="color"
-                v-model="gallery.cText.color"
-                label="Barva"
-              ></v-text-field>
+              <v-row>
+                <v-col cols="6"
+                  ><v-text-field
+                    v-model="gallery.logo.width"
+                    type="number"
+                    label="Šířka loga (px)"
+                  ></v-text-field
+                ></v-col>
+                <v-col cols="6"
+                  ><v-text-field
+                    v-model="gallery.logo.height"
+                    type="number"
+                    label="Výška loga (px)"
+                  ></v-text-field
+                ></v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="3"
+                  ><v-text-field
+                    type="number"
+                    v-model="gallery.logo.paddingTop"
+                    label="Horní odsazení"
+                  ></v-text-field
+                ></v-col>
+                <v-col cols="3"
+                  ><v-text-field
+                    type="number"
+                    v-model="gallery.logo.paddingRight"
+                    label="Pravé odsazení"
+                  ></v-text-field
+                ></v-col>
+                <v-col cols="3"
+                  ><v-text-field
+                    type="number"
+                    v-model="gallery.logo.paddingBottom"
+                    label="Spodní odsazení"
+                  ></v-text-field
+                ></v-col>
+                <v-col cols="3"
+                  ><v-text-field
+                    type="number"
+                    v-model="gallery.logo.paddingLeft"
+                    label="Levé odsazení"
+                  ></v-text-field
+                ></v-col>
+              </v-row>
             </v-form>
             <!-- Settings carousel -->
             <v-form
-              id="cCarousel"
+              id="carousel"
               class="mt-5"
               ref="form"
               :style="{
-                display: gallery.cCarousel.display,
+                display: gallery.carousel.display,
               }"
             >
-              <h4>Carousel</h4>
-              <v-text-field
-                v-model="gallery.cCarousel.width"
-                type="number"
-                label="Šířka"
-              ></v-text-field>
-              <v-text-field
-                v-model="gallery.cCarousel.height"
-                type="number"
-                label="Výška"
-              ></v-text-field>
+              <h4 class="mb-3">Carousel</h4>
+              <v-row>
+                <v-col cols="6"
+                  ><v-text-field
+                    v-model="gallery.carousel.width"
+                    type="number"
+                    label="Šířka (px)"
+                  ></v-text-field
+                ></v-col>
+                <v-col cols="6"
+                  ><v-text-field
+                    v-model="gallery.carousel.height"
+                    type="number"
+                    label="Výška (px)"
+                  ></v-text-field
+                ></v-col>
+              </v-row>
               <v-switch
-                v-model="gallery.cCarousel.loop"
+                v-model="gallery.carousel.loop"
                 label="Opakování obrázků"
               ></v-switch>
               <v-text-field
-                v-for="(item, i) in gallery.cCarousel.img"
+                v-for="(item, i) in gallery.carousel.img"
                 :key="i"
                 :src="item.src"
                 type="text"
-                v-model="gallery.cCarousel.img[i].src"
+                v-model="gallery.carousel.img[i].src"
                 label="URL obrázku"
               ></v-text-field>
               <v-btn
                 small
                 class="mr-3 mb-5"
                 color="primary"
-                @click="addCarouselImg"
+                @click="galleryCarouselAddImg"
                 >Přidat obrázek</v-btn
               >
               <v-btn
-                v-if="gallery.cCarousel.img.length > 1"
+                v-if="gallery.carousel.img.length > 1"
                 small
                 class="mr-3 mb-5 white--text"
                 color="red"
-                @click="removeCarouselImg"
+                @click="galleryCarouselRemoveImg"
                 >Odebrat obrázek</v-btn
               >
+            </v-form>
+            <!-- Settings title -->
+            <v-form
+              id="title"
+              class="mt-5"
+              ref="form"
+              :style="{
+                display: gallery.title.display,
+              }"
+            >
+              <h4 class="mb-3">Nadpis</h4>
+              <v-text-field
+                v-model="gallery.title.text"
+                label="Text"
+              ></v-text-field>
+              <v-radio-group
+                v-model="gallery.title.align"
+                row
+                label="Zarovnání nadpisu"
+              >
+                <v-radio label="Vlevo" value="left"></v-radio>
+                <v-radio label="Na střed" value="center"></v-radio>
+                <v-radio label="Vpravo" value="right"></v-radio>
+              </v-radio-group>
+              <v-row>
+                <v-col cols="3"
+                  ><v-text-field
+                    type="number"
+                    v-model="gallery.title.paddingTop"
+                    label="Horní odsazení"
+                  ></v-text-field
+                ></v-col>
+                <v-col cols="3"
+                  ><v-text-field
+                    type="number"
+                    v-model="gallery.title.paddingRight"
+                    label="Pravé odsazení"
+                  ></v-text-field
+                ></v-col>
+                <v-col cols="3"
+                  ><v-text-field
+                    type="number"
+                    v-model="gallery.title.paddingBottom"
+                    label="Spodní odsazení"
+                  ></v-text-field
+                ></v-col>
+                <v-col cols="3"
+                  ><v-text-field
+                    type="number"
+                    v-model="gallery.title.paddingLeft"
+                    label="Levé odsazení"
+                  ></v-text-field
+                ></v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="4">
+                  <v-text-field
+                    type="number"
+                    v-model="gallery.title.font_size"
+                    label="Velikost fontu"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="4">
+                  <v-text-field
+                    type="number"
+                    v-model="gallery.title.line_height"
+                    label="Výška řádku"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="4">
+                  <v-text-field
+                    type="color"
+                    v-model="gallery.title.color"
+                    label="Barva nadpisu"
+                    height="30"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-form>
+            <!-- Settings text -->
+            <v-form
+              id="text"
+              class="mt-5"
+              ref="form"
+              :style="{
+                display: gallery.text.display,
+              }"
+            >
+              <h4 class="mb-3">Textový blok</h4>
+              <v-textarea v-model="gallery.text.text" label="Text"></v-textarea>
+              <v-radio-group
+                v-model="gallery.text.align"
+                row
+                label="Zarovnání textu"
+              >
+                <v-radio label="Vlevo" value="left"></v-radio>
+                <v-radio label="Na střed" value="center"></v-radio>
+                <v-radio label="Vpravo" value="right"></v-radio>
+                <v-radio label="Do bloku" value="justify"></v-radio>
+              </v-radio-group>
+              <v-row>
+                <v-col cols="3"
+                  ><v-text-field
+                    type="number"
+                    v-model="gallery.text.paddingTop"
+                    label="Horní odsazení"
+                  ></v-text-field
+                ></v-col>
+                <v-col cols="3"
+                  ><v-text-field
+                    type="number"
+                    v-model="gallery.text.paddingRight"
+                    label="Pravé odsazení"
+                  ></v-text-field
+                ></v-col>
+                <v-col cols="3"
+                  ><v-text-field
+                    type="number"
+                    v-model="gallery.text.paddingBottom"
+                    label="Spodní odsazení"
+                  ></v-text-field
+                ></v-col>
+                <v-col cols="3"
+                  ><v-text-field
+                    type="number"
+                    v-model="gallery.text.paddingLeft"
+                    label="Levé odsazení"
+                  ></v-text-field
+                ></v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="4">
+                  <v-text-field
+                    type="number"
+                    v-model="gallery.text.font_size"
+                    label="Velikost fontu"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="4">
+                  <v-text-field
+                    type="number"
+                    v-model="gallery.text.line_height"
+                    label="Výška řádku"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="4">
+                  <v-text-field
+                    type="color"
+                    v-model="gallery.text.color"
+                    label="Barva textu"
+                    height="30"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
             </v-form>
           </v-card>
         </v-col>
@@ -164,28 +414,58 @@ export default {
   name: "Editor",
   data: () => ({
     userTemplateId: 0,
-    galleryFromDB: {},
+    introDisplay: "block",
     gallery: {
-      cText: {
+      logo: {
         display: "none",
-        padding: 40,
-        text: "Komponenta text",
-        font_size: "16",
-        line_height: "22",
-        color: "#000000",
+        paddingTop: 10,
+        paddingRight: 50,
+        paddingBottom: 10,
+        paddingLeft: 50,
+        align: "center",
+        width: 150,
+        height: 150,
+        alt: "Logo",
+        src:
+          "https://img.freepik.com/free-vector/illustration-circle-stamp-banner-vector_53876-27183.jpg?t=st=1650813257~exp=1650813857~hmac=cee7b6217f8190ead609263d99e2ef872c2b29d02c6fb5f6fe54964d0d138481&w=826",
       },
-      cCarousel: {
-        display: "block",
-        width: 700,
+      carousel: {
+        display: "none",
+        width: 600,
         height: 200,
         autoplay: "",
         delay: "",
         loop: true,
         img: [
           {
-            src: "https://picsum.photos/700/200?random=1",
+            src: "https://picsum.photos/600/200?random=1",
           },
         ],
+      },
+      title: {
+        display: "none",
+        align: "center",
+        paddingTop: 30,
+        paddingRight: 50,
+        paddingBottom: 30,
+        paddingLeft: 50,
+        text: "Galerie obrázků",
+        font_size: "22",
+        line_height: "28",
+        color: "#000000",
+      },
+      text: {
+        display: "none",
+        align: "justify",
+        paddingTop: 0,
+        paddingRight: 50,
+        paddingBottom: 30,
+        paddingLeft: 50,
+        text:
+          "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.",
+        font_size: "14",
+        line_height: "22",
+        color: "#000000",
       },
     },
     snackbar: false,
@@ -209,26 +489,11 @@ export default {
           this.gallery = response.data;
         });
     },
-    displayCCarousel() {
-      this.gallery.cText.display = "none";
-      this.gallery.cCarousel.display = "block";
-    },
-    addCarouselImg() {
-      let carouselImg = {};
-      this.gallery.cCarousel.img.push(carouselImg);
-    },
-    removeCarouselImg() {
-      this.gallery.cCarousel.img.pop();
-    },
-    displayCText() {
-      this.gallery.cCarousel.display = "none";
-      this.gallery.cText.display = "block";
-    },
     saveTemplate() {
       this.axios
         .post("https://ampeditor.dev/app/saveTemplate.php", {
-          cText: this.cText,
-          cCarousel: this.cCarousel,
+          text: this.text,
+          carousel: this.carousel,
         })
         .then((response) => {
           if (response.data === "Template saved") {
@@ -243,10 +508,6 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
-    },
-    closeTemplate() {
-      this.updateUserTemplate();
-      window.location.href = "/templates";
     },
     updateUserTemplate() {
       this.axios
@@ -268,6 +529,45 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
+    },
+    closeTemplate() {
+      this.updateUserTemplate();
+      window.location.href = "/templates";
+    },
+    galleryLogoDisplay() {
+      this.introDisplay = "none";
+      this.gallery.logo.display = "block";
+      this.gallery.carousel.display = "none";
+      this.gallery.title.display = "none";
+      this.gallery.text.display = "none";
+    },
+    galleryCarouselDisplay() {
+      this.introDisplay = "none";
+      this.gallery.logo.display = "none";
+      this.gallery.carousel.display = "block";
+      this.gallery.title.display = "none";
+      this.gallery.text.display = "none";
+    },
+    galleryCarouselAddImg() {
+      let carouselImg = {};
+      this.gallery.carousel.img.push(carouselImg);
+    },
+    galleryCarouselRemoveImg() {
+      this.gallery.carousel.img.pop();
+    },
+    galleryTitleDisplay() {
+      this.introDisplay = "none";
+      this.gallery.logo.display = "none";
+      this.gallery.carousel.display = "none";
+      this.gallery.title.display = "block";
+      this.gallery.text.display = "none";
+    },
+    galleryTextDisplay() {
+      this.introDisplay = "none";
+      this.gallery.logo.display = "none";
+      this.gallery.carousel.display = "none";
+      this.gallery.title.display = "none";
+      this.gallery.text.display = "block";
     },
   },
   computed: {
@@ -298,9 +598,5 @@ export default {
 .component:hover {
   border: #1976d2 1px solid;
   cursor: pointer;
-}
-#cText,
-#cCarousel {
-  display: none;
 }
 </style>
