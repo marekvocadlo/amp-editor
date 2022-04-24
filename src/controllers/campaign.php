@@ -32,7 +32,7 @@ if($requestMethod === "POST"){
     }
 
     // Select codes of selected template
-    $query2 = $pdo->prepare("SELECT * FROM template WHERE id = ?");
+    $query2 = $pdo->prepare("SELECT * FROM user_template WHERE id = ?");
     $query2->execute(array(
       $template_id
     ));
@@ -40,7 +40,7 @@ if($requestMethod === "POST"){
     $templateHTML = $result2[2];
     $templateAMP = $result2[3];
 
-    // Sending via Emailkampane.cz
+    // Sending
     $result = 1;
     $sendingError = 0;
     $numberOfRecipients = 0;

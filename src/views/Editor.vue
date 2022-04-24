@@ -489,26 +489,6 @@ export default {
           this.gallery = response.data;
         });
     },
-    saveTemplate() {
-      this.axios
-        .post("https://ampeditor.dev/app/saveTemplate.php", {
-          text: this.text,
-          carousel: this.carousel,
-        })
-        .then((response) => {
-          if (response.data === "Template saved") {
-            this.snackbar_color = "green darken-2";
-            this.snackbar_text = "Šablona úspěšně uložena.";
-            this.snackbar = true;
-          } else {
-            this.snackbar_text = "Došlo k chybě.";
-            this.snackbar = true;
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
     updateUserTemplate() {
       this.axios
         .put("/app/user_template.php", {

@@ -2,8 +2,10 @@
   <v-container v-if="getUser.email">
     <v-row no-gutters class="justify-center">
       <v-col cols="6">
-        <h2 class="mt-10 mb-5">Šablony</h2>
-        <v-btn color="success" @click="dialogCreateTemplate = true"
+        <v-btn
+          class="mt-10"
+          color="success"
+          @click="dialogCreateTemplate = true"
           >Vytvořit nový e-mail</v-btn
         >
         <h3 class="mt-10 mb-5">Moje vytvořené e-maily</h3>
