@@ -26,6 +26,7 @@
                 type="text"
                 required
                 :rules="senderNameRules"
+                :placeholder="senderName"
               ></v-text-field>
             </v-flex>
             <v-flex>
@@ -127,6 +128,7 @@ export default {
     this.readGroups();
     this.readTemplates();
     this.readUserEmails();
+    this.readUser();
   },
   methods: {
     sendCampaign() {
@@ -186,6 +188,11 @@ export default {
       this.axios.get("/app/user.php").then((response) => {
         this.senderEmails.push({ email: response.data[1] });
         this.senderEmails.push({ email: "amptest@emailkampane.cz" });
+      });
+    },
+    readUser() {
+      this.axios.get("/app/user.php").then((response) => {
+        this.senderName = response.data[3];
       });
     },
   },

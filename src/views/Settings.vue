@@ -24,19 +24,9 @@
               <v-text-field
                 v-model="name"
                 name="name"
-                label="Jméno"
+                label="Jméno nebo název společnosti"
                 type="text"
                 :placeholder="name"
-              >
-              </v-text-field>
-            </v-flex>
-            <v-flex>
-              <v-text-field
-                v-model="surname"
-                surname="surname"
-                label="Příjmení"
-                type="text"
-                :value="surname"
               >
               </v-text-field>
             </v-flex>
@@ -98,7 +88,6 @@ export default {
       (v) => /.+@.+/.test(v) || "E-mail musí být ve správném formátu",
     ],
     name: "",
-    surname: "",
     snackbar: false,
     snackbarText: "",
     snackbarColor: "red darken-2",
@@ -119,7 +108,6 @@ export default {
       this.axios.get("/app/user.php").then((response) => {
         this.email = response.data[1];
         this.name = response.data[3];
-        this.surname = response.data[4];
       });
     },
     updateUser() {
@@ -130,7 +118,6 @@ export default {
             {
               email: this.email,
               name: this.name,
-              surname: this.surname,
             },
             { withCredentials: true }
           )

@@ -9,7 +9,6 @@ export default new Vuex.Store({
     user: {
       email: "",
       name: "",
-      surname: "",
       created_at: "",
       updated_at: "",
     },
@@ -18,9 +17,8 @@ export default new Vuex.Store({
     GET_NAME(state, user) {
       state.user.email = user[1];
       state.user.name = user[2];
-      state.user.surname = user[3];
-      state.user.created_at = user[4];
-      state.user.updated_at = user[5];
+      state.user.created_at = user[3];
+      state.user.updated_at = user[4];
     },
   },
   actions: {

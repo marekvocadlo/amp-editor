@@ -35,12 +35,6 @@
                 <td>{{ item.date }}</td>
                 <td>
                   <v-icon
-                    title="Zobrazit kampaň"
-                    color="primary"
-                    @click="readCampaignAMP(item.id)"
-                    >{{ icons.mdiEye }}</v-icon
-                  >
-                  <v-icon
                     title="Smazat kampaň"
                     color="red"
                     @click="deleteCampaign(item.id)"
@@ -79,7 +73,7 @@ export default {
     campaigns: [],
     icons: {
       mdiDelete,
-      mdiEye
+      mdiEye,
     },
     snackbar: false,
     snackbarText: "",
