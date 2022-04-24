@@ -39,6 +39,14 @@
                     @click="openEditor(item.id)"
                     >Editovat</v-btn
                   >
+                  <v-btn
+                    outlined
+                    small
+                    title="Editovat e-mail"
+                    color="red"
+                    @click="deleteUserTemplate(item.id)"
+                    >Smazat</v-btn
+                  >
                 </td>
               </tr>
             </tbody>
@@ -179,6 +187,29 @@ export default {
     },
     openEditor(id) {
       window.location.href = "/editor?id=" + id;
+    },
+    deleteUserTemplate(id) {
+      this.axios
+        .delete("/app/user_template.php", {
+          data: {
+            id: id,
+          },
+        })
+        .then((response) => {
+          if (response.data === 1) {
+            this.snackbarText = "Šablona úspěšně smazána.";
+            this.snackbarColor = "green darken-2";
+            this.snackbar = true;
+            this.readUserTemplates();
+          } else {
+            this.snackbarText = "Nastala neočekávaná chyba.";
+            this.snackbarColor = "red darken-2";
+            this.snackbar = true;
+          }
+        })
+        .catch(function () {
+          console.log("FAILURE!!");
+        });
     },
   },
   computed: {

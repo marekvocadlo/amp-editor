@@ -72,3 +72,15 @@ if($requestMethod === "PUT"){
   echo "Template saved";
   exit();
 }
+
+// Delete group
+if ($requestMethod === "DELETE") {
+  $_DELETE = json_decode(file_get_contents("php://input"),true);
+  $id = htmlspecialchars($_DELETE["id"]);
+  $query = $pdo->prepare("DELETE FROM user_template WHERE id = :id");
+  $result = $query->execute(array(
+    ":id" => $id
+  ));
+  echo 1;
+  exit();
+}
