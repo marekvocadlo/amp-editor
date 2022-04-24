@@ -11,14 +11,14 @@
               @click="displayCCarousel"
             >
               <v-card
-                :width="cCarousel.width"
+                :width="gallery.cCarousel.width"
                 style="margin: 0 auto"
                 tile
                 elevation="0"
               >
-                <v-carousel :height="cCarousel.height" hide-delimiters>
+                <v-carousel :height="gallery.cCarousel.height" hide-delimiters>
                   <v-carousel-item
-                    v-for="(item, i) in cCarousel.img"
+                    v-for="(item, i) in gallery.cCarousel.img"
                     :key="i"
                     :src="item.src"
                   ></v-carousel-item>
@@ -30,16 +30,19 @@
               id="cTextComponent"
               class="component"
               :style="{
-                color: cText.color,
-                fontSize: cText.font_size + 'px',
-                lineHeight: cText.line_height + 'px',
+                paddingTop: gallery.cText.padding + 'px',
+                paddingBottom: gallery.cText.padding + 'px',
+                color: gallery.cText.color,
+                fontSize: gallery.cText.font_size + 'px',
+                lineHeight: gallery.cText.line_height + 'px',
               }"
               @click="displayCText"
             >
-              {{ cText.text }}
+              {{ gallery.cText.text }}
             </div>
           </div>
         </v-col>
+        <!-- Settings -->
         <v-col class="pt-5" cols="6" md="4">
           <v-card class="pa-5 editor-settings" shaped>
             <v-row no-gutters class="justify-space-between align-center">
@@ -47,7 +50,7 @@
                 <h3>Nastavení</h3>
               </v-col>
               <v-col class="text-right">
-                <v-btn class="mr-3" color="primary" @click="saveTemplate"
+                <v-btn class="mr-3" color="primary" @click="updateUserTemplate"
                   >Uložit</v-btn
                 >
                 <v-btn color="secondary" @click="closeTemplate">Zavřít</v-btn>
@@ -56,25 +59,35 @@
             <!-- Settings text -->
             <v-form
               id="cText"
+              class="mt-5"
               ref="form"
               :style="{
-                display: cText.display,
+                display: gallery.cText.display,
               }"
             >
-              <v-text-field v-model="cText.text" label="Text"></v-text-field>
+              <h4>Textový blok</h4>
+              <v-text-field
+                v-model="gallery.cText.text"
+                label="Text"
+              ></v-text-field>
               <v-text-field
                 type="number"
-                v-model="cText.font_size"
+                v-model="gallery.cText.padding"
+                label="Horní a spodní odsazení"
+              ></v-text-field>
+              <v-text-field
+                type="number"
+                v-model="gallery.cText.font_size"
                 label="Velikost fontu"
               ></v-text-field>
               <v-text-field
                 type="number"
-                v-model="cText.line_height"
+                v-model="gallery.cText.line_height"
                 label="Výška řádku"
               ></v-text-field>
               <v-text-field
                 type="color"
-                v-model="cText.color"
+                v-model="gallery.cText.color"
                 label="Barva"
               ></v-text-field>
             </v-form>
@@ -84,30 +97,30 @@
               class="mt-5"
               ref="form"
               :style="{
-                display: cCarousel.display,
+                display: gallery.cCarousel.display,
               }"
             >
               <h4>Carousel</h4>
               <v-text-field
-                v-model="cCarousel.width"
+                v-model="gallery.cCarousel.width"
                 type="number"
                 label="Šířka"
               ></v-text-field>
               <v-text-field
-                v-model="cCarousel.height"
+                v-model="gallery.cCarousel.height"
                 type="number"
                 label="Výška"
               ></v-text-field>
               <v-switch
-                v-model="cCarousel.loop"
+                v-model="gallery.cCarousel.loop"
                 label="Opakování obrázků"
               ></v-switch>
               <v-text-field
-                v-for="(item, i) in cCarousel.img"
+                v-for="(item, i) in gallery.cCarousel.img"
                 :key="i"
                 :src="item.src"
                 type="text"
-                v-model="cCarousel.img[i].src"
+                v-model="gallery.cCarousel.img[i].src"
                 label="URL obrázku"
               ></v-text-field>
               <v-btn
@@ -118,7 +131,7 @@
                 >Přidat obrázek</v-btn
               >
               <v-btn
-                v-if="cCarousel.img.length > 1"
+                v-if="gallery.cCarousel.img.length > 1"
                 small
                 class="mr-3 mb-5 white--text"
                 color="red"
@@ -150,52 +163,66 @@
 export default {
   name: "Editor",
   data: () => ({
-    templateAMP: ``,
-    templateHTML: "",
-    cText: {
-      display: "none",
-      text: "Komponenta text",
-      font_size: "16",
-      line_height: "22",
-      color: "#000000",
-    },
-    model: 0,
-    cCarousel: {
-      display: "block",
-      width: 700,
-      height: 200,
-      autoplay: "",
-      delay: "",
-      loop: true,
-      img: [
-        {
-          src: "https://picsum.photos/700/200?random=1",
-        },
-      ],
+    userTemplateId: 0,
+    galleryFromDB: {},
+    gallery: {
+      cText: {
+        display: "none",
+        padding: 40,
+        text: "Komponenta text",
+        font_size: "16",
+        line_height: "22",
+        color: "#000000",
+      },
+      cCarousel: {
+        display: "block",
+        width: 700,
+        height: 200,
+        autoplay: "",
+        delay: "",
+        loop: true,
+        img: [
+          {
+            src: "https://picsum.photos/700/200?random=1",
+          },
+        ],
+      },
     },
     snackbar: false,
     snackbar_text: "",
     snackbar_color: "red darken-2",
-    timeout: 8000,
+    timeout: 10000,
   }),
   created() {
     this.$store.dispatch("getUser");
+    this.getTemplateID();
+    this.readUserTemplate();
   },
   methods: {
+    getTemplateID() {
+      this.userTemplateId = this.$route.query.id;
+    },
+    readUserTemplate() {
+      this.axios
+        .get("/app/user_template.php?id=" + this.userTemplateId)
+        .then((response) => {
+          this.gallery = response.data;
+        });
+    },
     displayCCarousel() {
-      this.cText.display = "none";
-      this.cCarousel.display = "block";
+      this.gallery.cText.display = "none";
+      this.gallery.cCarousel.display = "block";
     },
     addCarouselImg() {
       let carouselImg = {};
-      this.cCarousel.img.push(carouselImg);
+      this.gallery.cCarousel.img.push(carouselImg);
     },
     removeCarouselImg() {
-      this.cCarousel.img.pop();
+      this.gallery.cCarousel.img.pop();
     },
     displayCText() {
-      this.cCarousel.display = "none";
-      this.cText.display = "block";
+      this.gallery.cCarousel.display = "none";
+      this.gallery.cText.display = "block";
     },
     saveTemplate() {
       this.axios
@@ -218,8 +245,29 @@ export default {
         });
     },
     closeTemplate() {
-      this.saveTemplate();
+      this.updateUserTemplate();
       window.location.href = "/templates";
+    },
+    updateUserTemplate() {
+      this.axios
+        .put("/app/user_template.php", {
+          id: this.userTemplateId,
+          settings: this.gallery,
+        })
+        .then((response) => {
+          if (response.data === "Template saved") {
+            this.snackbar_color = "green darken-2";
+            this.snackbar_text = "Šablona úspěšně uložena.";
+            this.snackbar = true;
+          } else {
+            this.snackbar_text = "Došlo k neočekávané chybě.";
+            this.snackbar_color = "red darken-2";
+            this.snackbar = true;
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
   },
   computed: {

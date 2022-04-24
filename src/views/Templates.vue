@@ -29,7 +29,17 @@
                 <td>
                   {{ item.updated }}
                 </td>
-                <td class="pa-2"></td>
+                <td class="pa-2">
+                  <v-btn
+                    outlined
+                    class="mr-3"
+                    small
+                    title="Editovat e-mail"
+                    color="secondary"
+                    @click="openEditor(item.id)"
+                    >Editovat</v-btn
+                  >
+                </td>
               </tr>
             </tbody>
           </template>
@@ -80,7 +90,7 @@
             :disabled="!valid"
             color="blue darken-1"
             text
-            @click="createGroup()"
+            @click="createUserTemplate()"
           >
             Vytvořit
           </v-btn>
@@ -114,6 +124,30 @@ export default {
     this.readUserTemplates();
   },
   methods: {
+    createUserTemplate() {
+      if (this.$refs.form.validate()) {
+        this.axios
+          .post("/app/user_template.php", {
+            name: this.myTemplateName,
+            template_id: this.templateId,
+          })
+          .then((response) => {
+            if (response.data === 1) {
+              this.snackbarText = "Šablona úspěšně vytvořena.";
+              this.snackbarColor = "green darken-2";
+              this.snackbar = true;
+              this.dialogCreateGroup = false;
+              this.readUserTemplates();
+            } else {
+              this.snackbarText = "Došlo k neočekávané chybě.";
+              this.snackbar = true;
+            }
+          })
+          .catch(function () {
+            console.log("FAILURE!!");
+          });
+      }
+    },
     readTemplates() {
       this.axios.get("/app/template.php").then((response) => {
         this.templates = [];
@@ -141,6 +175,9 @@ export default {
           this.userTemplates.push(tempTemplate);
         }
       });
+    },
+    openEditor(id) {
+      window.location.href = "/editor?id=" + id;
     },
   },
   computed: {
