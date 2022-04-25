@@ -11,6 +11,7 @@ export default new Vuex.Store({
       name: "",
       created_at: "",
       updated_at: "",
+      admin: "",
     },
   },
   mutations: {
@@ -19,6 +20,7 @@ export default new Vuex.Store({
       state.user.name = user[2];
       state.user.created_at = user[3];
       state.user.updated_at = user[4];
+      state.user.admin = user[6];
     },
   },
   actions: {

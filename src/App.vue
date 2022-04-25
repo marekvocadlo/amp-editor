@@ -33,6 +33,9 @@
         <router-link to="/help">
           <v-list-item class="mx-2">Návod</v-list-item>
         </router-link>
+        <router-link v-if="getUser.admin === '1'" to="/users">
+          <v-list-item class="mx-2">Správa uživatelů</v-list-item>
+        </router-link>
       </div>
       <v-spacer></v-spacer>
       <div class="d-flex align-center">

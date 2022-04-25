@@ -47,7 +47,7 @@ if ($action === "login") {
   $result = $query->fetch();
   if (password_verify($password, $result[2])) {
     $user_data = [];
-    $user_data = array($result[0], $email, $result[3], $result[4], $result[5]);
+    $user_data = array($result[0], $email, $result[3], $result[4], $result[5], $result[6]);
     $_SESSION['user'] = $user_data;
     echo "1";
   } else {
@@ -66,7 +66,7 @@ if ($action === "logout") {
 }
 
 // Read user
-if ($requestMethod === "GET") {
+if ($requestMethod === "GET" && !isset($_GET['admin'])) {
   $id = $_SESSION['user'][0];
   $query = $pdo->prepare("SELECT * FROM user WHERE id = :id");
   $query->execute(array(
@@ -74,6 +74,15 @@ if ($requestMethod === "GET") {
   ));
   $userData = $query->fetch();
   echo json_encode($userData);
+  exit();
+}
+
+// Read users
+if ($requestMethod === "GET" && isset($_GET['admin'])) {
+  $query = $pdo->prepare("SELECT * FROM user");
+  $query->execute();
+  $users = $query->fetchAll();
+  echo json_encode($users);
   exit();
 }
 
@@ -109,15 +118,26 @@ if ($requestMethod === "PUT") {
   exit;
 }
 
-// Delete user
+// Delete group
 if ($requestMethod === "DELETE") {
-  $id = $_SESSION['user'][0];
-  $query = $pdo->prepare("DELETE FROM user WHERE id = ?");
-  $query->execute(array(
-    $id
-  ));
-  session_unset();
-  session_destroy();
-  echo 1;
-  exit;
+  $_DELETE = json_decode(file_get_contents("php://input"),true);
+  $id = htmlspecialchars($_DELETE["id"]);
+  if (isset($id)) {
+    $query = $pdo->prepare("DELETE FROM user WHERE id = :id");
+    $result = $query->execute(array(
+      ":id" => $id
+    ));
+    echo 1;
+    exit();
+  } else {
+    $id2 = $_SESSION['user'][0];
+    $query = $pdo->prepare("DELETE FROM user WHERE id = ?");
+    $query->execute(array(
+      $id2
+    ));
+    session_unset();
+    session_destroy();
+    echo 1;
+    exit;
+  }
 }

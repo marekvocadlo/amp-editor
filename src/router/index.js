@@ -10,6 +10,7 @@ import Settings from "../views/Settings";
 import Campaigns from "../views/Campaigns";
 import Contacts from "../views/Contacts";
 import Send from "../views/Send";
+import Users from "../views/Users";
 
 Vue.use(VueRouter);
 
@@ -63,6 +64,11 @@ const routes = [
     path: "/send",
     name: "send",
     component: Send,
+  },
+  {
+    path: "/users",
+    name: "users",
+    component: Users,
   },
 ];
 
