@@ -41,7 +41,7 @@
           title="Šablony"
           text="Vytvořte jedinečnou interaktivní šablonu optimalizovanou pro všechny klienty."
           btnText="Zobrazit šablony"
-          btnHref="/send"
+          btnHref="/templates"
         />
         <DashboardCard
           img="campaign.jpg"

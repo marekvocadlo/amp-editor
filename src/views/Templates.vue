@@ -6,7 +6,7 @@
           class="mt-10"
           color="success"
           @click="dialogCreateTemplate = true"
-          >Vytvořit nový e-mail</v-btn
+          >Vytvořit nový obsah e-mailu</v-btn
         >
         <h3 class="mt-10 mb-5">Moje vytvořené e-maily</h3>
         <!-- User templates table -->
@@ -60,7 +60,7 @@
     <v-dialog v-model="dialogCreateTemplate" max-width="600px">
       <v-card>
         <v-card-title>
-          <span class="text-h5">Nový e-mail</span>
+          <span class="text-h5">Nový obsah e-mailu</span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -69,7 +69,7 @@
                 <v-col cols="12">
                   <v-text-field
                     v-model="myTemplateName"
-                    label="Název mojí šablony"
+                    label="Název"
                     required
                     :rules="templateNameRules"
                   ></v-text-field>

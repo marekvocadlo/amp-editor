@@ -122,7 +122,7 @@ if ($requestMethod === "PUT") {
 if ($requestMethod === "DELETE") {
   $_DELETE = json_decode(file_get_contents("php://input"),true);
   $id = htmlspecialchars($_DELETE["id"]);
-  if (isset($id)) {
+  if ($_SESSION['user'][5] == 1) {
     $query = $pdo->prepare("DELETE FROM user WHERE id = :id");
     $result = $query->execute(array(
       ":id" => $id
@@ -131,9 +131,9 @@ if ($requestMethod === "DELETE") {
     exit();
   } else {
     $id2 = $_SESSION['user'][0];
-    $query = $pdo->prepare("DELETE FROM user WHERE id = ?");
-    $query->execute(array(
-      $id2
+    $query2 = $pdo->prepare("DELETE FROM user WHERE id = :id");
+    $result = $query2->execute(array(
+      ":id" => $id2
     ));
     session_unset();
     session_destroy();

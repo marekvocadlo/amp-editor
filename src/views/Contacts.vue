@@ -360,6 +360,7 @@ export default {
               this.snackbarColor = "green darken-2";
               this.snackbar = true;
               this.dialogAddContact = false;
+              this.contacts = "";
               this.readGroup();
             } else {
               this.snackbarText = "Došlo k neočekávané chybě.";

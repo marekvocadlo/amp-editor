@@ -68,7 +68,7 @@
                 :items="templates"
                 item-text="name"
                 item-value="id"
-                label="Připravený e-mail"
+                label="Připravený obsah e-mailu"
                 required
                 :rules="templatesRules"
               ></v-select>
