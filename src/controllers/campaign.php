@@ -50,7 +50,7 @@ if($requestMethod === "POST"){
         $sendingError = 1;
       }
       $data2 = array(
-        'security'=>'UXTxb8SJJhKQhtjA',
+        'security'=>$ek_password,
         'sender_name'=>$senderName,
         'sender_email'=>$senderEmail,
         'recipient'=>$contact[2],
