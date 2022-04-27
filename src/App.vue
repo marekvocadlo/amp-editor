@@ -22,7 +22,7 @@
         </router-link>
         <v-spacer></v-spacer>
         <router-link to="/templates">
-          <v-list-item class="mx-2">Šablony</v-list-item>
+          <v-list-item class="mx-2">Obsahy e-mailu</v-list-item>
         </router-link>
         <router-link to="/contacts">
           <v-list-item class="mx-2">Kontakty</v-list-item>

@@ -8,7 +8,7 @@
           @click="dialogCreateTemplate = true"
           >Vytvořit nový obsah e-mailu</v-btn
         >
-        <h3 class="mt-10 mb-5">Moje vytvořené e-maily</h3>
+        <h3 class="mt-10 mb-5">Vytvořené obsahy e-mailu</h3>
         <!-- User templates table -->
         <v-simple-table class="mb-10 elevation-1" dense>
           <template v-slot:default>
@@ -69,7 +69,7 @@
                 <v-col cols="12">
                   <v-text-field
                     v-model="myTemplateName"
-                    label="Název"
+                    label="Název obsahu"
                     required
                     :rules="templateNameRules"
                   ></v-text-field>
@@ -78,7 +78,7 @@
                     :items="templates"
                     item-text="name"
                     item-value="id"
-                    label="Šablona"
+                    label="Vzor"
                     required
                     :rules="templatesRules"
                   ></v-select>
