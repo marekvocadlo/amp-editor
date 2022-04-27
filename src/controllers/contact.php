@@ -9,10 +9,23 @@ if ($requestMethod === "POST") {
   $_POST = json_decode(file_get_contents("php://input"),true);
   $groupId = htmlspecialchars($_POST["group_id"]);
   $contacts = htmlspecialchars($_POST["contacts"]);
+  $contacts_arr_clean = [];
 
-  $contacts_arr = explode(",", $contacts);
+  if (strpos($contacts, ',')){
+    $contacts_arr = explode(',', $contacts);
+  } else if (strpos($contacts, ';')) {
+    $contacts_arr = explode(';', $contacts);
+  } else {
+    $contacts_arr = explode(PHP_EOL, $contacts);
+  }
 
-  foreach ($contacts_arr as $contact) {
+  foreach ($contacts_arr as $contactCheck) {
+    if (preg_match( '/^[_a-zA-Z0-9-+.]*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{1,100})$/', trim($contactCheck))) {
+      array_push($contacts_arr_clean, trim($contactCheck));
+    }
+  }
+
+  foreach ($contacts_arr_clean as $contact) {
     $query = $pdo->prepare("INSERT INTO contact (list_id,email) VALUES(:group_id, :email)");
     $result = $query->execute(array(
       ":group_id" => $groupId,
@@ -46,39 +59,6 @@ if ($requestMethod === "GET" && isset($_GET['id'])) {
   echo json_encode($contacts);
   exit();
 }
-
-// Read contacts
-//if ($requestMethod === "GET") {
-//
-//  // Select all contact groups of logged user
-//  $userId = $_SESSION['user'][0];
-//  $queryGroups = $pdo->prepare("SELECT * FROM list WHERE user_id = :user_id");
-//  $queryGroups->execute(array(
-//    ":user_id" => $userId
-//  ));
-//  $userGroups = $queryGroups->fetchAll();
-//
-//  // Find all contact from user groups and connect them into 2dim array
-//  $contacts = [];
-//  foreach ($userGroups as $userGroup) {
-//    $query = $pdo->prepare("SELECT * FROM contact WHERE list_id = ?");
-//    $query->execute(array(
-//      $userGroup[0]
-//    ));
-//
-//    // Change group id to group name
-//    $tempContacts = $query->fetchAll();
-//    for ($i = 0; $i < count($tempContacts); $i++) {
-//      $tempContacts[$i][1] = $userGroup[1];
-//    }
-//
-//    array_push($contacts, $tempContacts);
-//  }
-//
-//  echo json_encode($contacts);
-//  exit();
-//}
-
 
 // Delete contact
 if ($requestMethod === "DELETE") {

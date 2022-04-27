@@ -126,6 +126,9 @@ export default {
               this.snackbarText = "Uživatelské údaje úspěšně aktualizovány.";
               this.snackbarColor = "green darken-2";
               this.snackbar = true;
+              window.setTimeout(function () {
+                window.location.href = "/";
+              }, 2000);
             } else {
               this.snackbarText = "Vámi zadaný email už někdo používá.";
               this.snackbarColor = "red darken-2";

@@ -103,7 +103,7 @@
                 display: introDisplay,
               }"
             >
-              Začněte kliknutí na obsah e-mailu...
+              Začněte kliknutí do obsahu...
             </h3>
             <!-- Settings logo -->
             <v-form

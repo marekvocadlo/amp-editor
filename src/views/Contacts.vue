@@ -223,7 +223,7 @@
                     type="text"
                     required
                     :rules="contactsRules"
-                    hint="Vložte emailové adresy oddělené čárkou."
+                    hint="Vložte e-mailové adresy oddělené čárkou, středníkem nebo každý e-mail na samostatném řádku"
                   ></v-textarea>
                 </v-flex>
               </v-layout>
@@ -356,7 +356,7 @@ export default {
           })
           .then((response) => {
             if (response.data === 1) {
-              this.snackbarText = "Kontakty úspěšně vloženy.";
+              this.snackbarText = "Validní e-mailové adresy úspěšně vloženy.";
               this.snackbarColor = "green darken-2";
               this.snackbar = true;
               this.dialogAddContact = false;
@@ -364,6 +364,7 @@ export default {
               this.readGroup();
             } else {
               this.snackbarText = "Došlo k neočekávané chybě.";
+              this.snackbarColor = "red darken-2";
               this.snackbar = true;
             }
           })
