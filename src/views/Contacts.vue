@@ -174,7 +174,7 @@
                   class="mx-4"
                 ></v-text-field>
                 <v-btn
-                  v-if="selected.length"
+                  :disabled="selected.length === 0"
                   class="white--text ma-3"
                   small
                   title="Smazat vybrané kontakty"
