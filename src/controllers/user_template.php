@@ -207,6 +207,14 @@ if($requestMethod === "PUT"){
   $ampOptimized = trim($amp);
   $htmlOptimized = trim($html);
 
+  // Create AMP and HTML e-mail file
+  $AMP_file = fopen("../files/index_amp".$id.".html", "w") or die("Soubor nelze otevřít!");
+  fwrite($AMP_file, $ampOptimized);
+  fclose($AMP_file);
+  $HTML_file = fopen("../files/index_html".$id.".html", "w") or die("Soubor nelze otevřít!");
+  fwrite($HTML_file, $htmlOptimized);
+  fclose($HTML_file);
+
   $query = $pdo->prepare("UPDATE user_template SET html = :html, amp = :amp, settings = :settings WHERE id = :id");
   $result = $query->execute(array(
     ":html" => $htmlOptimized,

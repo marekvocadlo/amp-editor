@@ -1,7 +1,7 @@
 <template>
   <v-container v-if="getUser.email">
     <v-row no-gutters class="justify-center">
-      <v-col cols="6">
+      <v-col cols="7">
         <v-btn
           class="mt-10"
           color="success"
@@ -18,6 +18,7 @@
                 <th class="text-left">Vytvořeno</th>
                 <th class="text-left">Poslední úprava</th>
                 <th class="text-left">Akce</th>
+                <th class="text-left">Export e-mailu</th>
               </tr>
             </thead>
             <tbody>
@@ -37,7 +38,7 @@
                     class="mr-3"
                     small
                     title="Editovat e-mail"
-                    color="secondary"
+                    color="primary"
                     @click="openEditor(item.id)"
                     >Editovat</v-btn
                   >
@@ -48,6 +49,28 @@
                     color="red"
                     @click="deleteUserTemplate(item.id)"
                     >Smazat</v-btn
+                  >
+                </td>
+                <td class="pa-2">
+                  <v-btn
+                    outlined
+                    class="mr-3"
+                    small
+                    title="Exportovat AMP e-mail"
+                    color="secondary"
+                    :href="item.ampURL"
+                    download
+                    >AMP</v-btn
+                  >
+                  <v-btn
+                    outlined
+                    class="mr-3"
+                    small
+                    title="Exportovat HTML e-mail"
+                    color="secondary"
+                    :href="item.htmlURL"
+                    download
+                    >HTML</v-btn
                   >
                 </td>
               </tr>
@@ -176,6 +199,10 @@ export default {
         for (let i = 0; i < response.data.length; i++) {
           let tempTemplate = {};
           tempTemplate.id = response.data[i][0];
+          tempTemplate.ampURL =
+            "/files/index_amp" + response.data[i][0] + ".html";
+          tempTemplate.htmlURL =
+            "/files/index_html" + response.data[i][0] + ".html";
           tempTemplate.name = response.data[i][1];
           tempTemplate.created = moment(response.data[i][4]).format(
             "DD. MM. YYYY HH:mm"
