@@ -20,7 +20,7 @@
               <tr>
                 <th class="text-left">Název skupiny</th>
                 <th class="text-left">Počet kontaktů</th>
-                <th class="text-left">Akce</th>
+                <th class="text-left actionCellWidth">Akce</th>
               </tr>
             </thead>
             <tbody>
@@ -266,7 +266,7 @@
       {{ snackbarText }}
       <template v-slot:action="{ attrs }">
         <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
-          Close
+          Zavřít
         </v-btn>
       </template>
     </v-snackbar>
@@ -494,4 +494,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.actionCellWidth {
+  width: 310px;
+}
+</style>
