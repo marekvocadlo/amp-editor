@@ -165,13 +165,13 @@ export default {
             template_id: this.templateId,
           })
           .then((response) => {
-            if (response.data === 1) {
+            if (!response.data.empty) {
               this.snackbarText = "Šablona úspěšně vytvořena.";
               this.snackbarColor = "green darken-2";
               this.snackbar = true;
               this.dialogCreateTemplate = false;
               this.myTemplateName = "";
-              this.readUserTemplates();
+              window.location.href = "/editor?id=" + response.data;
             } else {
               this.snackbarText = "Došlo k neočekávané chybě.";
               this.snackbar = true;

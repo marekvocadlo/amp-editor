@@ -25,7 +25,8 @@ if ($requestMethod === "POST") {
     ":settings" => $settings[0],
     ":template_id" => $template_id,
   ));
-  echo "1";
+  $insertId = $pdo->lastInsertId();
+  echo $insertId;
   exit();
 }
 
