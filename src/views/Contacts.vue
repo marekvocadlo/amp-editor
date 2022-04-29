@@ -187,6 +187,16 @@
           </v-container>
         </v-card-text>
         <v-card-actions>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="
+              dialogAddContact = true;
+              dialogReadGroup = false;
+            "
+          >
+            Přidat kontakty
+          </v-btn>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="dialogReadGroup = false">
             Zavřít
