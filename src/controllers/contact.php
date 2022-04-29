@@ -25,15 +25,27 @@ if ($requestMethod === "POST") {
     }
   }
 
+  $duplicateContact = false;
   foreach ($contacts_arr_clean as $contact) {
-    $query = $pdo->prepare("INSERT INTO contact (list_id,email) VALUES(:group_id, :email)");
-    $result = $query->execute(array(
-      ":group_id" => $groupId,
+    $queryD = $pdo->prepare("SELECT * FROM contact WHERE email = :email");
+    $queryD->execute(array(
       ":email" => $contact
     ));
+    if($queryD->rowCount() == 0) {
+      $query = $pdo->prepare("INSERT INTO contact (list_id,email) VALUES(:group_id, :email)");
+      $result = $query->execute(array(
+        ":group_id" => $groupId,
+        ":email" => $contact
+      ));
+    } else {
+      $duplicateContact = true;
+    }
   }
-
-  echo 1;
+  if ($duplicateContact) {
+    echo 0;
+  } else {
+    echo 1;
+  }
   exit();
 }
 
