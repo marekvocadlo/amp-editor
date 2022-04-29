@@ -27,9 +27,10 @@ if ($requestMethod === "POST") {
 
   $duplicateContact = false;
   foreach ($contacts_arr_clean as $contact) {
-    $queryD = $pdo->prepare("SELECT * FROM contact WHERE email = :email");
+    $queryD = $pdo->prepare("SELECT * FROM contact WHERE email = :email AND list_id = :group_id");
     $queryD->execute(array(
-      ":email" => $contact
+      ":email" => $contact,
+      ":group_id" => $groupId,
     ));
     if($queryD->rowCount() == 0) {
       $query = $pdo->prepare("INSERT INTO contact (list_id,email) VALUES(:group_id, :email)");
