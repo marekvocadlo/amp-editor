@@ -1,5 +1,5 @@
 <template>
-  <div v-if="getUser.email" class="editor">
+  <div v-if="!getUser.email" class="editor">
     <v-container class="container-editor">
       <v-row no-gutters>
         <v-col class="text-center py-5" cols="12" sm="6" md="8">
@@ -80,6 +80,42 @@
               @click="galleryTextDisplay"
             >
               {{ gallery.text.text }}
+            </div>
+            <!-- Component accordion -->
+            <div
+              id="infoAccordion"
+              class="component"
+              @click="infoAccordionDisplay"
+            >
+              <div
+                :style="{
+                  textAlign: info.accordion.align,
+                  width: 600 + 'px',
+                  fontSize: info.accordion.font_size + 'px',
+                  lineHeight: info.accordion.line_height + 'px',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                  paddingBottom: 30 + 'px',
+                }"
+              >
+                <v-expansion-panels accordion>
+                  <v-expansion-panel
+                    v-for="(item, i) in info.accordion.section"
+                    :key="i"
+                  >
+                    <v-expansion-panel-header
+                      :style="{ color: info.accordion.color }"
+                    >
+                      {{ item.title }}</v-expansion-panel-header
+                    >
+                    <v-expansion-panel-content
+                      :style="{ color: info.accordion.color }"
+                    >
+                      {{ item.text }}
+                    </v-expansion-panel-content>
+                  </v-expansion-panel>
+                </v-expansion-panels>
+              </div>
             </div>
           </div>
         </v-col>
@@ -389,6 +425,80 @@
                 </v-col>
               </v-row>
             </v-form>
+            <!-- Settings accordion -->
+            <v-form
+              id="accordion"
+              class="mt-5"
+              ref="form"
+              :style="{
+                display: info.accordion.display,
+              }"
+            >
+              <h4 class="mb-3">Skládaný seznam</h4>
+              <v-row>
+                <v-col cols="4">
+                  <v-text-field
+                    type="number"
+                    v-model="info.accordion.font_size"
+                    label="Velikost fontu obsahu"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="4">
+                  <v-text-field
+                    type="number"
+                    v-model="info.accordion.line_height"
+                    label="Výška řádku obsahu"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="4">
+                  <v-text-field
+                    type="color"
+                    v-model="info.accordion.color"
+                    label="Barva textu"
+                    height="30"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-switch
+                v-model="info.accordion.animate"
+                label="Animace při rozbalování"
+              ></v-switch>
+              <v-switch
+                v-model="info.accordion.expandSingleSection"
+                label="Rozbalená jen 1 sekce"
+              ></v-switch>
+              <v-text-field
+                v-for="(item, i) in info.accordion.section"
+                :key="i"
+                :src="item.src"
+                type="text"
+                v-model="info.accordion.section[i].title"
+                label="Nadpis sekce"
+              ></v-text-field>
+              <v-text-field
+                v-for="(item, i) in info.accordion.section"
+                :key="i"
+                :src="item.src"
+                type="text"
+                v-model="info.accordion.section[i].text"
+                label="Obsah sekce"
+              ></v-text-field>
+              <v-btn
+                small
+                class="mr-3 mb-5"
+                color="primary"
+                @click="infoAccordionAddSection"
+                >Přidat sekci</v-btn
+              >
+              <v-btn
+                v-if="info.accordion.section.length > 1"
+                small
+                class="mr-3 mb-5 white--text"
+                color="red"
+                @click="infoAccordionRemoveSection"
+                >Odebrat sekci</v-btn
+              >
+            </v-form>
           </v-card>
         </v-col>
       </v-row>
@@ -468,6 +578,23 @@ export default {
         color: "#000000",
       },
     },
+    info: {
+      accordion: {
+        display: "none",
+        align: "left",
+        font_size: "14",
+        line_height: "22",
+        color: "#00000",
+        animate: true,
+        expandSingleSection: true,
+        section: [
+          {
+            title: "Nadpis sekce 1",
+            text: "Obsah v sekci 1",
+          },
+        ],
+      },
+    },
     snackbar: false,
     snackbar_text: "",
     snackbar_color: "red darken-2",
@@ -520,6 +647,7 @@ export default {
       this.gallery.carousel.display = "none";
       this.gallery.title.display = "none";
       this.gallery.text.display = "none";
+      this.info.accordion.display = "none";
     },
     galleryCarouselDisplay() {
       this.introDisplay = "none";
@@ -527,6 +655,7 @@ export default {
       this.gallery.carousel.display = "block";
       this.gallery.title.display = "none";
       this.gallery.text.display = "none";
+      this.info.accordion.display = "none";
     },
     galleryCarouselAddImg() {
       let carouselImg = {};
@@ -541,6 +670,7 @@ export default {
       this.gallery.carousel.display = "none";
       this.gallery.title.display = "block";
       this.gallery.text.display = "none";
+      this.info.accordion.display = "none";
     },
     galleryTextDisplay() {
       this.introDisplay = "none";
@@ -548,6 +678,21 @@ export default {
       this.gallery.carousel.display = "none";
       this.gallery.title.display = "none";
       this.gallery.text.display = "block";
+    },
+    infoAccordionDisplay() {
+      this.introDisplay = "none";
+      this.gallery.logo.display = "none";
+      this.gallery.carousel.display = "none";
+      this.gallery.title.display = "none";
+      this.gallery.text.display = "none";
+      this.info.accordion.display = "block";
+    },
+    infoAccordionAddSection() {
+      let accordionSection = {};
+      this.info.accordion.section.push(accordionSection);
+    },
+    infoAccordionRemoveSection() {
+      this.info.accordion.section.pop();
     },
   },
   computed: {
