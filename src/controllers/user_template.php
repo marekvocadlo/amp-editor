@@ -56,6 +56,23 @@ if($requestMethod === "PUT"){
   $data = json_decode(file_get_contents("php://input"));
   $component = $data->settings;
 
+  // Used components
+  if ($component->logo->used) {
+    $logo = '<div class="container">
+      <div style="text-align: '.$component->logo->align.'; padding: '.$component->logo->paddingTop.'px '.$component->logo->paddingRight.'px '.$component->logo->paddingBottom.'px '.$component->logo->paddingLeft.'px;">
+        <amp-img
+          alt="'.$component->logo->alt.'"
+          src="'.$component->logo->src.'"
+          width="'.$component->logo->width.'"
+          height="'.$component->logo->height.'"
+        >
+        </amp-img>
+      </div>
+    </div>';
+  } else {
+    $logo = "";
+  }
+
   // Create carousel images
   $loop = ($component->carousel->loop) ? "loop" : "";
   $images = "";
@@ -99,17 +116,7 @@ if($requestMethod === "PUT"){
 </head>
 <body>
 <div style="padding: 20px 0;">
-  <div class="container">
-    <div style="text-align: '.$component->logo->align.'; padding: '.$component->logo->paddingTop.'px '.$component->logo->paddingRight.'px '.$component->logo->paddingBottom.'px '.$component->logo->paddingLeft.'px;">
-      <amp-img
-        alt="'.$component->logo->alt.'"
-        src="'.$component->logo->src.'"
-        width="'.$component->logo->width.'"
-        height="'.$component->logo->height.'"
-      >
-      </amp-img>
-    </div>
-  </div>
+  '.$logo.'
   <div class="container" style="text-align: center;">
     <amp-carousel
         width="'.$component->carousel->width.'"

@@ -646,8 +646,9 @@ export default {
   created() {
     this.$store.dispatch("getUser");
     this.getTemplateID();
-    this.updateUserTemplate();
-    this.readUserTemplate();
+    if (this.$route.query.new !== "true") {
+      this.readUserTemplate();
+    }
   },
   methods: {
     getTemplateID() {

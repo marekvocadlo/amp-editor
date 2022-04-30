@@ -156,7 +156,7 @@ export default {
               this.snackbar = true;
               this.dialogCreateTemplate = false;
               this.myTemplateName = "";
-              window.location.href = "/editor?id=" + response.data;
+              window.location.href = "/editor?id=" + response.data + "&new=true";
             } else {
               this.snackbarText = "Došlo k neočekávané chybě.";
               this.snackbar = true;
