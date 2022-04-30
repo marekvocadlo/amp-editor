@@ -156,7 +156,8 @@ export default {
               this.snackbar = true;
               this.dialogCreateTemplate = false;
               this.myTemplateName = "";
-              window.location.href = "/editor?id=" + response.data + "&new=true";
+              window.location.href =
+                "/editor?id=" + response.data + "&new=true";
             } else {
               this.snackbarText = "Došlo k neočekávané chybě.";
               this.snackbar = true;
@@ -179,10 +180,10 @@ export default {
             "/files/index_html" + response.data[i][0] + ".html";
           tempTemplate.name = response.data[i][1];
           tempTemplate.created = moment(response.data[i][4]).format(
-            "DD. MM. YYYY HH:mm"
+            "DD. M. YYYY HH:mm"
           );
           tempTemplate.updated = moment(response.data[i][5]).format(
-            "DD. MM. YYYY HH:mm"
+            "DD. M. YYYY HH:mm"
           );
           this.userTemplates.push(tempTemplate);
         }
