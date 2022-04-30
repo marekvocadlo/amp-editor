@@ -56,7 +56,7 @@ if($requestMethod === "PUT"){
   $data = json_decode(file_get_contents("php://input"));
   $component = $data->settings;
 
-  // Used components for AMP email
+  #region amp e-mail components
   // Logo
   if ($component->logo->used) {
     $logo = '<div class="container">
@@ -173,6 +173,54 @@ if($requestMethod === "PUT"){
     $timeago = "";
     $timeagoImport = "";
   }
+  // Form
+  if ($component->form->used) {
+
+    // Add form to email header
+    $formImport = '<script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script><script async custom-template="amp-mustache" src="https://cdn.ampproject.org/v0/amp-mustache-0.2.js"></script>';
+
+    // Create form inputs
+    $inputs = "";
+    for ($i = 0; $i < count($component->form->input); $i++) {
+      $inputRequired = ($component->form->input[$i]->required) ? "required" : "";
+      $input = '
+         <label>
+          <input type="'.$component->form->input[$i]->type.'"
+                 name="'.$component->form->input[$i]->label.'"
+                 style="width: '.$component->form->width.'px; height: 25px; padding: 5px 10px; font-family: Poppins, Verdana, Arial, sans-serif; font-size: 16px;"
+                 placeholder="'.$component->form->input[$i]->label.'"
+                 '.$inputRequired.'>
+        </label>
+        <br><br>';
+      $inputs .= $input;
+    }
+
+    $form = '
+      <div class="container" style="text-align: center;">
+        <form method="post" action-xhr="'.$component->form->url.'" style="padding: 30px 0">
+          <fieldset style="border: none;">
+            '.$inputs.'
+            <input type="submit"
+               style="padding: 8px 25px; background-color: #1976d2; border: none; border-radius: 4px; color: #ffffff; text-transform: uppercase; font-family: Poppins, Verdana, Arial, sans-serif; font-size: 15px; line-height: 22px;"
+               value="'.$component->form->button.'">
+            </fieldset>
+            <div submit-success>
+              <template type="amp-mustache">
+                '.$component->form->successSend.'
+              </template>
+            </div>
+            <div submit-error>
+              <template type="amp-mustache">
+                '.$component->form->errorSend.'
+              </template>
+            </div>
+          </form>
+        </div>';
+  } else {
+    $form = "";
+    $formImport = "";
+  }
+  #endregion amp e-mail components
 
 
   $amp = '<!DOCTYPE html>
@@ -183,6 +231,7 @@ if($requestMethod === "PUT"){
   '.$carouselImport.'
   '.$accordionImport.'
   '.$timeagoImport.'
+  '.$formImport.'
   <style amp4email-boilerplate>body{visibility:hidden}</style>
   <style amp-custom>
     body {
@@ -212,7 +261,7 @@ if($requestMethod === "PUT"){
 </head>
 <body>
 <div style="padding: 20px 0;">
-  '.$logo.$carousel.$title.$text.$accordion.$timeago.'
+  '.$logo.$carousel.$title.$text.$accordion.$timeago.$form.'
  </div>
 </body>
 </html>
