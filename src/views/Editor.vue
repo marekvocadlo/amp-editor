@@ -147,12 +147,19 @@
         <v-col class="pt-5" cols="6" md="4">
           <v-card class="pa-5 editor-settings" shaped>
             <v-row no-gutters class="justify-space-between align-center mb-5">
-              <v-col>
+              <v-col cols="3">
                 <h3>Nastavení</h3>
               </v-col>
-              <v-col class="text-right">
+              <v-col cols="9" class="text-right">
                 <v-btn class="mr-3" color="primary" @click="updateUserTemplate"
                   >Uložit</v-btn
+                >
+                <v-btn
+                  class="mr-3"
+                  color="primary"
+                  :href="ampURL"
+                  target="_blank"
+                  >Náhled</v-btn
                 >
                 <v-btn color="secondary" @click="closeTemplate">Zavřít</v-btn>
               </v-col>
@@ -678,6 +685,7 @@ export default {
   data: () => ({
     userTemplateId: 0,
     introDisplay: "block",
+    ampURL: "",
     component: {
       logo: {
         used: true,
@@ -780,6 +788,7 @@ export default {
   methods: {
     getTemplateID() {
       this.userTemplateId = this.$route.query.id;
+      this.ampURL = "/files/index_amp" + this.$route.query.id + ".html";
     },
     readUserTemplate() {
       this.axios
@@ -812,6 +821,12 @@ export default {
         });
     },
     closeTemplate() {
+      this.component.logo.display = "none";
+      this.component.title.display = "none";
+      this.component.text.display = "none";
+      this.component.carousel.display = "none";
+      this.component.accordion.display = "none";
+      this.component.timeago.display = "none";
       this.updateUserTemplate();
       window.location.href = "/templates";
     },
