@@ -141,6 +141,38 @@
             >
               {{ component.timeago.date }} {{ component.timeago.time }}
             </div>
+            <!-- Component form -->
+            <div
+              v-show="component.form.used"
+              id="componentForm"
+              class="component"
+              @click="componentFormDisplay"
+            >
+              <div
+                :style="{
+                  marginLeft: component.form.align,
+                  marginRight: component.form.align,
+                  paddingTop: component.form.paddingY + 'px',
+                  paddingBottom: component.form.paddingY + 'px',
+                  width: component.form.width + 'px',
+                }"
+              >
+                <v-text-field
+                  v-for="(item, i) in component.form.input"
+                  :key="i"
+                  v-model="item.value"
+                  :type="item.type"
+                  :label="item.label"
+                  disabled
+                  outlined
+                  dense
+                >
+                </v-text-field>
+                <v-btn color="secondary" disabled>{{
+                  component.form.button
+                }}</v-btn>
+              </div>
+            </div>
           </div>
         </v-col>
         <!-- Settings -->
@@ -159,6 +191,7 @@
                   color="primary"
                   :href="ampURL"
                   target="_blank"
+                  :disabled="!view"
                   >Náhled</v-btn
                 >
                 <v-btn color="secondary" @click="closeTemplate">Zavřít</v-btn>
@@ -195,6 +228,10 @@
                   <v-switch
                     v-model="component.timeago.used"
                     label="Časovač"
+                  ></v-switch>
+                  <v-switch
+                    v-model="component.form.used"
+                    label="Formulář"
                   ></v-switch>
                 </v-col>
               </v-row>
@@ -571,7 +608,7 @@
             </v-form>
             <!-- Settings timeago -->
             <v-form
-              id="text"
+              id="timeago"
               class="mt-5"
               ref="form"
               :style="{
@@ -659,6 +696,97 @@
                 </v-col>
               </v-row>
             </v-form>
+            <!-- Settings form -->
+            <v-form
+              id="form"
+              class="mt-5"
+              ref="form"
+              :style="{
+                display: component.form.display,
+              }"
+            >
+              <h4 class="mb-3">Formulář</h4>
+              <v-row>
+                <v-col cols="2">
+                  <v-text-field
+                    v-model="component.form.width"
+                    type="number"
+                    label="Šířka (px)"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="10">
+                  <v-text-field
+                    v-model="component.form.url"
+                    type="text"
+                    label="Cílová URL adresa"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row
+                v-for="(item, i) in component.form.input"
+                :key="i"
+                class="align-baseline mt-0"
+              >
+                <v-col cols="5">
+                  <v-text-field
+                    v-model="item.label"
+                    type="text"
+                    label="Název pole"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="4">
+                  <v-select
+                    v-model="item.type"
+                    :items="formTypes"
+                    label="Typ"
+                  ></v-select>
+                </v-col>
+                <v-col cols="3">
+                  <v-switch v-model="item.required" label="Povinné"></v-switch>
+                </v-col>
+              </v-row>
+
+              <v-btn
+                small
+                class="mr-3 mb-5"
+                color="primary"
+                @click="componentFormAddInput"
+                >Přidat pole</v-btn
+              >
+              <v-btn
+                v-if="component.form.input.length > 1"
+                small
+                class="mr-3 mb-5 white--text"
+                color="red"
+                @click="componentFormRemoveInput"
+                >Odebrat pole</v-btn
+              >
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="component.form.button"
+                    type="text"
+                    label="Text tlačítka"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row class="mt-0 mb-0">
+                <v-col cols="6">
+                  <v-text-field
+                    v-model="component.form.successSend"
+                    type="text"
+                    label="Text při úspěšném odeslání"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="6">
+                  <v-text-field
+                    v-model="component.form.errorSend"
+                    type="text"
+                    label="Text při neúspěšném odeslání"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-form>
           </v-card>
         </v-col>
       </v-row>
@@ -686,6 +814,8 @@ export default {
     userTemplateId: 0,
     introDisplay: "block",
     ampURL: "",
+    view: false,
+    formTypes: ["text", "email", "number"],
     component: {
       logo: {
         used: true,
@@ -772,6 +902,29 @@ export default {
         date: "1995-07-30",
         time: "22:00",
       },
+      form: {
+        used: false,
+        display: "none",
+        align: "auto",
+        width: 300,
+        paddingY: 30,
+        url: "",
+        successSend: "V pořádku odesláno.",
+        errorSend: "Došlo k chybě.",
+        input: [
+          {
+            label: "Jméno",
+            type: "text",
+            required: false,
+          },
+          {
+            label: "E-mail",
+            type: "email",
+            required: true,
+          },
+        ],
+        button: "Odeslat",
+      },
     },
     snackbar: false,
     snackbar_text: "",
@@ -783,6 +936,7 @@ export default {
     this.getTemplateID();
     if (this.$route.query.new !== "true") {
       this.readUserTemplate();
+      this.view = true;
     }
   },
   methods: {
@@ -810,6 +964,7 @@ export default {
             this.snackbar_color = "green darken-2";
             this.snackbar_text = "Šablona úspěšně uložena.";
             this.snackbar = true;
+            this.view = true;
           } else {
             this.snackbar_text = "Došlo k neočekávané chybě.";
             this.snackbar_color = "red darken-2";
@@ -827,6 +982,7 @@ export default {
       this.component.carousel.display = "none";
       this.component.accordion.display = "none";
       this.component.timeago.display = "none";
+      this.component.form.display = "none";
       this.updateUserTemplate();
       window.location.href = "/templates";
     },
@@ -838,6 +994,7 @@ export default {
       this.component.text.display = "none";
       this.component.accordion.display = "none";
       this.component.timeago.display = "none";
+      this.component.form.display = "none";
     },
     componentCarouselDisplay() {
       this.introDisplay = "none";
@@ -847,6 +1004,7 @@ export default {
       this.component.text.display = "none";
       this.component.accordion.display = "none";
       this.component.timeago.display = "none";
+      this.component.form.display = "none";
     },
     componentCarouselAddImg() {
       let carouselImg = {};
@@ -863,6 +1021,7 @@ export default {
       this.component.text.display = "none";
       this.component.accordion.display = "none";
       this.component.timeago.display = "none";
+      this.component.form.display = "none";
     },
     componentTextDisplay() {
       this.introDisplay = "none";
@@ -871,6 +1030,7 @@ export default {
       this.component.title.display = "none";
       this.component.text.display = "block";
       this.component.timeago.display = "none";
+      this.component.form.display = "none";
     },
     componentAccordionDisplay() {
       this.introDisplay = "none";
@@ -880,6 +1040,7 @@ export default {
       this.component.text.display = "none";
       this.component.accordion.display = "block";
       this.component.timeago.display = "none";
+      this.component.form.display = "none";
     },
     componentAccordionAddSection() {
       let accordionSection = {};
@@ -896,6 +1057,24 @@ export default {
       this.component.text.display = "none";
       this.component.accordion.display = "none";
       this.component.timeago.display = "block";
+      this.component.form.display = "none";
+    },
+    componentFormDisplay() {
+      this.introDisplay = "none";
+      this.component.logo.display = "none";
+      this.component.carousel.display = "none";
+      this.component.title.display = "none";
+      this.component.text.display = "none";
+      this.component.accordion.display = "none";
+      this.component.timeago.display = "none";
+      this.component.form.display = "block";
+    },
+    componentFormAddInput() {
+      let formInput = {};
+      this.component.form.input.push(formInput);
+    },
+    componentFormRemoveInput() {
+      this.component.form.input.pop();
     },
   },
   computed: {
