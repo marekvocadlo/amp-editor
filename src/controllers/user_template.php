@@ -149,6 +149,30 @@ if($requestMethod === "PUT"){
     $accordion = "";
     $accordionImport = "";
   }
+  // Timeago
+  if ($component->timeago->used) {
+
+    // Add accordion to email header
+    $timeagoImport = '<script async custom-element="amp-timeago" src="https://cdn.ampproject.org/v0/amp-timeago-0.1.js"></script>';
+    $timeagoWidth= 700 - $component->timeago->paddingRight - $component->timeago->paddingLeft;
+
+    $timeago = '
+      <div class="container">
+        <amp-timeago
+          layout="fixed"
+          width="'.$timeagoWidth.'"
+          height="'.$component->timeago->line_height.'"
+          datetime="'.$component->timeago->date.'T'.$component->timeago->time.':00.809Z"
+          locale="cs"
+          style="width: '.$timeagoWidth.'px; text-align: '.$component->timeago->align.'; font-size: '.$component->timeago->font_size.'px; line-height: '.$component->timeago->line_height.'px; color: '.$component->timeago->color.'; padding: '.$component->timeago->paddingTop.'px '.$component->timeago->paddingRight.'px '.$component->timeago->paddingBottom.'px '.$component->timeago->paddingLeft.'px;"
+        >
+          '.$component->timeago->date.' '.$component->timeago->time.'
+        </amp-timeago>
+      </div>';
+  } else {
+    $timeago = "";
+    $timeagoImport = "";
+  }
 
 
   $amp = '<!DOCTYPE html>
@@ -158,6 +182,7 @@ if($requestMethod === "PUT"){
   <script async src="https://cdn.ampproject.org/v0.js"></script>
   '.$carouselImport.'
   '.$accordionImport.'
+  '.$timeagoImport.'
   <style amp4email-boilerplate>body{visibility:hidden}</style>
   <style amp-custom>
     body {
@@ -187,7 +212,7 @@ if($requestMethod === "PUT"){
 </head>
 <body>
 <div style="padding: 20px 0;">
-  '.$logo.$carousel.$title.$text.$accordion.'
+  '.$logo.$carousel.$title.$text.$accordion.$timeago.'
  </div>
 </body>
 </html>

@@ -122,6 +122,25 @@
                 </v-expansion-panels>
               </div>
             </div>
+            <!-- Component timeago -->
+            <div
+              v-show="component.timeago.used"
+              id="componentTimeago"
+              class="component"
+              :style="{
+                textAlign: component.timeago.align,
+                paddingTop: component.timeago.paddingTop + 'px',
+                paddingRight: component.timeago.paddingRight + 'px',
+                paddingBottom: component.timeago.paddingBottom + 'px',
+                paddingLeft: component.timeago.paddingLeft + 'px',
+                color: component.timeago.color,
+                fontSize: component.timeago.font_size + 'px',
+                lineHeight: component.timeago.line_height + 'px',
+              }"
+              @click="componentTimeagoDisplay"
+            >
+              {{ component.timeago.date }} {{ component.timeago.time }}
+            </div>
           </div>
         </v-col>
         <!-- Settings -->
@@ -165,6 +184,10 @@
                   <v-switch
                     v-model="component.accordion.used"
                     label="Skládaný seznam"
+                  ></v-switch>
+                  <v-switch
+                    v-model="component.timeago.used"
+                    label="Časovač"
                   ></v-switch>
                 </v-col>
               </v-row>
@@ -539,6 +562,96 @@
                 >Odebrat sekci</v-btn
               >
             </v-form>
+            <!-- Settings timeago -->
+            <v-form
+              id="text"
+              class="mt-5"
+              ref="form"
+              :style="{
+                display: component.timeago.display,
+              }"
+            >
+              <h4 class="mb-3">Časovač</h4>
+              <v-radio-group
+                v-model="component.timeago.align"
+                row
+                label="Zarovnání textu"
+              >
+                <v-radio label="Vlevo" value="left"></v-radio>
+                <v-radio label="Na střed" value="center"></v-radio>
+                <v-radio label="Vpravo" value="right"></v-radio>
+              </v-radio-group>
+              <v-row>
+                <v-col cols="3"
+                  ><v-text-field
+                    type="number"
+                    v-model="component.timeago.paddingTop"
+                    label="Horní odsazení"
+                  ></v-text-field
+                ></v-col>
+                <v-col cols="3"
+                  ><v-text-field
+                    type="number"
+                    v-model="component.timeago.paddingRight"
+                    label="Pravé odsazení"
+                  ></v-text-field
+                ></v-col>
+                <v-col cols="3"
+                  ><v-text-field
+                    type="number"
+                    v-model="component.timeago.paddingBottom"
+                    label="Spodní odsazení"
+                  ></v-text-field
+                ></v-col>
+                <v-col cols="3"
+                  ><v-text-field
+                    type="number"
+                    v-model="component.timeago.paddingLeft"
+                    label="Levé odsazení"
+                  ></v-text-field
+                ></v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="4">
+                  <v-text-field
+                    type="number"
+                    v-model="component.timeago.font_size"
+                    label="Velikost fontu"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="4">
+                  <v-text-field
+                    type="number"
+                    v-model="component.timeago.line_height"
+                    label="Výška řádku"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="4">
+                  <v-text-field
+                    type="color"
+                    v-model="component.timeago.color"
+                    label="Barva textu"
+                    height="30"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="6">
+                  <v-text-field
+                    type="date"
+                    v-model="component.timeago.date"
+                    label="Datum události"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="6">
+                  <v-text-field
+                    type="time"
+                    v-model="component.timeago.time"
+                    label="Čas události"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-form>
           </v-card>
         </v-col>
       </v-row>
@@ -637,6 +750,20 @@ export default {
           },
         ],
       },
+      timeago: {
+        used: false,
+        display: "none",
+        align: "center",
+        paddingTop: 0,
+        paddingRight: 50,
+        paddingBottom: 30,
+        paddingLeft: 50,
+        font_size: "22",
+        line_height: "28",
+        color: "#000000",
+        date: "1995-07-30",
+        time: "22:00",
+      },
     },
     snackbar: false,
     snackbar_text: "",
@@ -695,6 +822,7 @@ export default {
       this.component.title.display = "none";
       this.component.text.display = "none";
       this.component.accordion.display = "none";
+      this.component.timeago.display = "none";
     },
     componentCarouselDisplay() {
       this.introDisplay = "none";
@@ -703,6 +831,7 @@ export default {
       this.component.title.display = "none";
       this.component.text.display = "none";
       this.component.accordion.display = "none";
+      this.component.timeago.display = "none";
     },
     componentCarouselAddImg() {
       let carouselImg = {};
@@ -718,6 +847,7 @@ export default {
       this.component.title.display = "block";
       this.component.text.display = "none";
       this.component.accordion.display = "none";
+      this.component.timeago.display = "none";
     },
     componentTextDisplay() {
       this.introDisplay = "none";
@@ -725,6 +855,7 @@ export default {
       this.component.carousel.display = "none";
       this.component.title.display = "none";
       this.component.text.display = "block";
+      this.component.timeago.display = "none";
     },
     componentAccordionDisplay() {
       this.introDisplay = "none";
@@ -733,6 +864,7 @@ export default {
       this.component.title.display = "none";
       this.component.text.display = "none";
       this.component.accordion.display = "block";
+      this.component.timeago.display = "none";
     },
     componentAccordionAddSection() {
       let accordionSection = {};
@@ -740,6 +872,15 @@ export default {
     },
     componentAccordionRemoveSection() {
       this.component.accordion.section.pop();
+    },
+    componentTimeagoDisplay() {
+      this.introDisplay = "none";
+      this.component.logo.display = "none";
+      this.component.carousel.display = "none";
+      this.component.title.display = "none";
+      this.component.text.display = "none";
+      this.component.accordion.display = "none";
+      this.component.timeago.display = "block";
     },
   },
   computed: {
