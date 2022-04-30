@@ -1,44 +1,46 @@
 <template>
-  <div v-if="!getUser.email" class="editor">
+  <div v-if="getUser.email" class="editor">
     <v-container class="container-editor">
       <v-row no-gutters>
         <v-col class="text-center py-5" cols="12" sm="6" md="8">
           <div class="card-email">
             <!-- Component logo -->
             <div
-              id="galleryLogo"
+              v-show="component.logo.used"
+              id="componentLogo"
               class="component"
-              @click="galleryLogoDisplay"
+              @click="componentLogoDisplay"
               :style="{
-                paddingTop: gallery.logo.paddingTop + 'px',
-                paddingBottom: gallery.logo.paddingBottom + 'px',
-                paddingLeft: gallery.logo.paddingLeft + 'px',
-                paddingRight: gallery.logo.paddingRight + 'px',
-                textAlign: gallery.logo.align,
+                paddingTop: component.logo.paddingTop + 'px',
+                paddingBottom: component.logo.paddingBottom + 'px',
+                paddingLeft: component.logo.paddingLeft + 'px',
+                paddingRight: component.logo.paddingRight + 'px',
+                textAlign: component.logo.align,
               }"
             >
               <img
-                :src="gallery.logo.src"
+                :src="component.logo.src"
                 alt=""
-                :width="gallery.logo.width"
-                :height="gallery.logo.height"
+                :width="component.logo.width"
+                :height="component.logo.height"
               />
             </div>
             <!-- Component carousel -->
             <div
-              id="galleryCarousel"
+              v-show="component.carousel.used"
+              id="componentCarousel"
               class="component"
-              @click="galleryCarouselDisplay"
+              @click="componentCarouselDisplay"
             >
               <v-card
-                :width="gallery.carousel.width"
+                :width="component.carousel.width"
                 style="margin: 0 auto"
                 tile
                 elevation="0"
               >
-                <v-carousel :height="gallery.carousel.height" hide-delimiters>
+                <v-carousel :height="component.carousel.height" hide-delimiters>
                   <v-carousel-item
-                    v-for="(item, i) in gallery.carousel.img"
+                    v-for="(item, i) in component.carousel.img"
                     :key="i"
                     :src="item.src"
                   ></v-carousel-item>
@@ -47,52 +49,55 @@
             </div>
             <!-- Component title -->
             <div
-              id="galleryTitle"
+              v-show="component.title.used"
+              id="componentTitle"
               class="component"
               :style="{
-                textAlign: gallery.title.align,
-                paddingTop: gallery.title.paddingTop + 'px',
-                paddingBottom: gallery.title.paddingBottom + 'px',
-                paddingLeft: gallery.title.paddingLeft + 'px',
-                paddingRight: gallery.title.paddingRight + 'px',
-                color: gallery.title.color,
-                fontSize: gallery.title.font_size + 'px',
-                lineHeight: gallery.title.line_height + 'px',
+                textAlign: component.title.align,
+                paddingTop: component.title.paddingTop + 'px',
+                paddingBottom: component.title.paddingBottom + 'px',
+                paddingLeft: component.title.paddingLeft + 'px',
+                paddingRight: component.title.paddingRight + 'px',
+                color: component.title.color,
+                fontSize: component.title.font_size + 'px',
+                lineHeight: component.title.line_height + 'px',
               }"
-              @click="galleryTitleDisplay"
+              @click="componentTitleDisplay"
             >
-              {{ gallery.title.text }}
+              {{ component.title.text }}
             </div>
             <!-- Component text -->
             <div
-              id="galleryText"
+              v-show="component.text.used"
+              id="componentText"
               class="component"
               :style="{
-                textAlign: gallery.text.align,
-                paddingTop: gallery.text.paddingTop + 'px',
-                paddingRight: gallery.text.paddingRight + 'px',
-                paddingBottom: gallery.text.paddingBottom + 'px',
-                paddingLeft: gallery.text.paddingLeft + 'px',
-                color: gallery.text.color,
-                fontSize: gallery.text.font_size + 'px',
-                lineHeight: gallery.text.line_height + 'px',
+                textAlign: component.text.align,
+                paddingTop: component.text.paddingTop + 'px',
+                paddingRight: component.text.paddingRight + 'px',
+                paddingBottom: component.text.paddingBottom + 'px',
+                paddingLeft: component.text.paddingLeft + 'px',
+                color: component.text.color,
+                fontSize: component.text.font_size + 'px',
+                lineHeight: component.text.line_height + 'px',
               }"
-              @click="galleryTextDisplay"
+              @click="componentTextDisplay"
             >
-              {{ gallery.text.text }}
+              {{ component.text.text }}
             </div>
             <!-- Component accordion -->
             <div
-              id="infoAccordion"
+              v-show="component.accordion.used"
+              id="componentAccordion"
               class="component"
-              @click="infoAccordionDisplay"
+              @click="componentAccordionDisplay"
             >
               <div
                 :style="{
-                  textAlign: info.accordion.align,
+                  textAlign: component.accordion.align,
                   width: 600 + 'px',
-                  fontSize: info.accordion.font_size + 'px',
-                  lineHeight: info.accordion.line_height + 'px',
+                  fontSize: component.accordion.font_size + 'px',
+                  lineHeight: component.accordion.line_height + 'px',
                   marginLeft: 'auto',
                   marginRight: 'auto',
                   paddingBottom: 30 + 'px',
@@ -100,16 +105,16 @@
               >
                 <v-expansion-panels accordion>
                   <v-expansion-panel
-                    v-for="(item, i) in info.accordion.section"
+                    v-for="(item, i) in component.accordion.section"
                     :key="i"
                   >
                     <v-expansion-panel-header
-                      :style="{ color: info.accordion.color }"
+                      :style="{ color: component.accordion.color }"
                     >
                       {{ item.title }}</v-expansion-panel-header
                     >
                     <v-expansion-panel-content
-                      :style="{ color: info.accordion.color }"
+                      :style="{ color: component.accordion.color }"
                     >
                       {{ item.text }}
                     </v-expansion-panel-content>
@@ -122,7 +127,7 @@
         <!-- Settings -->
         <v-col class="pt-5" cols="6" md="4">
           <v-card class="pa-5 editor-settings" shaped>
-            <v-row no-gutters class="justify-space-between align-center">
+            <v-row no-gutters class="justify-space-between align-center mb-5">
               <v-col>
                 <h3>Nastavení</h3>
               </v-col>
@@ -133,26 +138,58 @@
                 <v-btn color="secondary" @click="closeTemplate">Zavřít</v-btn>
               </v-col>
             </v-row>
-            <h3
-              class="mt-10"
+            <v-divider></v-divider>
+            <!-- Settings general -->
+            <v-form id="general" class="mt-5" ref="form" :style="{}">
+              <h4 class="mb-3">Dostupné komponenty</h4>
+              <v-row>
+                <v-col cols="6">
+                  <v-switch
+                    v-model="component.logo.used"
+                    label="Logo"
+                  ></v-switch>
+                  <v-switch
+                    v-model="component.title.used"
+                    label="Nadpis"
+                  ></v-switch>
+                  <v-switch
+                    v-model="component.text.used"
+                    label="Text"
+                  ></v-switch>
+                </v-col>
+                <v-col cols="6">
+                  <v-switch
+                    v-model="component.carousel.used"
+                    label="Galerie obrázků"
+                  ></v-switch>
+                  <v-switch
+                    v-model="component.accordion.used"
+                    label="Skládaný seznam"
+                  ></v-switch>
+                </v-col>
+              </v-row>
+            </v-form>
+            <v-divider></v-divider>
+            <h4
+              class="mt-5"
               :style="{
                 display: introDisplay,
               }"
             >
-              Začněte kliknutí do obsahu...
-            </h3>
+              Úpravy začněte kliknutím na komponentu...
+            </h4>
             <!-- Settings logo -->
             <v-form
               id="logo"
               class="mt-5"
               ref="form"
               :style="{
-                display: gallery.logo.display,
+                display: component.logo.display,
               }"
             >
               <h4 class="mb-3">Logo</h4>
               <v-radio-group
-                v-model="gallery.logo.align"
+                v-model="component.logo.align"
                 row
                 label="Pozice loga: "
               >
@@ -161,26 +198,26 @@
                 <v-radio label="Vpravo" value="right"></v-radio>
               </v-radio-group>
               <v-text-field
-                v-model="gallery.logo.src"
+                v-model="component.logo.src"
                 type="text"
                 label="URL loga"
               ></v-text-field>
               <v-text-field
-                v-model="gallery.logo.alt"
+                v-model="component.logo.alt"
                 type="text"
                 label="Alternativní text"
               ></v-text-field>
               <v-row>
                 <v-col cols="6"
                   ><v-text-field
-                    v-model="gallery.logo.width"
+                    v-model="component.logo.width"
                     type="number"
                     label="Šířka loga (px)"
                   ></v-text-field
                 ></v-col>
                 <v-col cols="6"
                   ><v-text-field
-                    v-model="gallery.logo.height"
+                    v-model="component.logo.height"
                     type="number"
                     label="Výška loga (px)"
                   ></v-text-field
@@ -190,28 +227,28 @@
                 <v-col cols="3"
                   ><v-text-field
                     type="number"
-                    v-model="gallery.logo.paddingTop"
+                    v-model="component.logo.paddingTop"
                     label="Horní odsazení"
                   ></v-text-field
                 ></v-col>
                 <v-col cols="3"
                   ><v-text-field
                     type="number"
-                    v-model="gallery.logo.paddingRight"
+                    v-model="component.logo.paddingRight"
                     label="Pravé odsazení"
                   ></v-text-field
                 ></v-col>
                 <v-col cols="3"
                   ><v-text-field
                     type="number"
-                    v-model="gallery.logo.paddingBottom"
+                    v-model="component.logo.paddingBottom"
                     label="Spodní odsazení"
                   ></v-text-field
                 ></v-col>
                 <v-col cols="3"
                   ><v-text-field
                     type="number"
-                    v-model="gallery.logo.paddingLeft"
+                    v-model="component.logo.paddingLeft"
                     label="Levé odsazení"
                   ></v-text-field
                 ></v-col>
@@ -223,51 +260,51 @@
               class="mt-5"
               ref="form"
               :style="{
-                display: gallery.carousel.display,
+                display: component.carousel.display,
               }"
             >
-              <h4 class="mb-3">Carousel</h4>
+              <h4 class="mb-3">Galerie obrázků</h4>
               <v-row>
                 <v-col cols="6"
                   ><v-text-field
-                    v-model="gallery.carousel.width"
+                    v-model="component.carousel.width"
                     type="number"
                     label="Šířka (px)"
                   ></v-text-field
                 ></v-col>
                 <v-col cols="6"
                   ><v-text-field
-                    v-model="gallery.carousel.height"
+                    v-model="component.carousel.height"
                     type="number"
                     label="Výška (px)"
                   ></v-text-field
                 ></v-col>
               </v-row>
               <v-switch
-                v-model="gallery.carousel.loop"
+                v-model="component.carousel.loop"
                 label="Opakování obrázků"
               ></v-switch>
               <v-text-field
-                v-for="(item, i) in gallery.carousel.img"
+                v-for="(item, i) in component.carousel.img"
                 :key="i"
                 :src="item.src"
                 type="text"
-                v-model="gallery.carousel.img[i].src"
+                v-model="component.carousel.img[i].src"
                 label="URL obrázku"
               ></v-text-field>
               <v-btn
                 small
                 class="mr-3 mb-5"
                 color="primary"
-                @click="galleryCarouselAddImg"
+                @click="componentCarouselAddImg"
                 >Přidat obrázek</v-btn
               >
               <v-btn
-                v-if="gallery.carousel.img.length > 1"
+                v-if="component.carousel.img.length > 1"
                 small
                 class="mr-3 mb-5 white--text"
                 color="red"
-                @click="galleryCarouselRemoveImg"
+                @click="componentCarouselRemoveImg"
                 >Odebrat obrázek</v-btn
               >
             </v-form>
@@ -277,16 +314,16 @@
               class="mt-5"
               ref="form"
               :style="{
-                display: gallery.title.display,
+                display: component.title.display,
               }"
             >
               <h4 class="mb-3">Nadpis</h4>
               <v-text-field
-                v-model="gallery.title.text"
+                v-model="component.title.text"
                 label="Text"
               ></v-text-field>
               <v-radio-group
-                v-model="gallery.title.align"
+                v-model="component.title.align"
                 row
                 label="Zarovnání nadpisu"
               >
@@ -298,28 +335,28 @@
                 <v-col cols="3"
                   ><v-text-field
                     type="number"
-                    v-model="gallery.title.paddingTop"
+                    v-model="component.title.paddingTop"
                     label="Horní odsazení"
                   ></v-text-field
                 ></v-col>
                 <v-col cols="3"
                   ><v-text-field
                     type="number"
-                    v-model="gallery.title.paddingRight"
+                    v-model="component.title.paddingRight"
                     label="Pravé odsazení"
                   ></v-text-field
                 ></v-col>
                 <v-col cols="3"
                   ><v-text-field
                     type="number"
-                    v-model="gallery.title.paddingBottom"
+                    v-model="component.title.paddingBottom"
                     label="Spodní odsazení"
                   ></v-text-field
                 ></v-col>
                 <v-col cols="3"
                   ><v-text-field
                     type="number"
-                    v-model="gallery.title.paddingLeft"
+                    v-model="component.title.paddingLeft"
                     label="Levé odsazení"
                   ></v-text-field
                 ></v-col>
@@ -328,21 +365,21 @@
                 <v-col cols="4">
                   <v-text-field
                     type="number"
-                    v-model="gallery.title.font_size"
+                    v-model="component.title.font_size"
                     label="Velikost fontu"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="4">
                   <v-text-field
                     type="number"
-                    v-model="gallery.title.line_height"
+                    v-model="component.title.line_height"
                     label="Výška řádku"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="4">
                   <v-text-field
                     type="color"
-                    v-model="gallery.title.color"
+                    v-model="component.title.color"
                     label="Barva nadpisu"
                     height="30"
                   ></v-text-field>
@@ -355,13 +392,16 @@
               class="mt-5"
               ref="form"
               :style="{
-                display: gallery.text.display,
+                display: component.text.display,
               }"
             >
               <h4 class="mb-3">Textový blok</h4>
-              <v-textarea v-model="gallery.text.text" label="Text"></v-textarea>
+              <v-textarea
+                v-model="component.text.text"
+                label="Text"
+              ></v-textarea>
               <v-radio-group
-                v-model="gallery.text.align"
+                v-model="component.text.align"
                 row
                 label="Zarovnání textu"
               >
@@ -374,28 +414,28 @@
                 <v-col cols="3"
                   ><v-text-field
                     type="number"
-                    v-model="gallery.text.paddingTop"
+                    v-model="component.text.paddingTop"
                     label="Horní odsazení"
                   ></v-text-field
                 ></v-col>
                 <v-col cols="3"
                   ><v-text-field
                     type="number"
-                    v-model="gallery.text.paddingRight"
+                    v-model="component.text.paddingRight"
                     label="Pravé odsazení"
                   ></v-text-field
                 ></v-col>
                 <v-col cols="3"
                   ><v-text-field
                     type="number"
-                    v-model="gallery.text.paddingBottom"
+                    v-model="component.text.paddingBottom"
                     label="Spodní odsazení"
                   ></v-text-field
                 ></v-col>
                 <v-col cols="3"
                   ><v-text-field
                     type="number"
-                    v-model="gallery.text.paddingLeft"
+                    v-model="component.text.paddingLeft"
                     label="Levé odsazení"
                   ></v-text-field
                 ></v-col>
@@ -404,21 +444,21 @@
                 <v-col cols="4">
                   <v-text-field
                     type="number"
-                    v-model="gallery.text.font_size"
+                    v-model="component.text.font_size"
                     label="Velikost fontu"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="4">
                   <v-text-field
                     type="number"
-                    v-model="gallery.text.line_height"
+                    v-model="component.text.line_height"
                     label="Výška řádku"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="4">
                   <v-text-field
                     type="color"
-                    v-model="gallery.text.color"
+                    v-model="component.text.color"
                     label="Barva textu"
                     height="30"
                   ></v-text-field>
@@ -431,7 +471,7 @@
               class="mt-5"
               ref="form"
               :style="{
-                display: info.accordion.display,
+                display: component.accordion.display,
               }"
             >
               <h4 class="mb-3">Skládaný seznam</h4>
@@ -439,63 +479,63 @@
                 <v-col cols="4">
                   <v-text-field
                     type="number"
-                    v-model="info.accordion.font_size"
+                    v-model="component.accordion.font_size"
                     label="Velikost fontu obsahu"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="4">
                   <v-text-field
                     type="number"
-                    v-model="info.accordion.line_height"
+                    v-model="component.accordion.line_height"
                     label="Výška řádku obsahu"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="4">
                   <v-text-field
                     type="color"
-                    v-model="info.accordion.color"
+                    v-model="component.accordion.color"
                     label="Barva textu"
                     height="30"
                   ></v-text-field>
                 </v-col>
               </v-row>
               <v-switch
-                v-model="info.accordion.animate"
+                v-model="component.accordion.animate"
                 label="Animace při rozbalování"
               ></v-switch>
               <v-switch
-                v-model="info.accordion.expandSingleSection"
+                v-model="component.accordion.expandSingleSection"
                 label="Rozbalená jen 1 sekce"
               ></v-switch>
               <v-text-field
-                v-for="(item, i) in info.accordion.section"
+                v-for="(item, i) in component.accordion.section"
                 :key="i"
                 :src="item.src"
                 type="text"
-                v-model="info.accordion.section[i].title"
+                v-model="component.accordion.section[i].title"
                 label="Nadpis sekce"
               ></v-text-field>
               <v-text-field
-                v-for="(item, i) in info.accordion.section"
+                v-for="(item, i) in component.accordion.section"
                 :key="i"
                 :src="item.src"
                 type="text"
-                v-model="info.accordion.section[i].text"
+                v-model="component.accordion.section[i].text"
                 label="Obsah sekce"
               ></v-text-field>
               <v-btn
                 small
                 class="mr-3 mb-5"
                 color="primary"
-                @click="infoAccordionAddSection"
+                @click="componentAccordionAddSection"
                 >Přidat sekci</v-btn
               >
               <v-btn
-                v-if="info.accordion.section.length > 1"
+                v-if="component.accordion.section.length > 1"
                 small
                 class="mr-3 mb-5 white--text"
                 color="red"
-                @click="infoAccordionRemoveSection"
+                @click="componentAccordionRemoveSection"
                 >Odebrat sekci</v-btn
               >
             </v-form>
@@ -525,8 +565,9 @@ export default {
   data: () => ({
     userTemplateId: 0,
     introDisplay: "block",
-    gallery: {
+    component: {
       logo: {
+        used: true,
         display: "none",
         paddingTop: 10,
         paddingRight: 50,
@@ -540,6 +581,7 @@ export default {
           "https://img.freepik.com/free-vector/illustration-circle-stamp-banner-vector_53876-27183.jpg?t=st=1650813257~exp=1650813857~hmac=cee7b6217f8190ead609263d99e2ef872c2b29d02c6fb5f6fe54964d0d138481&w=826",
       },
       carousel: {
+        used: true,
         display: "none",
         width: 600,
         height: 200,
@@ -553,6 +595,7 @@ export default {
         ],
       },
       title: {
+        used: true,
         display: "none",
         align: "center",
         paddingTop: 30,
@@ -565,6 +608,7 @@ export default {
         color: "#000000",
       },
       text: {
+        used: true,
         display: "none",
         align: "justify",
         paddingTop: 0,
@@ -577,9 +621,8 @@ export default {
         line_height: "22",
         color: "#000000",
       },
-    },
-    info: {
       accordion: {
+        used: false,
         display: "none",
         align: "left",
         font_size: "14",
@@ -603,6 +646,7 @@ export default {
   created() {
     this.$store.dispatch("getUser");
     this.getTemplateID();
+    this.updateUserTemplate();
     this.readUserTemplate();
   },
   methods: {
@@ -613,17 +657,19 @@ export default {
       this.axios
         .get("/app/user_template.php?id=" + this.userTemplateId)
         .then((response) => {
-          this.gallery = response.data;
+          if (response.data !== null) {
+            this.component = response.data;
+          }
         });
     },
     updateUserTemplate() {
       this.axios
         .put("/app/user_template.php", {
           id: this.userTemplateId,
-          settings: this.gallery,
+          settings: this.component,
         })
         .then((response) => {
-          if (response.data === "Template saved") {
+          if (response.data === 1) {
             this.snackbar_color = "green darken-2";
             this.snackbar_text = "Šablona úspěšně uložena.";
             this.snackbar = true;
@@ -641,58 +687,58 @@ export default {
       this.updateUserTemplate();
       window.location.href = "/templates";
     },
-    galleryLogoDisplay() {
+    componentLogoDisplay() {
       this.introDisplay = "none";
-      this.gallery.logo.display = "block";
-      this.gallery.carousel.display = "none";
-      this.gallery.title.display = "none";
-      this.gallery.text.display = "none";
-      this.info.accordion.display = "none";
+      this.component.logo.display = "block";
+      this.component.carousel.display = "none";
+      this.component.title.display = "none";
+      this.component.text.display = "none";
+      this.component.accordion.display = "none";
     },
-    galleryCarouselDisplay() {
+    componentCarouselDisplay() {
       this.introDisplay = "none";
-      this.gallery.logo.display = "none";
-      this.gallery.carousel.display = "block";
-      this.gallery.title.display = "none";
-      this.gallery.text.display = "none";
-      this.info.accordion.display = "none";
+      this.component.logo.display = "none";
+      this.component.carousel.display = "block";
+      this.component.title.display = "none";
+      this.component.text.display = "none";
+      this.component.accordion.display = "none";
     },
-    galleryCarouselAddImg() {
+    componentCarouselAddImg() {
       let carouselImg = {};
-      this.gallery.carousel.img.push(carouselImg);
+      this.component.carousel.img.push(carouselImg);
     },
-    galleryCarouselRemoveImg() {
-      this.gallery.carousel.img.pop();
+    componentCarouselRemoveImg() {
+      this.component.carousel.img.pop();
     },
-    galleryTitleDisplay() {
+    componentTitleDisplay() {
       this.introDisplay = "none";
-      this.gallery.logo.display = "none";
-      this.gallery.carousel.display = "none";
-      this.gallery.title.display = "block";
-      this.gallery.text.display = "none";
-      this.info.accordion.display = "none";
+      this.component.logo.display = "none";
+      this.component.carousel.display = "none";
+      this.component.title.display = "block";
+      this.component.text.display = "none";
+      this.component.accordion.display = "none";
     },
-    galleryTextDisplay() {
+    componentTextDisplay() {
       this.introDisplay = "none";
-      this.gallery.logo.display = "none";
-      this.gallery.carousel.display = "none";
-      this.gallery.title.display = "none";
-      this.gallery.text.display = "block";
+      this.component.logo.display = "none";
+      this.component.carousel.display = "none";
+      this.component.title.display = "none";
+      this.component.text.display = "block";
     },
-    infoAccordionDisplay() {
+    componentAccordionDisplay() {
       this.introDisplay = "none";
-      this.gallery.logo.display = "none";
-      this.gallery.carousel.display = "none";
-      this.gallery.title.display = "none";
-      this.gallery.text.display = "none";
-      this.info.accordion.display = "block";
+      this.component.logo.display = "none";
+      this.component.carousel.display = "none";
+      this.component.title.display = "none";
+      this.component.text.display = "none";
+      this.component.accordion.display = "block";
     },
-    infoAccordionAddSection() {
+    componentAccordionAddSection() {
       let accordionSection = {};
-      this.info.accordion.section.push(accordionSection);
+      this.component.accordion.section.push(accordionSection);
     },
-    infoAccordionRemoveSection() {
-      this.info.accordion.section.pop();
+    componentAccordionRemoveSection() {
+      this.component.accordion.section.pop();
     },
   },
   computed: {
@@ -723,5 +769,8 @@ export default {
 .component:hover {
   border: #1976d2 1px solid;
   cursor: pointer;
+}
+.v-input--selection-controls {
+  margin-top: 0;
 }
 </style>

@@ -96,15 +96,6 @@
                     required
                     :rules="templateNameRules"
                   ></v-text-field>
-                  <v-select
-                    v-model="templateId"
-                    :items="templates"
-                    item-text="name"
-                    item-value="id"
-                    label="Vzor"
-                    required
-                    :rules="templatesRules"
-                  ></v-select>
                 </v-col>
               </v-row>
             </v-form>
@@ -140,20 +131,15 @@ export default {
   name: "Templates",
   data: () => ({
     myTemplateName: "",
-    templateId: 0,
     templateName: "",
-    templates: [],
-    userTemplateId: 0,
     userTemplateName: "",
     userTemplates: [],
     valid: true,
     dialogCreateTemplate: false,
     templateNameRules: [(v) => !!v || "Musíte zvolit název šablony."],
-    templatesRules: [(v) => !!v || "Musíte zvolit šablonu."],
   }),
   created() {
     this.$store.dispatch("getUser");
-    this.readTemplates();
     this.readUserTemplates();
   },
   methods: {
@@ -162,7 +148,6 @@ export default {
         this.axios
           .post("/app/user_template.php", {
             name: this.myTemplateName,
-            template_id: this.templateId,
           })
           .then((response) => {
             if (!response.data.empty) {
@@ -181,17 +166,6 @@ export default {
             console.log("FAILURE!!");
           });
       }
-    },
-    readTemplates() {
-      this.axios.get("/app/template.php").then((response) => {
-        this.templates = [];
-        for (let i = 0; i < response.data.length; i++) {
-          let tempTemplate = {};
-          tempTemplate.id = response.data[i][0];
-          tempTemplate.name = response.data[i][1];
-          this.templates.push(tempTemplate);
-        }
-      });
     },
     readUserTemplates() {
       this.axios.get("/app/user_template.php").then((response) => {

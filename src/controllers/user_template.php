@@ -8,22 +8,12 @@ $requestMethod = $_SERVER['REQUEST_METHOD'];
 if ($requestMethod === "POST") {
   $_POST = json_decode(file_get_contents("php://input"),true);
   $name = htmlspecialchars($_POST["name"]);
-  $template_id = $_POST["template_id"];
   $user_id = $_SESSION['user'][0];
 
-  // Template settings
-  $query = $pdo->prepare("SELECT settings FROM template WHERE id = :id");
-  $query->execute(array(
-    ":id" => $template_id
-  ));
-  $settings = $query->fetch();
-
-  $query2 = $pdo->prepare("INSERT INTO user_template (name,user_id,settings,template_id) VALUES(:name, :user_id, :settings, :template_id)");
+  $query2 = $pdo->prepare("INSERT INTO user_template (name,user_id) VALUES(:name, :user_id)");
   $result = $query2->execute(array(
     ":name" => $name,
     ":user_id" => $user_id,
-    ":settings" => $settings[0],
-    ":template_id" => $template_id,
   ));
   $insertId = $pdo->lastInsertId();
   echo $insertId;
@@ -64,13 +54,13 @@ if($requestMethod === "PUT"){
   $id = $_PUT["id"];
   $settings = json_encode($_PUT["settings"]);
   $data = json_decode(file_get_contents("php://input"));
-  $gallery = $data->settings;
+  $component = $data->settings;
 
-  //helpers
-  $loop = ($gallery->carousel->loop) ? "loop" : "";
+  // Create carousel images
+  $loop = ($component->carousel->loop) ? "loop" : "";
   $images = "";
-  for ($i = 0; $i < count($gallery->carousel->img); $i++) {
-    $img = '<amp-img width="'.$gallery->carousel->width.'" height="'.$gallery->carousel->height.'" src="'.$gallery->carousel->img[$i]->src.'"></amp-img>';
+  for ($i = 0; $i < count($component->carousel->img); $i++) {
+    $img = '<amp-img width="'.$component->carousel->width.'" height="'.$component->carousel->height.'" src="'.$component->carousel->img[$i]->src.'"></amp-img>';
     $images .= $img;
   }
 
@@ -110,33 +100,33 @@ if($requestMethod === "PUT"){
 <body>
 <div style="padding: 20px 0;">
   <div class="container">
-    <div style="text-align: '.$gallery->logo->align.'; padding: '.$gallery->logo->paddingTop.'px '.$gallery->logo->paddingRight.'px '.$gallery->logo->paddingBottom.'px '.$gallery->logo->paddingLeft.'px;">
+    <div style="text-align: '.$component->logo->align.'; padding: '.$component->logo->paddingTop.'px '.$component->logo->paddingRight.'px '.$component->logo->paddingBottom.'px '.$component->logo->paddingLeft.'px;">
       <amp-img
-        alt="'.$gallery->logo->alt.'"
-        src="'.$gallery->logo->src.'"
-        width="'.$gallery->logo->width.'"
-        height="'.$gallery->logo->height.'"
+        alt="'.$component->logo->alt.'"
+        src="'.$component->logo->src.'"
+        width="'.$component->logo->width.'"
+        height="'.$component->logo->height.'"
       >
       </amp-img>
     </div>
   </div>
   <div class="container" style="text-align: center;">
     <amp-carousel
-        width="'.$gallery->carousel->width.'"
-        height="'.$gallery->carousel->height.'"
+        width="'.$component->carousel->width.'"
+        height="'.$component->carousel->height.'"
         type="slides"
         role="region"
         '.$loop.'
     >'.$images.'</amp-carousel>
   </div>
   <div class="container">
-    <div style="text-align: '.$gallery->title->align.'; font-size: '.$gallery->title->font_size.'px; line-height: '.$gallery->title->line_height.'px; color: '.$gallery->title->color.'; padding: '.$gallery->title->paddingTop.'px '.$gallery->title->paddingRight.'px '.$gallery->title->paddingBottom.'px '.$gallery->title->paddingLeft.'px;">
-      '.$gallery->title->text.'
+    <div style="text-align: '.$component->title->align.'; font-size: '.$component->title->font_size.'px; line-height: '.$component->title->line_height.'px; color: '.$component->title->color.'; padding: '.$component->title->paddingTop.'px '.$component->title->paddingRight.'px '.$component->title->paddingBottom.'px '.$component->title->paddingLeft.'px;">
+      '.$component->title->text.'
     </div>
   </div>
   <div class="container">
-    <div style="text-align: '.$gallery->text->align.'; font-size: '.$gallery->text->font_size.'px; line-height: '.$gallery->text->line_height.'px; color: '.$gallery->text->color.'; padding: '.$gallery->text->paddingTop.'px '.$gallery->text->paddingRight.'px '.$gallery->text->paddingBottom.'px '.$gallery->text->paddingLeft.'px;">
-    '.$gallery->text->text.'
+    <div style="text-align: '.$component->text->align.'; font-size: '.$component->text->font_size.'px; line-height: '.$component->text->line_height.'px; color: '.$component->text->color.'; padding: '.$component->text->paddingTop.'px '.$component->text->paddingRight.'px '.$component->text->paddingBottom.'px '.$component->text->paddingLeft.'px;">
+    '.$component->text->text.'
     </div>
   </div>
  </div>
@@ -157,12 +147,12 @@ if($requestMethod === "PUT"){
     <td align="center" style="padding: 20px 0; border-collapse: collapse;">
       <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 700px; margin:0 auto; border-collapse:collapse; border: none;">
         <tr>
-          <td style="text-align: '.$gallery->logo->align.'; padding: '.$gallery->logo->paddingTop.'px '.$gallery->logo->paddingRight.'px '.$gallery->logo->paddingBottom.'px '.$gallery->logo->paddingLeft.'px;">
+          <td style="text-align: '.$component->logo->align.'; padding: '.$component->logo->paddingTop.'px '.$component->logo->paddingRight.'px '.$component->logo->paddingBottom.'px '.$component->logo->paddingLeft.'px;">
             <img
-                alt="'.$gallery->logo->alt.'"
-                src="'.$gallery->logo->src.'"
-                width="'.$gallery->logo->width.'"
-                height="'.$gallery->logo->height.'"
+                alt="'.$component->logo->alt.'"
+                src="'.$component->logo->src.'"
+                width="'.$component->logo->width.'"
+                height="'.$component->logo->height.'"
             />
           </td>
         </tr>
@@ -173,9 +163,9 @@ if($requestMethod === "PUT"){
           <td align="center">
             <img
                 alt=""
-                src="'.$gallery->carousel->img[0]->src.'"
-                width="'.$gallery->carousel->width.'"
-                height="'.$gallery->carousel->height.'"
+                src="'.$component->carousel->img[0]->src.'"
+                width="'.$component->carousel->width.'"
+                height="'.$component->carousel->height.'"
             />
           </td>
         </tr>
@@ -183,16 +173,16 @@ if($requestMethod === "PUT"){
 
       <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 700px; margin:0 auto; border-collapse:collapse; border: none;">
         <tr>
-          <td style="font-family: Poppins, Verdana, Arial, sans-serif; text-align: '.$gallery->title->align.'; font-size: '.$gallery->title->font_size.'px; line-height: '.$gallery->title->line_height.'px; color: '.$gallery->title->color.'; padding: '.$gallery->title->paddingTop.'px '.$gallery->title->paddingRight.'px '.$gallery->title->paddingBottom.'px '.$gallery->title->paddingLeft.'px;">
-            '.$gallery->title->text.'
+          <td style="font-family: Poppins, Verdana, Arial, sans-serif; text-align: '.$component->title->align.'; font-size: '.$component->title->font_size.'px; line-height: '.$component->title->line_height.'px; color: '.$component->title->color.'; padding: '.$component->title->paddingTop.'px '.$component->title->paddingRight.'px '.$component->title->paddingBottom.'px '.$component->title->paddingLeft.'px;">
+            '.$component->title->text.'
           </td>
         </tr>
       </table>
 
       <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 700px; margin:0 auto; border-collapse:collapse; border: none;">
         <tr>
-          <td style="font-family: Poppins, Verdana, Arial, sans-serif; text-align: '.$gallery->text->align.'; font-size: '.$gallery->text->font_size.'px; line-height: '.$gallery->text->line_height.'px; color: '.$gallery->text->color.'; padding: '.$gallery->text->paddingTop.'px '.$gallery->text->paddingRight.'px '.$gallery->text->paddingBottom.'px '.$gallery->text->paddingLeft.'px;">
-            '.$gallery->text->text.'
+          <td style="font-family: Poppins, Verdana, Arial, sans-serif; text-align: '.$component->text->align.'; font-size: '.$component->text->font_size.'px; line-height: '.$component->text->line_height.'px; color: '.$component->text->color.'; padding: '.$component->text->paddingTop.'px '.$component->text->paddingRight.'px '.$component->text->paddingBottom.'px '.$component->text->paddingLeft.'px;">
+            '.$component->text->text.'
           </td>
         </tr>
       </table>
@@ -224,7 +214,7 @@ if($requestMethod === "PUT"){
     ":id" => $id
   ));
 
-  echo "Template saved";
+  echo "1";
   exit();
 }
 
