@@ -56,7 +56,8 @@ if($requestMethod === "PUT"){
   $data = json_decode(file_get_contents("php://input"));
   $component = $data->settings;
 
-  // Used components
+  // Used components for AMP email
+  // Logo
   if ($component->logo->used) {
     $logo = '<div class="container">
       <div style="text-align: '.$component->logo->align.'; padding: '.$component->logo->paddingTop.'px '.$component->logo->paddingRight.'px '.$component->logo->paddingBottom.'px '.$component->logo->paddingLeft.'px;">
@@ -72,21 +73,91 @@ if($requestMethod === "PUT"){
   } else {
     $logo = "";
   }
+  // Carousel
+  if ($component->carousel->used) {
 
-  // Create carousel images
-  $loop = ($component->carousel->loop) ? "loop" : "";
-  $images = "";
-  for ($i = 0; $i < count($component->carousel->img); $i++) {
-    $img = '<amp-img width="'.$component->carousel->width.'" height="'.$component->carousel->height.'" src="'.$component->carousel->img[$i]->src.'"></amp-img>';
-    $images .= $img;
+    // Add carousel to email header
+    $carouselImport = '<script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>';
+
+    // Create carousel images
+    $loop = ($component->carousel->loop) ? "loop" : "";
+    $images = "";
+    for ($i = 0; $i < count($component->carousel->img); $i++) {
+      $img = '<amp-img width="'.$component->carousel->width.'" height="'.$component->carousel->height.'" src="'.$component->carousel->img[$i]->src.'"></amp-img>';
+      $images .= $img;
+    }
+
+    $carousel = '<div class="container" style="text-align: center;">
+    <amp-carousel
+        width="'.$component->carousel->width.'"
+        height="'.$component->carousel->height.'"
+        type="slides"
+        role="region"
+        '.$loop.'
+    >'.$images.'</amp-carousel>
+  </div>';
+  } else {
+    $carousel = "";
+    $carouselImport = "";
   }
+  // Title
+  if ($component->title->used) {
+    $title = '<div class="container">
+    <div style="text-align: '.$component->title->align.'; font-size: '.$component->title->font_size.'px; line-height: '.$component->title->line_height.'px; color: '.$component->title->color.'; padding: '.$component->title->paddingTop.'px '.$component->title->paddingRight.'px '.$component->title->paddingBottom.'px '.$component->title->paddingLeft.'px;">
+      '.$component->title->text.'
+    </div>
+  </div>';
+  } else {
+    $title = "";
+  }
+  // Text
+  if ($component->text->used) {
+    $text = '<div class="container">
+    <div style="text-align: '.$component->text->align.'; font-size: '.$component->text->font_size.'px; line-height: '.$component->text->line_height.'px; color: '.$component->text->color.'; padding: '.$component->text->paddingTop.'px '.$component->text->paddingRight.'px '.$component->text->paddingBottom.'px '.$component->text->paddingLeft.'px;">
+    '.$component->text->text.'
+    </div>
+  </div>';
+  } else {
+    $text = "";
+  }
+  // Accordion
+  if ($component->accordion->used) {
+
+    // Add accordion to email header
+    $accordionImport = '<script async custom-element="amp-accordion" src="https://cdn.ampproject.org/v0/amp-accordion-0.1.js"></script>';
+
+    // Create accordion sections
+    $animate = ($component->accordion->animate) ? "animate" : "";
+    $expandSingleSection = ($component->accordion->expandSingleSection) ? "expand-single-section" : "";
+    $sections = "";
+    for ($i = 0; $i < count($component->accordion->section); $i++) {
+      $section = '
+        <section>
+          <h2 style="font-weight: normal; font-size: 15px;padding: 10px 20px;background-color: #ffffff">'.$component->accordion->section[$i]->title.'</h2>
+          <p style="font-size: '.$component->accordion->font_size.'px; line-height: '.$component->accordion->line_height.'px; padding: 10px 20px;">'.$component->accordion->section[$i]->text.'</p>
+        </section>';
+      $sections .= $section;
+    }
+
+    $accordion = '
+      <div class="container" style="padding-bottom: 30px;">
+        <amp-accordion style="width:600px; margin: 0 auto;color: '.$component->accordion->color.'" animate expand-single-section>
+          '.$sections.'
+        </amp-accordion>
+      </div>';
+  } else {
+    $accordion = "";
+    $accordionImport = "";
+  }
+
 
   $amp = '<!DOCTYPE html>
 <html ⚡4email data-css-strict>
 <head>
   <meta charset="utf-8">
   <script async src="https://cdn.ampproject.org/v0.js"></script>
-  <script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>
+  '.$carouselImport.'
+  '.$accordionImport.'
   <style amp4email-boilerplate>body{visibility:hidden}</style>
   <style amp-custom>
     body {
@@ -116,26 +187,7 @@ if($requestMethod === "PUT"){
 </head>
 <body>
 <div style="padding: 20px 0;">
-  '.$logo.'
-  <div class="container" style="text-align: center;">
-    <amp-carousel
-        width="'.$component->carousel->width.'"
-        height="'.$component->carousel->height.'"
-        type="slides"
-        role="region"
-        '.$loop.'
-    >'.$images.'</amp-carousel>
-  </div>
-  <div class="container">
-    <div style="text-align: '.$component->title->align.'; font-size: '.$component->title->font_size.'px; line-height: '.$component->title->line_height.'px; color: '.$component->title->color.'; padding: '.$component->title->paddingTop.'px '.$component->title->paddingRight.'px '.$component->title->paddingBottom.'px '.$component->title->paddingLeft.'px;">
-      '.$component->title->text.'
-    </div>
-  </div>
-  <div class="container">
-    <div style="text-align: '.$component->text->align.'; font-size: '.$component->text->font_size.'px; line-height: '.$component->text->line_height.'px; color: '.$component->text->color.'; padding: '.$component->text->paddingTop.'px '.$component->text->paddingRight.'px '.$component->text->paddingBottom.'px '.$component->text->paddingLeft.'px;">
-    '.$component->text->text.'
-    </div>
-  </div>
+  '.$logo.$carousel.$title.$text.$accordion.'
  </div>
 </body>
 </html>
@@ -233,6 +285,6 @@ if ($requestMethod === "DELETE") {
   $result = $query->execute(array(
     ":id" => $id
   ));
-  echo 1;
+  echo "1";
   exit();
 }
