@@ -192,7 +192,11 @@
                   :href="ampURL"
                   target="_blank"
                   :disabled="!view"
-                  >Náhled</v-btn
+                >
+                  <v-icon color="#ffffff" class="mr-1">{{
+                    icons.mdiLightningBoltCircle
+                  }}</v-icon>
+                  Náhled</v-btn
                 >
                 <v-btn color="secondary" @click="closeTemplate">Zavřít</v-btn>
               </v-col>
@@ -808,9 +812,13 @@
 </template>
 
 <script>
+import { mdiLightningBoltCircle } from "@mdi/js";
 export default {
   name: "Editor",
   data: () => ({
+    icons: {
+      mdiLightningBoltCircle,
+    },
     userTemplateId: 0,
     introDisplay: "block",
     ampURL: "",
