@@ -56,7 +56,8 @@ if($requestMethod === "PUT"){
   $data = json_decode(file_get_contents("php://input"));
   $component = $data->settings;
 
-  #region amp e-mail components
+  #region e-mail components
+
   // Logo
   if ($component->logo->used) {
     $logo = '<div class="container">
@@ -70,9 +71,25 @@ if($requestMethod === "PUT"){
         </amp-img>
       </div>
     </div>';
+    $logoHTML = '
+      <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 700px; margin:0 auto; border-collapse:collapse; border: none;">
+        <tr>
+          <td style="text-align: '.$component->logo->align.'; padding: '.$component->logo->paddingTop.'px '.$component->logo->paddingRight.'px '.$component->logo->paddingBottom.'px '.$component->logo->paddingLeft.'px;">
+            <img
+                alt="'.$component->logo->alt.'"
+                src="'.$component->logo->src.'"
+                width="'.$component->logo->width.'"
+                height="'.$component->logo->height.'"
+            />
+          </td>
+        </tr>
+      </table>
+    ';
   } else {
     $logo = "";
+    $logoHTML = "";
   }
+
   // Carousel
   if ($component->carousel->used) {
 
@@ -96,10 +113,27 @@ if($requestMethod === "PUT"){
         '.$loop.'
     >'.$images.'</amp-carousel>
   </div>';
+
+    $carouselHTML = '
+      <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 700px; margin:0 auto; border-collapse:collapse; border: none;">
+        <tr>
+          <td align="center">
+            <img
+                alt=""
+                src="'.$component->carousel->img[0]->src.'"
+                width="'.$component->carousel->width.'"
+                height="'.$component->carousel->height.'"
+            />
+          </td>
+        </tr>
+      </table>
+    ';
   } else {
     $carousel = "";
     $carouselImport = "";
+    $carouselHTML = "";
   }
+
   // Title
   if ($component->title->used) {
     $title = '<div class="container">
@@ -107,9 +141,21 @@ if($requestMethod === "PUT"){
       '.$component->title->text.'
     </div>
   </div>';
+
+    $titleHTML = '
+      <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 700px; margin:0 auto; border-collapse:collapse; border: none;">
+        <tr>
+          <td style="font-family: Poppins, Verdana, Arial, sans-serif; text-align: '.$component->title->align.'; font-size: '.$component->title->font_size.'px; line-height: '.$component->title->line_height.'px; color: '.$component->title->color.'; padding: '.$component->title->paddingTop.'px '.$component->title->paddingRight.'px '.$component->title->paddingBottom.'px '.$component->title->paddingLeft.'px;">
+            '.$component->title->text.'
+          </td>
+        </tr>
+      </table>
+    ';
   } else {
     $title = "";
+    $titleHTML = "";
   }
+
   // Text
   if ($component->text->used) {
     $text = '<div class="container">
@@ -117,9 +163,21 @@ if($requestMethod === "PUT"){
     '.$component->text->text.'
     </div>
   </div>';
+
+    $textHTML = '
+      <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 700px; margin:0 auto; border-collapse:collapse; border: none;">
+        <tr>
+          <td style="font-family: Poppins, Verdana, Arial, sans-serif; text-align: '.$component->text->align.'; font-size: '.$component->text->font_size.'px; line-height: '.$component->text->line_height.'px; color: '.$component->text->color.'; padding: '.$component->text->paddingTop.'px '.$component->text->paddingRight.'px '.$component->text->paddingBottom.'px '.$component->text->paddingLeft.'px;">
+            '.$component->text->text.'
+          </td>
+        </tr>
+      </table>
+    ';
   } else {
     $text = "";
+    $textHTML = "";
   }
+
   // Accordion
   if ($component->accordion->used) {
 
@@ -145,10 +203,39 @@ if($requestMethod === "PUT"){
           '.$sections.'
         </amp-accordion>
       </div>';
+
+    $sectionsHTML = "";
+    for ($i = 0; $i < count($component->accordion->section); $i++) {
+      $sectionHTML = '
+        <tr>
+          <td style="border: 1px #cccccc solid; font-family: Poppins, Verdana, Arial, sans-serif; text-align: justify; font-size: 14px; line-height: 22px; color: '.$component->accordion->color.';  padding: 10px 20px;">
+            '.$component->accordion->section[$i]->title.'
+          </td>
+        </tr>
+        <tr>
+          <td style="font-family: Poppins, Verdana, Arial, sans-serif; text-align: justify; font-size: '.$component->accordion->font_size.'px; line-height: '.$component->accordion->line_height.'px; color: '.$component->accordion->color.';  padding: 10px 20px;">
+            '.$component->accordion->section[$i]->text.'
+          </td>
+        </tr>';
+      $sectionsHTML .= $sectionHTML;
+    }
+
+    $accordionHTML = '
+      <table bgcolor="#ffffff" style="width: 100%; max-width: 700px; margin:0 auto; border-collapse:collapse; border: none;">
+        <tr>
+          <td style="font-family: Poppins, Verdana, Arial, sans-serif; text-align: justify; font-size: 14px; line-height: 22px; color: '.$component->accordion->color.'; padding: 0px 50px 30px 50px;">
+            <table bgcolor="#ffffff" style="width: 100%; max-width: 700px; margin:0 auto; border-collapse:collapse; border: none;">
+              '.$sectionsHTML.'
+            </table>
+          </td>
+        </tr>
+      </table>';
   } else {
     $accordion = "";
     $accordionImport = "";
+    $accordionHTML = "";
   }
+
   // Timeago
   if ($component->timeago->used) {
 
@@ -169,10 +256,25 @@ if($requestMethod === "PUT"){
           '.$component->timeago->date.' '.$component->timeago->time.'
         </amp-timeago>
       </div>';
+
+    $orgDate = $component->timeago->date;
+    $timeagoDateFormat = date("d. m. Y", strtotime($orgDate));
+
+    $timeagoHTML = '
+      <table bgcolor="#ffffff" style="width: 100%; max-width: 700px; margin:0 auto; border-collapse:collapse; border: none;">
+        <tr>
+          <td style="font-family: Poppins, Verdana, Arial, sans-serif; text-align: '.$component->timeago->align.'; font-size: '.$component->timeago->font_size.'px; line-height: '.$component->timeago->line_height.'px; color: '.$component->timeago->color.'; padding: '.$component->timeago->paddingTop.'px '.$component->timeago->paddingRight.'px '.$component->timeago->paddingBottom.'px '.$component->timeago->paddingLeft.'px;">
+            '.$timeagoDateFormat.' '.$component->timeago->time.'
+          </td>
+        </tr>
+      </table>
+    ';
   } else {
     $timeago = "";
     $timeagoImport = "";
+    $timeagoHTML = "";
   }
+
   // Form
   if ($component->form->used) {
 
@@ -216,11 +318,28 @@ if($requestMethod === "PUT"){
             </div>
           </form>
         </div>';
+
+    $formHTML = '
+      <table bgcolor="#ffffff" style="width: 100%; max-width: 700px; margin:0 auto; border-collapse:collapse; border: none;">
+        <tr>
+          <td style="font-family: Poppins, Verdana, Arial, sans-serif; text-align: center; font-size: 22px; line-height: 28px; color: #000000; padding: 30px 50px 30px 50px;">
+            <table style="margin:0 auto; border-collapse:collapse; border: none;">
+              <tr>
+                <td style="padding: 10px 20px; font-family: Poppins, Verdana, Arial, sans-serif; text-align: justify; font-size: 14px; line-height: 22px; color: #ffffff; background-color: #1976d2; border-radius: 4px; text-transform: uppercase;">
+                  <a href="'.$component->form->url.'" style="color: #ffffff; text-decoration: none;" target="_blank">VYPLNIT FORMULÁŘ</a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    ';
   } else {
     $form = "";
     $formImport = "";
+    $formHTML = "";
   }
-  #endregion amp e-mail components
+  #endregion e-mail components
 
 
   $amp = '<!DOCTYPE html>
@@ -272,54 +391,26 @@ if($requestMethod === "PUT"){
 <html>
 <head>
   <meta charset="UTF-8">
+  <title></title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      background-color: #f3f5f7;
+      font-family: Poppins, Verdana, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.4;
+      color: #000000;
+    }
+  </style>
 </head>
 <body style="width: 100%; font-family: Poppins, Verdana, Arial, sans-serif; font-size: 14px; margin: 0; padding: 0; background-color: #f3f5f7">
 
 <table align="center" border="0" cellpadding="0" cellspacing="0" style="width: 100%; margin:0 auto; border-collapse:collapse; border: none;">
   <tr>
     <td align="center" style="padding: 20px 0; border-collapse: collapse;">
-      <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 700px; margin:0 auto; border-collapse:collapse; border: none;">
-        <tr>
-          <td style="text-align: '.$component->logo->align.'; padding: '.$component->logo->paddingTop.'px '.$component->logo->paddingRight.'px '.$component->logo->paddingBottom.'px '.$component->logo->paddingLeft.'px;">
-            <img
-                alt="'.$component->logo->alt.'"
-                src="'.$component->logo->src.'"
-                width="'.$component->logo->width.'"
-                height="'.$component->logo->height.'"
-            />
-          </td>
-        </tr>
-      </table>
-
-      <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 700px; margin:0 auto; border-collapse:collapse; border: none;">
-        <tr>
-          <td align="center">
-            <img
-                alt=""
-                src="'.$component->carousel->img[0]->src.'"
-                width="'.$component->carousel->width.'"
-                height="'.$component->carousel->height.'"
-            />
-          </td>
-        </tr>
-      </table>
-
-      <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 700px; margin:0 auto; border-collapse:collapse; border: none;">
-        <tr>
-          <td style="font-family: Poppins, Verdana, Arial, sans-serif; text-align: '.$component->title->align.'; font-size: '.$component->title->font_size.'px; line-height: '.$component->title->line_height.'px; color: '.$component->title->color.'; padding: '.$component->title->paddingTop.'px '.$component->title->paddingRight.'px '.$component->title->paddingBottom.'px '.$component->title->paddingLeft.'px;">
-            '.$component->title->text.'
-          </td>
-        </tr>
-      </table>
-
-      <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 700px; margin:0 auto; border-collapse:collapse; border: none;">
-        <tr>
-          <td style="font-family: Poppins, Verdana, Arial, sans-serif; text-align: '.$component->text->align.'; font-size: '.$component->text->font_size.'px; line-height: '.$component->text->line_height.'px; color: '.$component->text->color.'; padding: '.$component->text->paddingTop.'px '.$component->text->paddingRight.'px '.$component->text->paddingBottom.'px '.$component->text->paddingLeft.'px;">
-            '.$component->text->text.'
-          </td>
-        </tr>
-      </table>
-
+      '.$logoHTML.$carouselHTML.$titleHTML.$textHTML.$accordionHTML.$timeagoHTML.$formHTML.'
     </td>
   </tr>
 </table>
