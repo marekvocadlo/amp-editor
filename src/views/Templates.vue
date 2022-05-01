@@ -121,6 +121,20 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- Snackbar -->
+    <v-snackbar
+      top
+      :color="snackbarColor"
+      v-model="snackbar"
+      :timeout="snackbarTimeout"
+    >
+      {{ snackbarText }}
+      <template v-slot:action="{ attrs }">
+        <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
+          Zavřít
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -137,6 +151,9 @@ export default {
     valid: true,
     dialogCreateTemplate: false,
     templateNameRules: [(v) => !!v || "Musíte zvolit název šablony."],
+    snackbarText: "",
+    snackbarColor: "red darken-2",
+    snackbarTimeout: 10000,
   }),
   created() {
     this.$store.dispatch("getUser");
@@ -146,7 +163,7 @@ export default {
     createUserTemplate() {
       if (this.$refs.form.validate()) {
         this.axios
-          .post("/app/user_template.php", {
+          .post("/app/template.php", {
             name: this.myTemplateName,
           })
           .then((response) => {
@@ -169,7 +186,7 @@ export default {
       }
     },
     readUserTemplates() {
-      this.axios.get("/app/user_template.php").then((response) => {
+      this.axios.get("/app/template.php").then((response) => {
         this.userTemplates = [];
         for (let i = 0; i < response.data.length; i++) {
           let tempTemplate = {};
@@ -194,7 +211,7 @@ export default {
     },
     deleteUserTemplate(id) {
       this.axios
-        .delete("/app/user_template.php", {
+        .delete("/app/template.php", {
           data: {
             id: id,
           },

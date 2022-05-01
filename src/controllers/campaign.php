@@ -32,7 +32,7 @@ if($requestMethod === "POST"){
     }
 
     // Select codes of selected template
-    $query2 = $pdo->prepare("SELECT * FROM user_template WHERE id = ?");
+    $query2 = $pdo->prepare("SELECT * FROM template WHERE id = ?");
     $query2->execute(array(
       $template_id
     ));

@@ -30,23 +30,23 @@
         />
         -->
         <DashboardCard
+          img="editor.png"
+          title="Tvorba e-mailů"
+          text="Vytvořte jedinečný interaktivní obsah optimalizovaný pro všechny klienty."
+          btnText="Zobrazit obsahy"
+          btnHref="/templates"
+        />
+        <DashboardCard
           img="contacts.jpg"
           title="Kontakty"
-          text="Začněte vytvořením skupiny kontaktů nebo nahráním emailových adres."
+          text="Začněte vytvořením skupiny kontaktů nebo nahráním e-mailových adres."
           btnText="Zobrazit kontakty"
           btnHref="/contacts"
         />
         <DashboardCard
-          img="editor.png"
-          title="Šablony"
-          text="Vytvořte jedinečnou interaktivní šablonu optimalizovanou pro všechny klienty."
-          btnText="Zobrazit šablony"
-          btnHref="/templates"
-        />
-        <DashboardCard
           img="campaign.jpg"
           title="Kampaně"
-          text="Vymyslete předmět a pošlete kampaň všem vašim kontaktům."
+          text="Vymyslete poutavý předmět a pošlete kampaň všem kontaktům."
           btnText="Vytvořit kampaň"
           btnHref="/campaigns"
         />

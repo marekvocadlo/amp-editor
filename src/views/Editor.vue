@@ -946,7 +946,7 @@ export default {
     },
     readUserTemplate() {
       this.axios
-        .get("/app/user_template.php?id=" + this.userTemplateId)
+        .get("/app/template.php?id=" + this.userTemplateId)
         .then((response) => {
           if (response.data !== null) {
             this.component = response.data;
@@ -955,7 +955,7 @@ export default {
     },
     updateUserTemplate() {
       this.axios
-        .put("/app/user_template.php", {
+        .put("/app/template.php", {
           id: this.userTemplateId,
           settings: this.component,
         })
