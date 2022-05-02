@@ -9,11 +9,13 @@ if ($requestMethod === "POST") {
   $_POST = json_decode(file_get_contents("php://input"),true);
   $name = htmlspecialchars($_POST["name"]);
   $user_id = $_SESSION['user'][0];
+  $defaultSettings = '{"logo":{"used":true,"display":"none","paddingTop":10,"paddingRight":50,"paddingBottom":10,"paddingLeft":50,"align":"center","width":150,"height":150,"alt":"Logo","src":"https:\/\/img.freepik.com\/free-vector\/illustration-circle-stamp-banner-vector_53876-27183.jpg?t=st=1650813257~exp=1650813857~hmac=cee7b6217f8190ead609263d99e2ef872c2b29d02c6fb5f6fe54964d0d138481&w=826"},"carousel":{"used":true,"display":"none","width":600,"height":200,"autoplay":"","delay":"","loop":true,"img":[{"src":"https:\/\/picsum.photos\/600\/200?random=1"}]},"title":{"used":true,"display":"none","align":"center","paddingTop":30,"paddingRight":50,"paddingBottom":30,"paddingLeft":50,"text":"Galerie obr\u00e1zk\u016f","font_size":"22","line_height":"28","color":"#000000"},"text":{"used":true,"display":"none","align":"justify","paddingTop":0,"paddingRight":50,"paddingBottom":30,"paddingLeft":50,"text":"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.","font_size":"14","line_height":"22","color":"#000000"},"accordion":{"used":false,"display":"none","align":"left","font_size":"14","line_height":"22","color":"#00000","animate":true,"expandSingleSection":true,"section":[{"title":"Nadpis sekce 1","text":"Obsah v sekci 1"}]},"timeago":{"used":false,"display":"none","align":"center","paddingTop":0,"paddingRight":50,"paddingBottom":30,"paddingLeft":50,"font_size":"22","line_height":"28","color":"#000000","date":"1995-07-30","time":"22:00"},"form":{"used":false,"display":"none","align":"auto","width":300,"paddingY":30,"url":"","successSend":"V po\u0159\u00e1dku odesl\u00e1no.","errorSend":"Do\u0161lo k chyb\u011b.","input":[{"label":"Jm\u00e9no","type":"text","required":false},{"label":"E-mail","type":"email","required":true}],"button":"Odeslat"}}';
 
-  $query2 = $pdo->prepare("INSERT INTO template (name,user_id) VALUES(:name, :user_id)");
+  $query2 = $pdo->prepare("INSERT INTO template (name,user_id,settings) VALUES(:name, :user_id, :settings)");
   $result = $query2->execute(array(
     ":name" => $name,
     ":user_id" => $user_id,
+    ":settings" => $defaultSettings,
   ));
   $insertId = $pdo->lastInsertId();
   echo $insertId;
@@ -35,7 +37,7 @@ if($requestMethod === "GET" && !isset($_GET['id'])){
 }
 
 // Read template by id
-if($requestMethod === "GET" && isset($_GET['id'])){
+if($requestMethod === "GET" && isset($_GET['id']) && !isset($_GET['auth'])){
   $template_id = $_GET['id'];
   $query = $pdo->prepare("SELECT settings FROM template WHERE id = :id");
   $query->execute(array(
@@ -45,6 +47,25 @@ if($requestMethod === "GET" && isset($_GET['id'])){
   $settings = $query->fetch();
 
   echo $settings[0];
+  exit();
+}
+
+// Check template owner
+if($requestMethod === "GET" && isset($_GET['id']) && isset($_GET['auth'])){
+  $template_id = $_GET['id'];
+  $user_id = $_SESSION['user'][0];
+
+  $query = $pdo->prepare("SELECT * FROM template WHERE id = :id");
+  $query->execute(array(
+    ":id" => $template_id
+  ));
+  $result = $query->fetch();
+
+  if ($result[6] === $user_id) {
+    echo "1";
+  } else {
+    echo "0";
+  }
   exit();
 }
 

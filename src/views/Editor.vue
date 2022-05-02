@@ -1,5 +1,5 @@
 <template>
-  <div v-if="getUser.email" class="editor">
+  <div v-if="getUser.email && auth" class="editor">
     <v-container class="container-editor">
       <v-row no-gutters>
         <v-col class="text-center py-5" cols="12" sm="6" md="8">
@@ -819,6 +819,7 @@ export default {
     icons: {
       mdiLightningBoltCircle,
     },
+    auth: false,
     userTemplateId: 0,
     introDisplay: "block",
     ampURL: "",
@@ -941,6 +942,7 @@ export default {
   }),
   created() {
     this.$store.dispatch("getUser");
+    this.checkAuth();
     this.getTemplateID();
     if (this.$route.query.new !== "true") {
       this.readUserTemplate();
@@ -951,6 +953,13 @@ export default {
     getTemplateID() {
       this.userTemplateId = this.$route.query.id;
       this.ampURL = "/files/index_amp" + this.$route.query.id + ".html";
+    },
+    checkAuth() {
+      this.axios
+        .get("app/template.php?id=" + this.$route.query.id + "&auth=1")
+        .then((response) => {
+          this.auth = response.data === 1;
+        });
     },
     readUserTemplate() {
       this.axios
