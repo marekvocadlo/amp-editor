@@ -72,12 +72,17 @@
     <!-- Form to create new group -->
     <v-dialog v-model="dialogCreateGroup" max-width="600px">
       <v-card>
-        <v-card-title>
-          <span class="text-h5">Nová skupina kontaktů</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-form ref="form" v-model="valid" lazy-validation>
+        <v-form
+          @submit.prevent="createGroup"
+          ref="form"
+          v-model="valid"
+          lazy-validation
+        >
+          <v-card-title>
+            <span class="text-h5">Nová skupina kontaktů</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
               <v-row>
                 <v-col cols="12">
                   <v-text-field
@@ -88,23 +93,22 @@
                   ></v-text-field>
                 </v-col>
               </v-row>
-            </v-form>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="dialogCreateGroup = false">
-            Zavřít
-          </v-btn>
-          <v-btn
-            :disabled="!valid"
-            color="blue darken-1"
-            text
-            @click="createGroup()"
-          >
-            Vytvořit
-          </v-btn>
-        </v-card-actions>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="blue darken-1"
+              text
+              @click="dialogCreateGroup = false"
+            >
+              Zavřít
+            </v-btn>
+            <v-btn :disabled="!valid" color="blue darken-1" text type="submit">
+              Vytvořit
+            </v-btn>
+          </v-card-actions>
+        </v-form>
       </v-card>
     </v-dialog>
     <!-- Form to update group -->
