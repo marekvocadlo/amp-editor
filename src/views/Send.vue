@@ -5,7 +5,12 @@
         <h1>Rozeslat kampaň</h1>
       </v-flex>
       <v-flex xs12 sm4 offset-sm4 mt-3>
-        <v-form @submit.prevent="sendCampaign" ref="form" v-model="valid" lazy-validation>
+        <v-form
+          @submit.prevent="sendCampaign"
+          ref="form"
+          v-model="valid"
+          lazy-validation
+        >
           <v-layout column>
             <v-flex>
               <v-text-field

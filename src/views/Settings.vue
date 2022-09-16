@@ -7,7 +7,12 @@
       </v-flex>
       <v-flex xs12 sm4 offset-sm4 mt-3>
         <h3 class="mt-10">Aktualizovat osobní údaje</h3>
-        <v-form @submit.prevent="updateUser" ref="form" v-model="valid" lazy-validation>
+        <v-form
+          @submit.prevent="updateUser"
+          ref="form"
+          v-model="valid"
+          lazy-validation
+        >
           <v-layout column>
             <v-flex>
               <v-text-field

@@ -115,12 +115,7 @@
           >
             Zavřít
           </v-btn>
-          <v-btn
-            :disabled="!valid"
-            color="blue darken-1"
-            text
-            type="submit"
-          >
+          <v-btn :disabled="!valid" color="blue darken-1" text type="submit">
             Vytvořit
           </v-btn>
         </v-card-actions>

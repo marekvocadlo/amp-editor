@@ -837,8 +837,7 @@ export default {
         width: 150,
         height: 150,
         alt: "Logo",
-        src:
-          "https://img.freepik.com/free-vector/illustration-circle-stamp-banner-vector_53876-27183.jpg?t=st=1650813257~exp=1650813857~hmac=cee7b6217f8190ead609263d99e2ef872c2b29d02c6fb5f6fe54964d0d138481&w=826",
+        src: "https://img.freepik.com/free-vector/illustration-circle-stamp-banner-vector_53876-27183.jpg?t=st=1650813257~exp=1650813857~hmac=cee7b6217f8190ead609263d99e2ef872c2b29d02c6fb5f6fe54964d0d138481&w=826",
       },
       carousel: {
         used: true,
@@ -875,8 +874,7 @@ export default {
         paddingRight: 50,
         paddingBottom: 30,
         paddingLeft: 50,
-        text:
-          "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.",
+        text: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.",
         font_size: "14",
         line_height: "22",
         color: "#000000",
