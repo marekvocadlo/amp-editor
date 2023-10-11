@@ -20,6 +20,3 @@ Then copy files from controllers folder to production server path /www/app/
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
