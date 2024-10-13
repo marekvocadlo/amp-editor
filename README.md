@@ -1,5 +1,7 @@
 # amp-editor
 
+Vue.js app for creating AMP emails.
+
 ## Project setup
 ```
 npm install
